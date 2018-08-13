@@ -1,7 +1,7 @@
 ;; -*- coding: utf-8 -*-
 ;;
 ;; eigenmat.scm
-;; 2018-8-13 v1.01
+;; 2018-8-14 v1.02
 ;;
 ;; ＜内容＞
 ;;   Gauche で、Eigen ライブラリ を使って行列の高速演算を行うためのモジュールです。
@@ -52,18 +52,18 @@
 ;; 行列の積を計算
 (define-method eigen-array-mul ((A <f64array>) (B <f64array>))
   (check-array-rank A B)
-  (let* ((data1 (slot-ref A 'backing-storage))
-         (n1    (array-length A 0))
-         (m1    (array-length A 1))
-         (data2 (slot-ref B 'backing-storage))
-         (n2    (array-length B 0))
-         (m2    (array-length B 1))
-         (C     (make-f64array (shape 0 n1 0 m2) 0))
-         (data3 (slot-ref C 'backing-storage)))
+  (let ((data1 (slot-ref A 'backing-storage))
+        (n1    (array-length A 0))
+        (m1    (array-length A 1))
+        (data2 (slot-ref B 'backing-storage))
+        (n2    (array-length B 0))
+        (m2    (array-length B 1)))
     (unless (= m1 n2)
       (error "can't mul (array shapes mismatch)"))
-    (eigen-matrix-mul data1 n1 m1 data2 n2 m2 data3)
-    C))
+    (let* ((C     (make-f64array (shape 0 n1 0 m2) 0))
+           (data3 (slot-ref C 'backing-storage)))
+      (eigen-matrix-mul data1 n1 m1 data2 n2 m2 data3)
+      C)))
 
 ;; 行列式を計算
 (define-method eigen-array-determinant ((A <f64array>))
@@ -76,43 +76,33 @@
     (eigen-matrix-determinant data1 n1 m1)))
 
 ;; 逆行列を計算
-(define-method eigen-array-inverse ((A <f64array>) :optional (abs-tol 1e-4))
+(define-method eigen-array-inverse ((A <f64array>))
   (check-array-rank A)
   (let ((data1 (slot-ref A 'backing-storage))
         (n1    (array-length A 0))
         (m1    (array-length A 1)))
     (unless (= n1 m1)
       (error "array shape must be square"))
-    (cond
-     ;; 行列式をチェック
-     ((<= (abs (eigen-matrix-determinant data1 n1 m1)) abs-tol)
-      #f)
-     (else
-      (let* ((B     (make-f64array (shape 0 n1 0 m1) 0))
-             (data2 (slot-ref B 'backing-storage)))
-        (eigen-matrix-inverse data1 n1 m1 data2)
-        B)))))
+    (let* ((B     (make-f64array (shape 0 n1 0 m1) 0))
+           (data2 (slot-ref B 'backing-storage)))
+      (eigen-matrix-inverse data1 n1 m1 data2)
+      B)))
 
 ;; AX=B となる X を求める
-(define-method eigen-array-solve ((A <f64array>) (B <f64array>) :optional (abs-tol 1e-4))
+(define-method eigen-array-solve ((A <f64array>) (B <f64array>))
   (check-array-rank A B)
-  (let* ((data1 (slot-ref A 'backing-storage))
-         (n1    (array-length A 0))
-         (m1    (array-length A 1))
-         (data2 (slot-ref B 'backing-storage))
-         (n2    (array-length B 0))
-         (m2    (array-length B 1)))
+  (let ((data1 (slot-ref A 'backing-storage))
+        (n1    (array-length A 0))
+        (m1    (array-length A 1))
+        (data2 (slot-ref B 'backing-storage))
+        (n2    (array-length B 0))
+        (m2    (array-length B 1)))
     (unless (= n1 m1)
       (error "array A's shape must be square"))
     (unless (= m1 n2)
       (error "can't solve (array shapes mismatch)"))
-    (cond
-     ;; 行列式をチェック
-     ((<= (abs (eigen-matrix-determinant data1 n1 m1)) abs-tol)
-      #f)
-     (else
-      (let* ((X     (make-f64array (shape 0 n1 0 m2) 0))
-             (data3 (slot-ref X 'backing-storage)))
-        (eigen-matrix-solve data1 n1 m1 data2 n2 m2 data3)
-        X)))))
+    (let* ((X     (make-f64array (shape 0 n1 0 m2) 0))
+           (data3 (slot-ref X 'backing-storage)))
+      (eigen-matrix-solve data1 n1 m1 data2 n2 m2 data3)
+      X)))
 

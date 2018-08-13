@@ -34,11 +34,13 @@
 
 (test* "eigen-array-inverse 1" #,(<f64array> (0 2 0 2) -2 1 1.5 -0.5)
        (eigen-array-inverse A) eigen-array-nearly=?)
-(test* "eigen-array-inverse 2" #f (eigen-array-inverse D))
+(test* "eigen-array-inverse 2" #,(<f64array> (0 2 0 2) +inf.0 -inf.0 -inf.0 +inf.0)
+       (eigen-array-inverse D))
 
 (test* "eigen-array-solve 1" #,(<f64array> (0 2 0 1) 0 0.5)
        (eigen-array-solve A E) eigen-array-nearly=?)
-(test* "eigen-array-solve 2" #f (eigen-array-solve D E))
+(test* "eigen-array-solve 2" #,(<f64array> (0 2 0 1) -inf.0 +inf.0)
+       (eigen-array-solve D E))
 
 ;; If you don't want `gosh' to exit with nonzero status even if
 ;; the test fails, pass #f to :exit-on-failure.
