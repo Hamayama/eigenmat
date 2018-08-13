@@ -1,0 +1,48 @@
+;;;
+;;; eigenmatlib.stub
+;;;
+
+"
+#include \"eigenmat.h\"
+"
+
+;; The following entry is a dummy one.
+;; Replace it for your definitions.
+
+;(define-cproc test-eigenmat () ::<const-cstring>
+;  (result "eigenmat is working"))
+(define-cproc test-eigenmat ()
+  (result (test_eigenmat)))
+
+(define-cproc eigen-matrix-nearly(data1::<f64vector> n1::<int> m1::<int>
+                                  data2::<f64vector> n2::<int> m2::<int>
+                                  abs-tol::<double>) ::<boolean>
+  (result (eigen_matrix_nearly_sub (cast (double*) (SCM_F64VECTOR_ELEMENTS data1)) n1 m1
+                                   (cast (double*) (SCM_F64VECTOR_ELEMENTS data2)) n2 m2
+                                   abs-tol)))
+
+(define-cproc eigen-matrix-mul(data1::<f64vector> n1::<int> m1::<int>
+                               data2::<f64vector> n2::<int> m2::<int>
+                               data3::<f64vector>) ::<boolean>
+  (result (eigen_matrix_mul_sub (cast (double*) (SCM_F64VECTOR_ELEMENTS data1)) n1 m1
+                                (cast (double*) (SCM_F64VECTOR_ELEMENTS data2)) n2 m2
+                                (cast (double*) (SCM_F64VECTOR_ELEMENTS data3)))))
+
+(define-cproc eigen-matrix-determinant(data1::<f64vector> n1::<int> m1::<int>) ::<double>
+  (result (eigen_matrix_determinant_sub (cast (double*) (SCM_F64VECTOR_ELEMENTS data1)) n1 m1)))
+
+(define-cproc eigen-matrix-inverse(data1::<f64vector> n1::<int> m1::<int>
+                                   data2::<f64vector>) ::<int>
+  (result (eigen_matrix_inverse_sub (cast (double*) (SCM_F64VECTOR_ELEMENTS data1)) n1 m1
+                                    (cast (double*) (SCM_F64VECTOR_ELEMENTS data2)))))
+
+(define-cproc eigen-matrix-solve(data1::<f64vector> n1::<int> m1::<int>
+                                 data2::<f64vector> n2::<int> m2::<int>
+                                 data3::<f64vector>) ::<boolean>
+  (result (eigen_matrix_solve_sub (cast (double*) (SCM_F64VECTOR_ELEMENTS data1)) n1 m1
+                                  (cast (double*) (SCM_F64VECTOR_ELEMENTS data2)) n2 m2
+                                  (cast (double*) (SCM_F64VECTOR_ELEMENTS data3)))))
+
+;; Local variables:
+;; mode: scheme
+;; end:
