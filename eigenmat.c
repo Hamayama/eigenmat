@@ -70,7 +70,7 @@ int eigen_matrix_inverse_sub(double* data1, int n1, int m1,
     return TRUE;
 }
 
-// Ax=b となる x を求める
+// AX=B となる X を求める
 int eigen_matrix_solve_sub(double* data1, int n1, int m1,
                            double* data2, int n2, int m2,
                            double* data3) {

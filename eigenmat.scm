@@ -1,13 +1,13 @@
 ;; -*- coding: utf-8 -*-
 ;;
 ;; eigenmat.scm
-;; 2018-8-13 v1.00
+;; 2018-8-13 v1.01
 ;;
 ;; ＜内容＞
 ;;   Gauche で、Eigen ライブラリ を使って行列の高速演算を行うためのモジュールです。
 ;;   Eigen は、C++ で書かれた線形代数用のライブラリです ( http://eigen.tuxfamily.org )。
 ;;   現状、本モジュールは、標準の gauhce.array モジュールにおける
-;;   <f64array> のごく一部の演算にのみ対応しています。
+;;   <f64array> クラスのごく一部の演算にのみ対応しています。
 ;;
 ;;   詳細については、以下のページを参照ください。
 ;;   https://github.com/Hamayama/eigenmat
@@ -93,7 +93,7 @@
         (eigen-matrix-inverse data1 n1 m1 data2)
         B)))))
 
-;; Ax=b となる x を求める
+;; AX=B となる X を求める
 (define-method eigen-array-solve ((A <f64array>) (B <f64array>) :optional (abs-tol 1e-4))
   (check-array-rank A B)
   (let* ((data1 (slot-ref A 'backing-storage))
