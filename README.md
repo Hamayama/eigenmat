@@ -102,6 +102,12 @@
    このため、Gauche の将来の変更で動作しなくなる可能性があります。
 
 
+## 参考情報
+1. Gauche-gl-examples ( https://github.com/Hamayama/Gauche-gl-examples )  
+   の pendulum.scm は、本モジュールが存在すれば使用するようになっています。  
+   (振り子の数 `*N*` を大きくすると、高速化の効果が分かりやすいです)
+
+
 ## 環境等
 - OS
   - Windows 8.1 (64bit)
