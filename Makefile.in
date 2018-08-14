@@ -12,6 +12,10 @@ datarootdir = @datarootdir@
 srcdir      = @srcdir@
 VPATH       = $(srcdir)
 
+# for C++
+CXX         = @CXX@
+LDFLAGS     = @LDFLAGS@ -static-libstdc++
+
 # These may be overridden by make invocators
 DESTDIR        =
 GOSH           = "@GOSH@"
@@ -24,8 +28,6 @@ SOEXT  = @SOEXT@
 OBJEXT = @OBJEXT@
 EXEEXT = @EXEEXT@
 LOCAL_PATHS = "@LOCAL_PATHS@"
-
-CXX      = @CXX@
 
 # Module-specific stuff
 PACKAGE   = eigenmat
@@ -49,7 +51,7 @@ all : $(TARGET)
 
 eigenmat.$(SOEXT): $(eigenmat_SRCS)
 	$(GAUCHE_PACKAGE) compile \
-	  --cc=$(CXX) --ldflags=-static-libstdc++ \
+	  --cc=$(CXX) --ldflags="$(LDFLAGS)" \
 	  --local=$(LOCAL_PATHS) --verbose eigenmat $(eigenmat_SRCS)
 
 check : all
