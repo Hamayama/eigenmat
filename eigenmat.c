@@ -4,9 +4,9 @@
 
 #define EIGEN_DEFAULT_TO_ROW_MAJOR 1 // データの格納順を行優先にする
 
+#include "eigenmat.h"
 #include <iostream>
 #include <Eigen/Dense>
-#include "eigenmat.h"
 
 using namespace std;
 using namespace Eigen;

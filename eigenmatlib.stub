@@ -15,8 +15,8 @@
   (result (test_eigenmat)))
 
 (define-cproc eigen-matrix-nearly-p(data1::<f64vector> n1::<int> m1::<int>
-                                  data2::<f64vector> n2::<int> m2::<int>
-                                  abs-tol::<double>) ::<boolean>
+                                    data2::<f64vector> n2::<int> m2::<int>
+                                    abs-tol::<double>) ::<boolean>
   (result (eigen_matrix_nearly_p_sub (cast (double*) (SCM_F64VECTOR_ELEMENTS data1)) n1 m1
                                      (cast (double*) (SCM_F64VECTOR_ELEMENTS data2)) n2 m2
                                      abs-tol)))
