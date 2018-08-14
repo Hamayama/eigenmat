@@ -1,6 +1,3 @@
-# NOTE: "gauche-package compile" doesn't handle C++ sources, so
-# we have to write the rules for C++ files separately.
-
 # General info
 SHELL       = @SHELL@
 prefix      = @prefix@
@@ -12,16 +9,19 @@ datarootdir = @datarootdir@
 srcdir      = @srcdir@
 VPATH       = $(srcdir)
 
-# for C++
-CXX         = @CXX@
-LDFLAGS     = @LDFLAGS@ -static-libstdc++
-
 # These may be overridden by make invocators
 DESTDIR        =
 GOSH           = "@GOSH@"
 GAUCHE_CONFIG  = "@GAUCHE_CONFIG@"
 GAUCHE_PACKAGE = "@GAUCHE_PACKAGE@"
 INSTALL        = "@GAUCHE_INSTALL@" -C
+
+# for C++
+CXX      = @CXX@
+CFLAGS   = @CFLAGS@
+CPPFLAGS = @CPPFLAGS@ @DEF_UNICODE@
+LDFLAGS  = @LDFLAGS@ -static-libstdc++
+LIBS     = @LIBS@
 
 # Other parameters
 SOEXT  = @SOEXT@
@@ -51,7 +51,9 @@ all : $(TARGET)
 
 eigenmat.$(SOEXT): $(eigenmat_SRCS)
 	$(GAUCHE_PACKAGE) compile \
-	  --cc=$(CXX) --ldflags="$(LDFLAGS)" \
+	  --cc=$(CXX)             \
+	  --cppflags="$(CPPFLAGS)" --cflags="$(CFLAGS)" \
+	  --ldflags="$(LDFLAGS)"   --libs="$(LIBS)"     \
 	  --local=$(LOCAL_PATHS) --verbose eigenmat $(eigenmat_SRCS)
 
 check : all
