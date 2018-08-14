@@ -28,9 +28,9 @@ ScmObj test_eigenmat(void)
 }
 
 // 行列の一致チェック
-int eigen_matrix_nearly_sub(double* data1, int n1, int m1,
-                            double* data2, int n2, int m2,
-                            double abs_tol) {
+int eigen_matrix_nearly_p_sub(double* data1, int n1, int m1,
+                              double* data2, int n2, int m2,
+                              double abs_tol) {
     if (n1 < 0 || m1 < 0 || n2 < 0 || m2 < 0) return FALSE;
     if (n1 != n2 || m1 != m2) return FALSE;
     MatrixXd A = Map<MatrixXd>(data1, n1, m1);

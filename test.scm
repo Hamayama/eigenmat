@@ -26,8 +26,10 @@
 (test* "eigen-array-nearly=? 1" #t (eigen-array-nearly=? A C))
 (test* "eigen-array-nearly=? 2" #f (eigen-array-nearly=? A D))
 
-(test* "eigen-array-mul" #,(<f64array> (0 2 0 2) 19 22 43 50)
+(test* "eigen-array-mul 1" #,(<f64array> (0 2 0 2) 19 22 43 50)
        (eigen-array-mul A B) eigen-array-nearly=?)
+(test* "eigen-array-mul 2" #,(<f64array> (0 2 0 2) 2 2 2 2)
+       (eigen-array-mul D D) eigen-array-nearly=?)
 
 (test* "eigen-array-determinant 1" -2 (eigen-array-determinant A) nearly=?)
 (test* "eigen-array-determinant 2"  0 (eigen-array-determinant D) nearly=?)

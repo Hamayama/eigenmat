@@ -1,7 +1,7 @@
 ;; -*- coding: utf-8 -*-
 ;;
 ;; eigenmat.scm
-;; 2018-8-14 v1.02
+;; 2018-8-14 v1.03
 ;;
 ;; ＜内容＞
 ;;   Gauche で、Eigen ライブラリ を使って行列の高速演算を行うためのモジュールです。
@@ -47,7 +47,7 @@
         (m2    (array-length B 1)))
     (unless (and (= n1 n2) (= m1 m2))
       (error "different array shapes"))
-    (eigen-matrix-nearly data1 n1 m1 data2 n2 m2 abs-tol)))
+    (eigen-matrix-nearly-p data1 n1 m1 data2 n2 m2 abs-tol)))
 
 ;; 行列の積を計算
 (define-method eigen-array-mul ((A <f64array>) (B <f64array>))

@@ -18,9 +18,9 @@ SCM_DECL_BEGIN
 
 extern ScmObj test_eigenmat(void);
 
-extern int eigen_matrix_nearly_sub(double* data1, int n1, int m1,
-                                   double* data2, int n2, int m2,
-                                   double abs_tol);
+extern int eigen_matrix_nearly_p_sub(double* data1, int n1, int m1,
+                                     double* data2, int n2, int m2,
+                                     double abs_tol);
 
 extern int eigen_matrix_mul_sub(double* data1, int n1, int m1,
                                 double* data2, int n2, int m2,
