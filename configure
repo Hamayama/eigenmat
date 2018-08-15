@@ -59,16 +59,16 @@
            [(and gauche.os.windows gauche.ces.utf8) "-DUNICODE"]
            [else ""]))
 
-(cf-subst 'SOEXT  (gauche-config "--so-suffix"))
-(cf-subst 'OBJEXT (gauche-config "--object-suffix"))
-(cf-subst 'EXEEXT (gauche-config "--executable-suffix"))
+(when (version<=? (gauche-version) "0.9.4")
+  (cf-subst 'SOEXT  (gauche-config "--so-suffix"))
+  (cf-subst 'OBJEXT (gauche-config "--object-suffix"))
+  (cf-subst 'EXEEXT (gauche-config "--executable-suffix")))
 
 (cf-subst 'GAUCHE_PKGINCDIR  (gauche-config "--pkgincdir"))
 (cf-subst 'GAUCHE_PKGLIBDIR  (gauche-config "--pkglibdir"))
 (cf-subst 'GAUCHE_PKGARCHDIR (gauche-config "--pkgarchdir"))
 
 ;; Output
-;(cf-make-gpd)
 (use gauche.package)
 (if (version<=? (gauche-version) "0.9.4")
   (let1 gpd-file #"~(cf$ 'PACKAGE_NAME).gpd"
