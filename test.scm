@@ -4,9 +4,20 @@
 
 (use gauche.test)
 (use gauche.array)
+(use gauche.uvector)
 
 (define (nearly=? x y :optional (abs-tol 1e-4))
   (<= (abs (- x y)) abs-tol))
+
+;; for Gauche v0.9.4
+(define f64array
+  (if (global-variable-bound? 'gauche.array 'f64array)
+    (with-module gauche.array f64array)
+    (lambda (shape . inits)
+      (rlet1 arr (make-f64array shape 0)
+        (slot-set! arr 'backing-storage
+                   (vector->f64vector
+                    (slot-ref (apply array shape inits) 'backing-storage)))))))
 
 (test-start "eigenmat")
 (use eigenmat)

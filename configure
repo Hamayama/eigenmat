@@ -46,7 +46,9 @@
 ;; be compatible with the C compiler used to build Gauche, but I
 ;; don't know how to guarantee that; here we just assume system's
 ;; C++ compiler is compatible with the cc used for Gauche.
-(cf-prog-cxx)
+(if (version<=? (gauche-version) "0.9.4")
+  (unless (cf-have-subst? 'CXX) (cf-subst 'CXX "g++"))
+  (cf-prog-cxx))
 
 (unless (cf-have-subst? 'CFLAGS)
   (cf-subst 'CFLAGS (gauche-config "--default-cflags")))
