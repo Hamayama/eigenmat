@@ -33,41 +33,55 @@
 (define C (f64array (shape 0 2 0 2) 1 2 3 4))
 (define D (f64array (shape 0 2 0 2) 1 1 1 1))
 (define E (f64array (shape 0 2 0 1) 1 2))
-(define Z (f64array (shape 0 2 0 2) 0 0 0 0))
+(define F (f64array (shape 0 2 0 2) 0 0 0 0))
+(define G (f64array (shape 0 0 0 0)))
 
 (test* "eigen-array-nearly=? 1" #t (eigen-array-nearly=? A C))
 (test* "eigen-array-nearly=? 2" #f (eigen-array-nearly=? A D))
+(test* "eigen-array-nearly=? 3" #t (eigen-array-nearly=? G G))
 
-(test* "eigen-array-nearly-zero? 1" #t (eigen-array-nearly-zero? Z))
+(test* "eigen-array-nearly-zero? 1" #t (eigen-array-nearly-zero? F))
 (test* "eigen-array-nearly-zero? 2" #f (eigen-array-nearly-zero? D))
+(test* "eigen-array-nearly-zero? 3" #t (eigen-array-nearly-zero? G))
 
 (test* "eigen-array-add 1" #,(<f64array> (0 2 0 2) 6 8 10 12)
        (eigen-array-add A B) eigen-array-nearly=?)
 (test* "eigen-array-add 2" #,(<f64array> (0 2 0 2) 2 2 2 2)
        (eigen-array-add D D) eigen-array-nearly=?)
+(test* "eigen-array-add 3" #,(<f64array> (0 0 0 0))
+       (eigen-array-add G G) eigen-array-nearly=?)
 
 (test* "eigen-array-sub 1" #,(<f64array> (0 2 0 2) -4 -4 -4 -4)
        (eigen-array-sub A B) eigen-array-nearly=?)
 (test* "eigen-array-sub 2" #,(<f64array> (0 2 0 2) 0 0 0 0)
        (eigen-array-sub D D) eigen-array-nearly=?)
+(test* "eigen-array-sub 3" #,(<f64array> (0 0 0 0))
+       (eigen-array-sub G G) eigen-array-nearly=?)
 
 (test* "eigen-array-mul 1" #,(<f64array> (0 2 0 2) 19 22 43 50)
        (eigen-array-mul A B) eigen-array-nearly=?)
 (test* "eigen-array-mul 2" #,(<f64array> (0 2 0 2) 2 2 2 2)
        (eigen-array-mul D D) eigen-array-nearly=?)
+(test* "eigen-array-mul 3" #,(<f64array> (0 0 0 0))
+       (eigen-array-mul G G) eigen-array-nearly=?)
 
 (test* "eigen-array-determinant 1" -2 (eigen-array-determinant A) nearly=?)
 (test* "eigen-array-determinant 2"  0 (eigen-array-determinant D) nearly=?)
+(test* "eigen-array-determinant 3"  1 (eigen-array-determinant G) nearly=?)
 
 (test* "eigen-array-inverse 1" #,(<f64array> (0 2 0 2) -2 1 1.5 -0.5)
        (eigen-array-inverse A) eigen-array-nearly=?)
 (test* "eigen-array-inverse 2" #,(<f64array> (0 2 0 2) +inf.0 -inf.0 -inf.0 +inf.0)
        (eigen-array-inverse D))
+(test* "eigen-array-inverse 3" (test-error <error>)
+       (eigen-array-inverse G))
 
 (test* "eigen-array-solve 1" #,(<f64array> (0 2 0 1) 0 0.5)
        (eigen-array-solve A E) eigen-array-nearly=?)
 (test* "eigen-array-solve 2" #,(<f64array> (0 2 0 1) -inf.0 +inf.0)
        (eigen-array-solve D E))
+(test* "eigen-array-solve 3" (test-error <error>)
+       (eigen-array-solve G G))
 
 ;; If you don't want `gosh' to exit with nonzero status even if
 ;; the test fails, pass #f to :exit-on-failure.

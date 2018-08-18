@@ -98,7 +98,8 @@ double eigen_matrix_determinant_sub(double* data1, int n1, int m1) {
 // 逆行列を計算
 int eigen_matrix_inverse_sub(double* data1, int n1, int m1,
                              double* data2) {
-    if (n1 < 0 || m1 < 0) return FALSE;
+    // if (n1 < 0 || m1 < 0) return FALSE;
+    if (n1 <= 0 || m1 <= 0) return FALSE;
     MatrixXd A = Map<MatrixXd>(data1, n1, m1);
     MatrixXd B(n1,m1);
     B = A.inverse();
@@ -110,7 +111,8 @@ int eigen_matrix_inverse_sub(double* data1, int n1, int m1,
 int eigen_matrix_solve_sub(double* data1, int n1, int m1,
                            double* data2, int n2, int m2,
                            double* data3) {
-    if (n1 < 0 || m1 < 0 || n2 < 0 || m2 < 0) return FALSE;
+    // if (n1 < 0 || m1 < 0 || n2 < 0 || m2 < 0) return FALSE;
+    if (n1 <= 0 || m1 <= 0 || n2 <= 0 || m2 <= 0) return FALSE;
     if (m1 != n2) return FALSE;
     MatrixXd A = Map<MatrixXd>(data1, n1, m1);
     MatrixXd B = Map<MatrixXd>(data2, n2, m2);

@@ -1,7 +1,7 @@
 ;; -*- coding: utf-8 -*-
 ;;
 ;; eigenmat.scm
-;; 2018-8-18 v1.05
+;; 2018-8-18 v1.06
 ;;
 ;; ＜内容＞
 ;;   Gauche で、Eigen ライブラリ を使って行列の高速演算を行うためのモジュールです。
@@ -124,6 +124,8 @@
   (let ((data1 (slot-ref A 'backing-storage))
         (n1    (array-length A 0))
         (m1    (array-length A 1)))
+    (unless (and (> n1 0) (> m1 0))
+      (error "invalid array shape"))
     (unless (= n1 m1)
       (error "array shape must be square"))
     (let* ((B     (make-f64array (shape 0 n1 0 m1) 0))
@@ -140,6 +142,8 @@
         (data2 (slot-ref B 'backing-storage))
         (n2    (array-length B 0))
         (m2    (array-length B 1)))
+    (unless (and (> n1 0) (> m1 0) (> n2 0) (> m2 0))
+      (error "invalid array shape"))
     (unless (= n1 m1)
       (error "array A's shape must be square"))
     (unless (= m1 n2)

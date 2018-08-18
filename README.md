@@ -147,6 +147,7 @@
 - 2018-8-14  v1.04 ヘッダファイルの読み込み順見直し
 - 2018-8-18  v1.05 eigen-array-nearly-zero?,eigen-array-add,eigen-array-subを追加  
   eigen-array-nearly=?の精度の初期値を変更(Eigenライブラリに合わせた(1e-4 → 1e-12))
+- 2018-8-18  v1.06 0x0の行列で実行時エラーになる件の対策(eigen-array-inverse,eigen-array-solve)
 
 
 (2018-8-18)
