@@ -82,19 +82,17 @@
     行列A と 行列B の各要素がほぼ等しければ #t を返します。  
     そうでなければ #f を返します。  
     precision には、比較の精度を示す値を指定します。  
-    (precision の定義については、Eigen ライブラリ の  
-    isApprox メソッドの説明を参照してください)  
+    (precision の定義については、Eigen ライブラリ の isApprox メソッドの説明を参照してください)  
     precision は省略可能です。省略した場合は 1e-12 を指定したことになります。  
-    注意) この手続きには、A と B のどちらかが ゼロ行列 の場合に、  
-    A と B が両方とも誤差のないゼロ行列の場合にしか #t を返さないという特徴があります。  
-    ゼロ行列の比較を行いたい場合には、後述の eigen-array-nearly-zero? を使用してください。
+    注意) この手続きには、「A と B のどちらかが "誤差のないゼロ行列" のとき、  
+    A と B の両方が "誤差のないゼロ行列" の場合にのみ #t を返す」という特徴があります。  
+    誤差を許すゼロ行列の比較を行いたい場合には、後述の eigen-array-nearly-zero? を使用してください。
 
   - `(eigen-array-nearly-zero? A [precision])`  
     行列A が ゼロ行列 に近ければ #t を返します。  
     そうでなければ #f を返します。  
     precision には、比較の精度を示す値を指定します。  
-    (precision の定義については、Eigen ライブラリ の  
-    isMuchSmallerThan メソッドの説明を参照してください)  
+    (precision の定義については、Eigen ライブラリ の isMuchSmallerThan メソッドの説明を参照してください)  
     precision は省略可能です。省略した場合は 1e-12 を指定したことになります。
 
   - `(eigen-array-add A B)`  
