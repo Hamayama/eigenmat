@@ -1,7 +1,7 @@
 ;; -*- coding: utf-8 -*-
 ;;
 ;; eigenmat.scm
-;; 2018-8-18 v1.06
+;; 2018-8-18 v1.07
 ;;
 ;; ＜内容＞
 ;;   Gauche で、Eigen ライブラリ を使って行列の高速演算を行うためのモジュールです。
@@ -71,7 +71,7 @@
         (m2    (array-length B 1)))
     (unless (and (= n1 n2) (= m1 m2))
       (error "can't add (array shapes mismatch)"))
-    (let* ((C     (make-f64array (shape 0 n1 0 m2) 0))
+    (let* ((C     (make-f64array (shape 0 n1 0 m1) 0))
            (data3 (slot-ref C 'backing-storage)))
       (eigen-matrix-add data1 n1 m1 data2 n2 m2 data3)
       C)))
@@ -87,7 +87,7 @@
         (m2    (array-length B 1)))
     (unless (and (= n1 n2) (= m1 m2))
       (error "can't subtract (array shapes mismatch)"))
-    (let* ((C     (make-f64array (shape 0 n1 0 m2) 0))
+    (let* ((C     (make-f64array (shape 0 n1 0 m1) 0))
            (data3 (slot-ref C 'backing-storage)))
       (eigen-matrix-sub data1 n1 m1 data2 n2 m2 data3)
       C)))

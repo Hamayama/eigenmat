@@ -54,8 +54,7 @@ int eigen_matrix_add_sub(double* data1, int n1, int m1,
     if (n1 != n2 || m1 != m2) return FALSE;
     MatrixXd A = Map<MatrixXd>(data1, n1, m1);
     MatrixXd B = Map<MatrixXd>(data2, n2, m2);
-    MatrixXd C(n1,m2);
-    C = A + B;
+    MatrixXd C = A + B;
     Map<MatrixXd>(data3, n1, m1) = C;
     return TRUE;
 }
@@ -68,8 +67,7 @@ int eigen_matrix_sub_sub(double* data1, int n1, int m1,
     if (n1 != n2 || m1 != m2) return FALSE;
     MatrixXd A = Map<MatrixXd>(data1, n1, m1);
     MatrixXd B = Map<MatrixXd>(data2, n2, m2);
-    MatrixXd C(n1,m2);
-    C = A - B;
+    MatrixXd C = A - B;
     Map<MatrixXd>(data3, n1, m1) = C;
     return TRUE;
 }
@@ -82,9 +80,8 @@ int eigen_matrix_mul_sub(double* data1, int n1, int m1,
     if (m1 != n2) return FALSE;
     MatrixXd A = Map<MatrixXd>(data1, n1, m1);
     MatrixXd B = Map<MatrixXd>(data2, n2, m2);
-    MatrixXd C(n1,m2);
-    C = A * B;
-    Map<MatrixXd>(data3, n1, m2) = C;
+    MatrixXd C = A * B;
+    Map<MatrixXd>(data3, n1, m2) = C; // 第3引数はm1ではないので注意
     return TRUE;
 }
 
@@ -98,11 +95,11 @@ double eigen_matrix_determinant_sub(double* data1, int n1, int m1) {
 // 逆行列を計算
 int eigen_matrix_inverse_sub(double* data1, int n1, int m1,
                              double* data2) {
+    // (0を許可すると実行時エラーになる)
     // if (n1 < 0 || m1 < 0) return FALSE;
     if (n1 <= 0 || m1 <= 0) return FALSE;
     MatrixXd A = Map<MatrixXd>(data1, n1, m1);
-    MatrixXd B(n1,m1);
-    B = A.inverse();
+    MatrixXd B = A.inverse();
     Map<MatrixXd>(data2, n1, m1) = B;
     return TRUE;
 }
@@ -111,13 +108,14 @@ int eigen_matrix_inverse_sub(double* data1, int n1, int m1,
 int eigen_matrix_solve_sub(double* data1, int n1, int m1,
                            double* data2, int n2, int m2,
                            double* data3) {
+    // (0を許可すると実行時エラーになる)
     // if (n1 < 0 || m1 < 0 || n2 < 0 || m2 < 0) return FALSE;
     if (n1 <= 0 || m1 <= 0 || n2 <= 0 || m2 <= 0) return FALSE;
     if (m1 != n2) return FALSE;
     MatrixXd A = Map<MatrixXd>(data1, n1, m1);
     MatrixXd B = Map<MatrixXd>(data2, n2, m2);
     MatrixXd X = A.partialPivLu().solve(B);
-    Map<MatrixXd>(data3, n1, m2) = X;
+    Map<MatrixXd>(data3, n1, m2) = X; // 第3引数はm1ではないので注意
     return TRUE;
 }
 

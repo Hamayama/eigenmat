@@ -4,7 +4,7 @@
 
 (define-gauche-package "eigenmat"
   ;; 
-  :version "1.06"
+  :version "1.07"
 
   ;; Description of the package.  The first line is used as a short
   ;; summary.
