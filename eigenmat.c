@@ -30,12 +30,48 @@ ScmObj test_eigenmat(void)
 // 行列の一致チェック
 int eigen_matrix_nearly_p_sub(double* data1, int n1, int m1,
                               double* data2, int n2, int m2,
-                              double abs_tol) {
+                              double precision) {
     if (n1 < 0 || m1 < 0 || n2 < 0 || m2 < 0) return FALSE;
     if (n1 != n2 || m1 != m2) return FALSE;
     MatrixXd A = Map<MatrixXd>(data1, n1, m1);
     MatrixXd B = Map<MatrixXd>(data2, n2, m2);
-    return A.isApprox(B, abs_tol) ? TRUE : FALSE;
+    return A.isApprox(B, precision) ? TRUE : FALSE;
+}
+
+// 行列のゼロチェック
+int eigen_matrix_nearly_zero_p_sub(double* data1, int n1, int m1,
+                                   double precision) {
+    if (n1 < 0 || m1 < 0) return FALSE;
+    MatrixXd A = Map<MatrixXd>(data1, n1, m1);
+    return A.isMuchSmallerThan(precision) ? TRUE : FALSE;
+}
+
+// 行列の和を計算
+int eigen_matrix_add_sub(double* data1, int n1, int m1,
+                         double* data2, int n2, int m2,
+                         double* data3) {
+    if (n1 < 0 || m1 < 0 || n2 < 0 || m2 < 0) return FALSE;
+    if (n1 != n2 || m1 != m2) return FALSE;
+    MatrixXd A = Map<MatrixXd>(data1, n1, m1);
+    MatrixXd B = Map<MatrixXd>(data2, n2, m2);
+    MatrixXd C(n1,m2);
+    C = A + B;
+    Map<MatrixXd>(data3, n1, m1) = C;
+    return TRUE;
+}
+
+// 行列の差を計算
+int eigen_matrix_sub_sub(double* data1, int n1, int m1,
+                         double* data2, int n2, int m2,
+                         double* data3) {
+    if (n1 < 0 || m1 < 0 || n2 < 0 || m2 < 0) return FALSE;
+    if (n1 != n2 || m1 != m2) return FALSE;
+    MatrixXd A = Map<MatrixXd>(data1, n1, m1);
+    MatrixXd B = Map<MatrixXd>(data2, n2, m2);
+    MatrixXd C(n1,m2);
+    C = A - B;
+    Map<MatrixXd>(data3, n1, m1) = C;
+    return TRUE;
 }
 
 // 行列の積を計算

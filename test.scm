@@ -6,8 +6,8 @@
 (use gauche.array)
 (use gauche.uvector)
 
-(define (nearly=? x y :optional (abs-tol 1e-4))
-  (<= (abs (- x y)) abs-tol))
+(define (nearly=? x y :optional (precision 1e-12))
+  (<= (abs (- x y)) precision))
 
 ;; for Gauche v0.9.4
 (define f64array
@@ -33,9 +33,23 @@
 (define C (f64array (shape 0 2 0 2) 1 2 3 4))
 (define D (f64array (shape 0 2 0 2) 1 1 1 1))
 (define E (f64array (shape 0 2 0 1) 1 2))
+(define Z (f64array (shape 0 2 0 2) 0 0 0 0))
 
 (test* "eigen-array-nearly=? 1" #t (eigen-array-nearly=? A C))
 (test* "eigen-array-nearly=? 2" #f (eigen-array-nearly=? A D))
+
+(test* "eigen-array-nearly-zero? 1" #t (eigen-array-nearly-zero? Z))
+(test* "eigen-array-nearly-zero? 2" #f (eigen-array-nearly-zero? D))
+
+(test* "eigen-array-add 1" #,(<f64array> (0 2 0 2) 6 8 10 12)
+       (eigen-array-add A B) eigen-array-nearly=?)
+(test* "eigen-array-add 2" #,(<f64array> (0 2 0 2) 2 2 2 2)
+       (eigen-array-add D D) eigen-array-nearly=?)
+
+(test* "eigen-array-sub 1" #,(<f64array> (0 2 0 2) -4 -4 -4 -4)
+       (eigen-array-sub A B) eigen-array-nearly=?)
+(test* "eigen-array-sub 2" #,(<f64array> (0 2 0 2) 0 0 0 0)
+       (eigen-array-sub D D) eigen-array-nearly=?)
 
 (test* "eigen-array-mul 1" #,(<f64array> (0 2 0 2) 19 22 43 50)
        (eigen-array-mul A B) eigen-array-nearly=?)

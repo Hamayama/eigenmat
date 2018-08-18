@@ -1,7 +1,7 @@
 ;; -*- coding: utf-8 -*-
 ;;
 ;; eigenmat.scm
-;; 2018-8-14 v1.04
+;; 2018-8-18 v1.05
 ;;
 ;; ＜内容＞
 ;;   Gauche で、Eigen ライブラリ を使って行列の高速演算を行うためのモジュールです。
@@ -18,6 +18,9 @@
   (export
     test-eigenmat
     eigen-array-nearly=?
+    eigen-array-nearly-zero?
+    eigen-array-add
+    eigen-array-sub
     eigen-array-mul
     eigen-array-determinant
     eigen-array-inverse
@@ -37,7 +40,7 @@
     (error "array rank must be 2")))
 
 ;; 行列の一致チェック
-(define-method eigen-array-nearly=? ((A <f64array>) (B <f64array>) :optional (abs-tol 1e-4))
+(define-method eigen-array-nearly=? ((A <f64array>) (B <f64array>) :optional (precision 1e-12))
   (check-array-rank A B)
   (let ((data1 (slot-ref A 'backing-storage))
         (n1    (array-length A 0))
@@ -47,7 +50,47 @@
         (m2    (array-length B 1)))
     (unless (and (= n1 n2) (= m1 m2))
       (error "different array shapes"))
-    (eigen-matrix-nearly-p data1 n1 m1 data2 n2 m2 abs-tol)))
+    (eigen-matrix-nearly-p data1 n1 m1 data2 n2 m2 precision)))
+
+;; 行列のゼロチェック
+(define-method eigen-array-nearly-zero? ((A <f64array>) :optional (precision 1e-12))
+  (check-array-rank A)
+  (let ((data1 (slot-ref A 'backing-storage))
+        (n1    (array-length A 0))
+        (m1    (array-length A 1)))
+    (eigen-matrix-nearly-zero-p data1 n1 m1 precision)))
+
+;; 行列の和を計算
+(define-method eigen-array-add ((A <f64array>) (B <f64array>))
+  (check-array-rank A B)
+  (let ((data1 (slot-ref A 'backing-storage))
+        (n1    (array-length A 0))
+        (m1    (array-length A 1))
+        (data2 (slot-ref B 'backing-storage))
+        (n2    (array-length B 0))
+        (m2    (array-length B 1)))
+    (unless (and (= n1 n2) (= m1 m2))
+      (error "can't add (array shapes mismatch)"))
+    (let* ((C     (make-f64array (shape 0 n1 0 m2) 0))
+           (data3 (slot-ref C 'backing-storage)))
+      (eigen-matrix-add data1 n1 m1 data2 n2 m2 data3)
+      C)))
+
+;; 行列の差を計算
+(define-method eigen-array-sub ((A <f64array>) (B <f64array>))
+  (check-array-rank A B)
+  (let ((data1 (slot-ref A 'backing-storage))
+        (n1    (array-length A 0))
+        (m1    (array-length A 1))
+        (data2 (slot-ref B 'backing-storage))
+        (n2    (array-length B 0))
+        (m2    (array-length B 1)))
+    (unless (and (= n1 n2) (= m1 m2))
+      (error "can't subtract (array shapes mismatch)"))
+    (let* ((C     (make-f64array (shape 0 n1 0 m2) 0))
+           (data3 (slot-ref C 'backing-storage)))
+      (eigen-matrix-sub data1 n1 m1 data2 n2 m2 data3)
+      C)))
 
 ;; 行列の積を計算
 (define-method eigen-array-mul ((A <f64array>) (B <f64array>))
@@ -59,7 +102,7 @@
         (n2    (array-length B 0))
         (m2    (array-length B 1)))
     (unless (= m1 n2)
-      (error "can't mul (array shapes mismatch)"))
+      (error "can't multiply (array shapes mismatch)"))
     (let* ((C     (make-f64array (shape 0 n1 0 m2) 0))
            (data3 (slot-ref C 'backing-storage)))
       (eigen-matrix-mul data1 n1 m1 data2 n2 m2 data3)

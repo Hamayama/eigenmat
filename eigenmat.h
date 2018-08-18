@@ -20,7 +20,18 @@ extern ScmObj test_eigenmat(void);
 
 extern int eigen_matrix_nearly_p_sub(double* data1, int n1, int m1,
                                      double* data2, int n2, int m2,
-                                     double abs_tol);
+                                     double precision);
+
+extern int eigen_matrix_nearly_zero_p_sub(double* data1, int n1, int m1,
+                                          double precision);
+
+extern int eigen_matrix_add_sub(double* data1, int n1, int m1,
+                                double* data2, int n2, int m2,
+                                double* data3);
+
+extern int eigen_matrix_sub_sub(double* data1, int n1, int m1,
+                                double* data2, int n2, int m2,
+                                double* data3);
 
 extern int eigen_matrix_mul_sub(double* data1, int n1, int m1,
                                 double* data2, int n2, int m2,

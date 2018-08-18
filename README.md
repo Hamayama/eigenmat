@@ -24,7 +24,7 @@
    https://gist.github.com/Hamayama/eb4b4824ada3ac71beee0c9bb5fa546d  
    (すでにインストール済みであれば本手順は不要です)
 
-3. Eigen ライブラリのインストール  
+3. Eigen ライブラリ のインストール  
    Eigen のホームページ ( http://eigen.tuxfamily.org ) から、  
    ソース (zipファイル等) を取得して、適当なフォルダに展開してください。  
    そして、中の Eigen フォルダを、  
@@ -77,17 +77,41 @@
   ```
 - 現状、本モジュールは、標準の gauhce.array モジュールにおける  
   `<f64array>` クラスの以下の演算にのみ対応しています。
-  - `(eigen-array-nearly=? A B [abs-tol])`  
+
+  - `(eigen-array-nearly=? A B [precision])`  
     行列A と 行列B の各要素がほぼ等しければ #t を返します。  
     そうでなければ #f を返します。  
-    abs-tol には、許容誤差の絶対値を指定します。  
-    abs-tol は省略可能です。省略した場合は 1e-4 を指定したことになります。
+    precision には、比較の精度を示す値を指定します。  
+    (precision の定義については、Eigen ライブラリ の  
+    isApprox メソッドの説明を参照してください)  
+    precision は省略可能です。省略した場合は 1e-12 を指定したことになります。  
+    注意) この手続きには、A と B のどちらかが ゼロ行列 の場合に、  
+    A と B が両方とも誤差のないゼロ行列の場合にしか #t を返さないという特徴があります。  
+    ゼロ行列の比較を行いたい場合には、後述の eigen-array-nearly-zero? を使用してください。
+
+  - `(eigen-array-nearly-zero? A [precision])`  
+    行列A が ゼロ行列 に近ければ #t を返します。  
+    そうでなければ #f を返します。  
+    precision には、比較の精度を示す値を指定します。  
+    (precision の定義については、Eigen ライブラリ の  
+    isMuchSmallerThan メソッドの説明を参照してください)  
+    precision は省略可能です。省略した場合は 1e-12 を指定したことになります。
+
+  - `(eigen-array-add A B)`  
+    行列A と 行列B の和を計算して返します。
+
+  - `(eigen-array-sub A B)`  
+    行列A と 行列B の差を計算して返します。
+
   - `(eigen-array-mul A B)`  
     行列A と 行列B の積を計算して返します。
+
   - `(eigen-array-determinant A)`  
     行列A の行列式を計算して返します。
+
   - `(eigen-array-inverse A)`  
     行列A の逆行列を計算して返します。
+
   - `(eigen-array-solve A B)`  
     AX=B となる 行列X を計算して返します。
 
@@ -121,6 +145,8 @@
 - 2018-8-14  v1.02 行列式のチェックを削除
 - 2018-8-14  v1.03 内部関数名見直し等
 - 2018-8-14  v1.04 ヘッダファイルの読み込み順見直し
+- 2018-8-18  v1.05 eigen-array-nearly-zero?,eigen-array-add,eigen-array-subを追加  
+  eigen-array-nearly=?の精度の初期値を変更(Eigenライブラリに合わせた(1e-4 → 1e-12))
 
 
-(2018-8-15)
+(2018-8-18)
