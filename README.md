@@ -102,19 +102,19 @@
   - `(eigen-array-add A B)`  
     行列A と 行列B の和を計算して返します。
 
-  - `(eigen-array-add-scalar A r)`  
+  - `(eigen-array-add A r)`  
     行列A と 実数r の和を計算して返します。
 
   - `(eigen-array-sub A B)`  
     行列A と 行列B の差を計算して返します。
 
-  - `(eigen-array-sub-scalar A r)`  
+  - `(eigen-array-sub A r)`  
     行列A と 実数r の差を計算して返します。
 
   - `(eigen-array-mul A B)`  
     行列A と 行列B の積を計算して返します。
 
-  - `(eigen-array-mul-scalar A r)`  
+  - `(eigen-array-mul A r)`  
     行列A と 実数r の積を計算して返します。
 
   - `(eigen-array-determinant A)`  
@@ -161,6 +161,7 @@
 - 2018-8-18  v1.06 0x0の行列で実行時エラーになる件の対策(eigen-array-inverse,eigen-array-solve)
 - 2018-8-18  v1.07 配列の添字ミス修正等
 - 2018-8-20  v1.08 eigen-array-add-scalar,eigen-array-sub-scalar,eigen-array-mul-scalarを追加
+- 2018-8-20  v1.09 v1.08の追加分を削除してジェネリックファンクションで対応
 
 
 (2018-8-20)

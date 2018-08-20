@@ -1,7 +1,7 @@
 ;; -*- coding: utf-8 -*-
 ;;
 ;; eigenmat.scm
-;; 2018-8-20 v1.08
+;; 2018-8-20 v1.09
 ;;
 ;; ＜内容＞
 ;;   Gauche で、Eigen ライブラリ を使って行列の高速演算を行うためのモジュールです。
@@ -19,9 +19,9 @@
     test-eigenmat
     eigen-array-nearly=?
     eigen-array-nearly-zero?
-    eigen-array-add eigen-array-add-scalar
-    eigen-array-sub eigen-array-sub-scalar
-    eigen-array-mul eigen-array-mul-scalar
+    eigen-array-add
+    eigen-array-sub
+    eigen-array-mul
     eigen-array-determinant
     eigen-array-inverse
     eigen-array-solve))
@@ -77,7 +77,7 @@
       C)))
 
 ;; 行列とスカラーの和を計算
-(define-method eigen-array-add-scalar ((A <f64array>) (r <real>))
+(define-method eigen-array-add ((A <f64array>) (r <real>))
   (check-array-rank A)
   (let ((data1 (slot-ref A 'backing-storage))
         (n1    (array-length A 0))
@@ -104,7 +104,7 @@
       C)))
 
 ;; 行列とスカラーの差を計算
-(define-method eigen-array-sub-scalar ((A <f64array>) (r <real>))
+(define-method eigen-array-sub ((A <f64array>) (r <real>))
   (check-array-rank A)
   (let ((data1 (slot-ref A 'backing-storage))
         (n1    (array-length A 0))
@@ -131,7 +131,7 @@
       C)))
 
 ;; 行列とスカラーの積を計算
-(define-method eigen-array-mul-scalar ((A <f64array>) (r <real>))
+(define-method eigen-array-mul ((A <f64array>) (r <real>))
   (check-array-rank A)
   (let ((data1 (slot-ref A 'backing-storage))
         (n1    (array-length A 0))
