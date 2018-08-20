@@ -52,6 +52,13 @@
 (test* "eigen-array-add 3" #,(<f64array> (0 0 0 0))
        (eigen-array-add G G) eigen-array-nearly=?)
 
+(test* "eigen-array-add-scalar 1" #,(<f64array> (0 2 0 2) 2 3 4 5)
+       (eigen-array-add-scalar A 1)   eigen-array-nearly=?)
+(test* "eigen-array-add-scalar 2" #,(<f64array> (0 2 0 2) 1.5 1.5 1.5 1.5)
+       (eigen-array-add-scalar D 0.5) eigen-array-nearly=?)
+(test* "eigen-array-add-scalar 3" #,(<f64array> (0 0 0 0))
+       (eigen-array-add-scalar G 1)   eigen-array-nearly=?)
+
 (test* "eigen-array-sub 1" #,(<f64array> (0 2 0 2) -4 -4 -4 -4)
        (eigen-array-sub A B) eigen-array-nearly=?)
 (test* "eigen-array-sub 2" #,(<f64array> (0 2 0 2) 0 0 0 0)
@@ -59,12 +66,26 @@
 (test* "eigen-array-sub 3" #,(<f64array> (0 0 0 0))
        (eigen-array-sub G G) eigen-array-nearly=?)
 
+(test* "eigen-array-sub-scalar 1" #,(<f64array> (0 2 0 2) 0 1 2 3)
+       (eigen-array-sub-scalar A 1)   eigen-array-nearly=?)
+(test* "eigen-array-sub-scalar 2" #,(<f64array> (0 2 0 2) 0.5 0.5 0.5 0.5)
+       (eigen-array-sub-scalar D 0.5) eigen-array-nearly=?)
+(test* "eigen-array-sub-scalar 3" #,(<f64array> (0 0 0 0))
+       (eigen-array-sub-scalar G 1)   eigen-array-nearly=?)
+
 (test* "eigen-array-mul 1" #,(<f64array> (0 2 0 2) 19 22 43 50)
        (eigen-array-mul A B) eigen-array-nearly=?)
 (test* "eigen-array-mul 2" #,(<f64array> (0 2 0 2) 2 2 2 2)
        (eigen-array-mul D D) eigen-array-nearly=?)
 (test* "eigen-array-mul 3" #,(<f64array> (0 0 0 0))
        (eigen-array-mul G G) eigen-array-nearly=?)
+
+(test* "eigen-array-mul-scalar 1" #,(<f64array> (0 2 0 2) 2 4 6 8)
+       (eigen-array-mul-scalar A 2)   eigen-array-nearly=?)
+(test* "eigen-array-mul-scalar 2" #,(<f64array> (0 2 0 2) 0.5 0.5 0.5 0.5)
+       (eigen-array-mul-scalar D 0.5) eigen-array-nearly=?)
+(test* "eigen-array-mul-scalar 3" #,(<f64array> (0 0 0 0))
+       (eigen-array-mul-scalar G 2)   eigen-array-nearly=?)
 
 (test* "eigen-array-determinant 1" -2 (eigen-array-determinant A) nearly=?)
 (test* "eigen-array-determinant 2"  0 (eigen-array-determinant D) nearly=?)

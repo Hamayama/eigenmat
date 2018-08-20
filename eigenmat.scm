@@ -1,7 +1,7 @@
 ;; -*- coding: utf-8 -*-
 ;;
 ;; eigenmat.scm
-;; 2018-8-18 v1.07
+;; 2018-8-20 v1.08
 ;;
 ;; ＜内容＞
 ;;   Gauche で、Eigen ライブラリ を使って行列の高速演算を行うためのモジュールです。
@@ -19,9 +19,9 @@
     test-eigenmat
     eigen-array-nearly=?
     eigen-array-nearly-zero?
-    eigen-array-add
-    eigen-array-sub
-    eigen-array-mul
+    eigen-array-add eigen-array-add-scalar
+    eigen-array-sub eigen-array-sub-scalar
+    eigen-array-mul eigen-array-mul-scalar
     eigen-array-determinant
     eigen-array-inverse
     eigen-array-solve))
@@ -76,6 +76,17 @@
       (eigen-matrix-add data1 n1 m1 data2 n2 m2 data3)
       C)))
 
+;; 行列とスカラーの和を計算
+(define-method eigen-array-add-scalar ((A <f64array>) (r <real>))
+  (check-array-rank A)
+  (let ((data1 (slot-ref A 'backing-storage))
+        (n1    (array-length A 0))
+        (m1    (array-length A 1)))
+    (let* ((B     (make-f64array (shape 0 n1 0 m1) 0))
+           (data2 (slot-ref B 'backing-storage)))
+      (eigen-matrix-add-scalar data1 n1 m1 r data2)
+      B)))
+
 ;; 行列の差を計算
 (define-method eigen-array-sub ((A <f64array>) (B <f64array>))
   (check-array-rank A B)
@@ -92,6 +103,17 @@
       (eigen-matrix-sub data1 n1 m1 data2 n2 m2 data3)
       C)))
 
+;; 行列とスカラーの差を計算
+(define-method eigen-array-sub-scalar ((A <f64array>) (r <real>))
+  (check-array-rank A)
+  (let ((data1 (slot-ref A 'backing-storage))
+        (n1    (array-length A 0))
+        (m1    (array-length A 1)))
+    (let* ((B     (make-f64array (shape 0 n1 0 m1) 0))
+           (data2 (slot-ref B 'backing-storage)))
+      (eigen-matrix-sub-scalar data1 n1 m1 r data2)
+      B)))
+
 ;; 行列の積を計算
 (define-method eigen-array-mul ((A <f64array>) (B <f64array>))
   (check-array-rank A B)
@@ -107,6 +129,17 @@
            (data3 (slot-ref C 'backing-storage)))
       (eigen-matrix-mul data1 n1 m1 data2 n2 m2 data3)
       C)))
+
+;; 行列とスカラーの積を計算
+(define-method eigen-array-mul-scalar ((A <f64array>) (r <real>))
+  (check-array-rank A)
+  (let ((data1 (slot-ref A 'backing-storage))
+        (n1    (array-length A 0))
+        (m1    (array-length A 1)))
+    (let* ((B     (make-f64array (shape 0 n1 0 m1) 0))
+           (data2 (slot-ref B 'backing-storage)))
+      (eigen-matrix-mul-scalar data1 n1 m1 r data2)
+      B)))
 
 ;; 行列式を計算
 (define-method eigen-array-determinant ((A <f64array>))

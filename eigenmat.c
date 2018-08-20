@@ -28,9 +28,9 @@ ScmObj test_eigenmat(void)
 }
 
 // 行列の一致チェック
-int eigen_matrix_nearly_p_sub(double* data1, int n1, int m1,
-                              double* data2, int n2, int m2,
-                              double precision) {
+int eigen_matrix_nearly_p(double* data1, int n1, int m1,
+                          double* data2, int n2, int m2,
+                          double precision) {
     if (n1 < 0 || m1 < 0 || n2 < 0 || m2 < 0) return FALSE;
     if (n1 != n2 || m1 != m2) return FALSE;
     MatrixXd A = Map<MatrixXd>(data1, n1, m1);
@@ -39,17 +39,17 @@ int eigen_matrix_nearly_p_sub(double* data1, int n1, int m1,
 }
 
 // 行列のゼロチェック
-int eigen_matrix_nearly_zero_p_sub(double* data1, int n1, int m1,
-                                   double precision) {
+int eigen_matrix_nearly_zero_p(double* data1, int n1, int m1,
+                               double precision) {
     if (n1 < 0 || m1 < 0) return FALSE;
     MatrixXd A = Map<MatrixXd>(data1, n1, m1);
     return A.isMuchSmallerThan(precision) ? TRUE : FALSE;
 }
 
 // 行列の和を計算
-int eigen_matrix_add_sub(double* data1, int n1, int m1,
-                         double* data2, int n2, int m2,
-                         double* data3) {
+int eigen_matrix_add(double* data1, int n1, int m1,
+                     double* data2, int n2, int m2,
+                     double* data3) {
     if (n1 < 0 || m1 < 0 || n2 < 0 || m2 < 0) return FALSE;
     if (n1 != n2 || m1 != m2) return FALSE;
     MatrixXd A = Map<MatrixXd>(data1, n1, m1);
@@ -59,10 +59,20 @@ int eigen_matrix_add_sub(double* data1, int n1, int m1,
     return TRUE;
 }
 
+// 行列とスカラーの和を計算
+int eigen_matrix_add_scalar(double* data1, int n1, int m1,
+                            double scalar, double* data2) {
+    if (n1 < 0 || m1 < 0) return FALSE;
+    MatrixXd A = Map<MatrixXd>(data1, n1, m1);
+    MatrixXd B = A.array() + scalar;
+    Map<MatrixXd>(data2, n1, m1) = B;
+    return TRUE;
+}
+
 // 行列の差を計算
-int eigen_matrix_sub_sub(double* data1, int n1, int m1,
-                         double* data2, int n2, int m2,
-                         double* data3) {
+int eigen_matrix_sub(double* data1, int n1, int m1,
+                     double* data2, int n2, int m2,
+                     double* data3) {
     if (n1 < 0 || m1 < 0 || n2 < 0 || m2 < 0) return FALSE;
     if (n1 != n2 || m1 != m2) return FALSE;
     MatrixXd A = Map<MatrixXd>(data1, n1, m1);
@@ -72,10 +82,20 @@ int eigen_matrix_sub_sub(double* data1, int n1, int m1,
     return TRUE;
 }
 
+// 行列とスカラーの差を計算
+int eigen_matrix_sub_scalar(double* data1, int n1, int m1,
+                            double scalar, double* data2) {
+    if (n1 < 0 || m1 < 0) return FALSE;
+    MatrixXd A = Map<MatrixXd>(data1, n1, m1);
+    MatrixXd B = A.array() - scalar;
+    Map<MatrixXd>(data2, n1, m1) = B;
+    return TRUE;
+}
+
 // 行列の積を計算
-int eigen_matrix_mul_sub(double* data1, int n1, int m1,
-                         double* data2, int n2, int m2,
-                         double* data3) {
+int eigen_matrix_mul(double* data1, int n1, int m1,
+                     double* data2, int n2, int m2,
+                     double* data3) {
     if (n1 < 0 || m1 < 0 || n2 < 0 || m2 < 0) return FALSE;
     if (m1 != n2) return FALSE;
     MatrixXd A = Map<MatrixXd>(data1, n1, m1);
@@ -85,16 +105,26 @@ int eigen_matrix_mul_sub(double* data1, int n1, int m1,
     return TRUE;
 }
 
+// 行列とスカラーの積を計算
+int eigen_matrix_mul_scalar(double* data1, int n1, int m1,
+                            double scalar, double* data2) {
+    if (n1 < 0 || m1 < 0) return FALSE;
+    MatrixXd A = Map<MatrixXd>(data1, n1, m1);
+    MatrixXd B = A.array() * scalar;
+    Map<MatrixXd>(data2, n1, m1) = B;
+    return TRUE;
+}
+
 // 行列式を計算
-double eigen_matrix_determinant_sub(double* data1, int n1, int m1) {
+double eigen_matrix_determinant(double* data1, int n1, int m1) {
     if (n1 < 0 || m1 < 0) return FALSE;
     MatrixXd A = Map<MatrixXd>(data1, n1, m1);
     return (double)A.determinant();
 }
 
 // 逆行列を計算
-int eigen_matrix_inverse_sub(double* data1, int n1, int m1,
-                             double* data2) {
+int eigen_matrix_inverse(double* data1, int n1, int m1,
+                         double* data2) {
     // (0を許可すると実行時エラーになる)
     // if (n1 < 0 || m1 < 0) return FALSE;
     if (n1 <= 0 || m1 <= 0) return FALSE;
@@ -105,9 +135,9 @@ int eigen_matrix_inverse_sub(double* data1, int n1, int m1,
 }
 
 // AX=B となる X を求める
-int eigen_matrix_solve_sub(double* data1, int n1, int m1,
-                           double* data2, int n2, int m2,
-                           double* data3) {
+int eigen_matrix_solve(double* data1, int n1, int m1,
+                       double* data2, int n2, int m2,
+                       double* data3) {
     // (0を許可すると実行時エラーになる)
     // if (n1 < 0 || m1 < 0 || n2 < 0 || m2 < 0) return FALSE;
     if (n1 <= 0 || m1 <= 0 || n2 <= 0 || m2 <= 0) return FALSE;
