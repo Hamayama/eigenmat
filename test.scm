@@ -36,9 +36,10 @@
 (define F (f64array (shape 0 2 0 2) 0 0 0 0))
 (define G (f64array (shape 0 0 0 0)))
 
-(test* "eigen-array-nearly=? 1" #t (eigen-array-nearly=? A C))
-(test* "eigen-array-nearly=? 2" #f (eigen-array-nearly=? A D))
-(test* "eigen-array-nearly=? 3" #t (eigen-array-nearly=? G G))
+(test* "eigen-array-nearly=? 1" #t (eigen-array-nearly=? A A))
+(test* "eigen-array-nearly=? 2" #t (eigen-array-nearly=? A C))
+(test* "eigen-array-nearly=? 3" #f (eigen-array-nearly=? A D))
+(test* "eigen-array-nearly=? 4" #t (eigen-array-nearly=? G G))
 
 (test* "eigen-array-nearly-zero? 1" #t (eigen-array-nearly-zero? F))
 (test* "eigen-array-nearly-zero? 2" #f (eigen-array-nearly-zero? D))
