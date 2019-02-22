@@ -141,11 +141,24 @@ int eigen_matrix_solve(double* data1, int n1, int m1,
     // (0を許可すると実行時エラーになる)
     // if (n1 < 0 || m1 < 0 || n2 < 0 || m2 < 0) return FALSE;
     if (n1 <= 0 || m1 <= 0 || n2 <= 0 || m2 <= 0) return FALSE;
+    // (正方行列でなくても何かしら計算する?)
+    // if (n1 != m1) return FALSE;
     if (m1 != n2) return FALSE;
     MatrixXd A = Map<MatrixXd>(data1, n1, m1);
     MatrixXd B = Map<MatrixXd>(data2, n2, m2);
     MatrixXd X = A.partialPivLu().solve(B);
     Map<MatrixXd>(data3, n1, m2) = X; // 第3引数はm1ではないので注意
+    return TRUE;
+}
+
+// 行列A から一部を抜き出す
+int eigen_matrix_block(double* data1, int n1, int m1,
+                       double* data2, int i2, int j2, int n2, int m2) {
+    if (n1 < 0 || m1 < 0 || n2 < 0 || m2 < 0) return FALSE;
+    if (i2 < 0 || j2 < 0 || i2 + n2 > n1 || j2 + m2 > m1) return FALSE;
+    MatrixXd A = Map<MatrixXd>(data1, n1, m1);
+    MatrixXd B = A.block(i2, j2, n2, m2);
+    Map<MatrixXd>(data2, n2, m2) = B;
     return TRUE;
 }
 

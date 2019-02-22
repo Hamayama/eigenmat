@@ -80,6 +80,12 @@
                               (cast (double*) (SCM_F64VECTOR_ELEMENTS data2)) n2 m2
                               (cast (double*) (SCM_F64VECTOR_ELEMENTS data3)))))
 
+(define-cproc eigen-matrix-block (data1::<f64vector> n1::<int> m1::<int>
+                                  data2::<f64vector> i2::<int> j2::<int>
+                                  n2::<int> m2::<int>) ::<boolean>
+  (result (eigen_matrix_block (cast (double*) (SCM_F64VECTOR_ELEMENTS data1)) n1 m1
+                              (cast (double*) (SCM_F64VECTOR_ELEMENTS data2)) i2 j2 n2 m2)))
+
 ;; Local variables:
 ;; mode: scheme
 ;; end:

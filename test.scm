@@ -35,6 +35,7 @@
 (define E (f64array (shape 0 2 0 1) 1 2))
 (define F (f64array (shape 0 2 0 2) 0 0 0 0))
 (define G (f64array (shape 0 0 0 0)))
+(define H (f64array (shape 0 4 0 4) 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16))
 
 (test* "eigen-array-nearly=? 1" #t (eigen-array-nearly=? A A))
 (test* "eigen-array-nearly=? 2" #t (eigen-array-nearly=? A C))
@@ -104,6 +105,23 @@
        (eigen-array-solve D E))
 (test* "eigen-array-solve 3" (test-error <error>)
        (eigen-array-solve G G))
+
+(test* "eigen-array-block 1" #,(<f64array> (0 2 0 2) 1 2 5 6)
+       (eigen-array-block H 0 0 2 2))
+(test* "eigen-array-block 2" #,(<f64array> (0 2 0 3) 6 7 8 10 11 12)
+       (eigen-array-block H 1 1 2 3))
+(test* "eigen-array-block 3" #,(<f64array> (0 1 0 2) 15 16)
+       (eigen-array-block H 3 2 1 2))
+(test* "eigen-array-block 4" (test-error <error>)
+       (eigen-array-block H -1 -1 2 2))
+(test* "eigen-array-block 5" (test-error <error>)
+       (eigen-array-block H 3 3 2 2))
+(test* "eigen-array-block 6" #,(<f64array> (0 0 0 0))
+       (eigen-array-block H 0 0 0 0))
+(test* "eigen-array-block 7" #,(<f64array> (0 0 0 0))
+       (eigen-array-block G 0 0 0 0))
+(test* "eigen-array-block 8" (test-error <error>)
+       (eigen-array-block G 0 0 1 1))
 
 ;; If you don't want `gosh' to exit with nonzero status even if
 ;; the test fails, pass #f to :exit-on-failure.

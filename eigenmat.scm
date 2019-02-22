@@ -1,13 +1,14 @@
 ;; -*- coding: utf-8 -*-
 ;;
 ;; eigenmat.scm
-;; 2018-8-20 v1.09
+;; 2019-2-22 v1.10
 ;;
 ;; ＜内容＞
 ;;   Gauche で、Eigen ライブラリ を使って行列の高速演算を行うためのモジュールです。
 ;;   Eigen は、C++ で書かれた線形代数用のライブラリです ( http://eigen.tuxfamily.org )。
 ;;   現状、本モジュールは、標準の gauhce.array モジュールにおける
 ;;   <f64array> クラスのごく一部の演算にのみ対応しています。
+;;   (基本的に行列 (すなわち2次元のarray) のみが対象です)
 ;;
 ;;   詳細については、以下のページを参照ください。
 ;;   https://github.com/Hamayama/eigenmat
@@ -24,7 +25,9 @@
     eigen-array-mul
     eigen-array-determinant
     eigen-array-inverse
-    eigen-array-solve))
+    eigen-array-solve
+    eigen-array-block
+    ))
 (select-module eigenmat)
 
 ;; Loads extension
@@ -34,14 +37,23 @@
 ;; Put your Scheme definitions here
 ;;
 
-;; 行列の次元数のチェック(内部処理用)
-(define (check-array-rank . As)
-  (unless (every (lambda (A) (= (array-rank A) 2)) As)
-    (error "array rank must be 2")))
+;; 行列のチェック(内部処理用)
+(define (check-array . As)
+  (every
+   (lambda (A)
+     ;; 次元数のチェック
+     (unless (= (array-rank A) 2)
+       (error "array rank must be 2"))
+     ;; shapeのチェック
+     (unless (and (>= (array-length A 0) 0)
+                  (>= (array-length A 1) 0))
+       (error "invalid array shape"))
+     )
+   As))
 
 ;; 行列の一致チェック
 (define-method eigen-array-nearly=? ((A <f64array>) (B <f64array>) :optional (precision 1e-12))
-  (check-array-rank A B)
+  (check-array A B)
   (let ((data1 (slot-ref A 'backing-storage))
         (n1    (array-length A 0))
         (m1    (array-length A 1))
@@ -54,7 +66,7 @@
 
 ;; 行列のゼロチェック
 (define-method eigen-array-nearly-zero? ((A <f64array>) :optional (precision 1e-12))
-  (check-array-rank A)
+  (check-array A)
   (let ((data1 (slot-ref A 'backing-storage))
         (n1    (array-length A 0))
         (m1    (array-length A 1)))
@@ -62,7 +74,7 @@
 
 ;; 行列の和を計算
 (define-method eigen-array-add ((A <f64array>) (B <f64array>))
-  (check-array-rank A B)
+  (check-array A B)
   (let ((data1 (slot-ref A 'backing-storage))
         (n1    (array-length A 0))
         (m1    (array-length A 1))
@@ -78,7 +90,7 @@
 
 ;; 行列とスカラーの和を計算
 (define-method eigen-array-add ((A <f64array>) (r <real>))
-  (check-array-rank A)
+  (check-array A)
   (let ((data1 (slot-ref A 'backing-storage))
         (n1    (array-length A 0))
         (m1    (array-length A 1)))
@@ -89,7 +101,7 @@
 
 ;; 行列の差を計算
 (define-method eigen-array-sub ((A <f64array>) (B <f64array>))
-  (check-array-rank A B)
+  (check-array A B)
   (let ((data1 (slot-ref A 'backing-storage))
         (n1    (array-length A 0))
         (m1    (array-length A 1))
@@ -105,7 +117,7 @@
 
 ;; 行列とスカラーの差を計算
 (define-method eigen-array-sub ((A <f64array>) (r <real>))
-  (check-array-rank A)
+  (check-array A)
   (let ((data1 (slot-ref A 'backing-storage))
         (n1    (array-length A 0))
         (m1    (array-length A 1)))
@@ -116,7 +128,7 @@
 
 ;; 行列の積を計算
 (define-method eigen-array-mul ((A <f64array>) (B <f64array>))
-  (check-array-rank A B)
+  (check-array A B)
   (let ((data1 (slot-ref A 'backing-storage))
         (n1    (array-length A 0))
         (m1    (array-length A 1))
@@ -132,7 +144,7 @@
 
 ;; 行列とスカラーの積を計算
 (define-method eigen-array-mul ((A <f64array>) (r <real>))
-  (check-array-rank A)
+  (check-array A)
   (let ((data1 (slot-ref A 'backing-storage))
         (n1    (array-length A 0))
         (m1    (array-length A 1)))
@@ -143,7 +155,7 @@
 
 ;; 行列式を計算
 (define-method eigen-array-determinant ((A <f64array>))
-  (check-array-rank A)
+  (check-array A)
   (let ((data1 (slot-ref A 'backing-storage))
         (n1    (array-length A 0))
         (m1    (array-length A 1)))
@@ -153,10 +165,11 @@
 
 ;; 逆行列を計算
 (define-method eigen-array-inverse ((A <f64array>))
-  (check-array-rank A)
+  (check-array A)
   (let ((data1 (slot-ref A 'backing-storage))
         (n1    (array-length A 0))
         (m1    (array-length A 1)))
+    ;; (0を許可すると実行時エラーになる)
     (unless (and (> n1 0) (> m1 0))
       (error "invalid array shape"))
     (unless (= n1 m1)
@@ -168,13 +181,14 @@
 
 ;; AX=B となる X を求める
 (define-method eigen-array-solve ((A <f64array>) (B <f64array>))
-  (check-array-rank A B)
+  (check-array A B)
   (let ((data1 (slot-ref A 'backing-storage))
         (n1    (array-length A 0))
         (m1    (array-length A 1))
         (data2 (slot-ref B 'backing-storage))
         (n2    (array-length B 0))
         (m2    (array-length B 1)))
+    ;; (0を許可すると実行時エラーになる)
     (unless (and (> n1 0) (> m1 0) (> n2 0) (> m2 0))
       (error "invalid array shape"))
     (unless (= n1 m1)
@@ -185,4 +199,23 @@
            (data3 (slot-ref X 'backing-storage)))
       (eigen-matrix-solve data1 n1 m1 data2 n2 m2 data3)
       X)))
+
+;; 行列A から一部を抜き出す
+(define-method eigen-array-block ((A <f64array>)
+                                  (i1 <integer>) (j1 <integer>)
+                                  (n2 <integer>) (m2 <integer>))
+  (check-array A)
+  (let ((data1 (slot-ref A 'backing-storage))
+        (n1    (array-length A 0))
+        (m1    (array-length A 1))
+        (i2    (- i1 (array-start A 0)))
+        (j2    (- j1 (array-start A 1))))
+    (unless (and (>= n2 0) (>= m2 0))
+      (error "invalid block size"))
+    (unless (and (>= i2 0) (>= j2 0) (<= (+ i2 n2) n1) (<= (+ j2 m2) m1))
+      (error "invalid block range"))
+    (let* ((B     (make-f64array (shape 0 n2 0 m2) 0))
+           (data2 (slot-ref B 'backing-storage)))
+      (eigen-matrix-block data1 n1 m1 data2 i2 j2 n2 m2)
+      B)))
 

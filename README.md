@@ -6,7 +6,8 @@
 - Gauche で、Eigen ライブラリ を使って行列の高速演算を行うためのモジュールです。  
   Eigen は、C++ で書かれた線形代数用のライブラリです ( http://eigen.tuxfamily.org )。  
   現状、本モジュールは、標準の gauhce.array モジュールにおける  
-  `<f64array>` クラスのごく一部の演算にのみ対応しています。
+  `<f64array>` クラスのごく一部の演算にのみ対応しています。  
+  (基本的に行列 (すなわち2次元のarray) のみが対象です)
 
 
 ## インストール方法
@@ -79,7 +80,8 @@
     (print (array-ref C 0 1)) ; 行列C の右上の要素の値を表示します。
   ```
 - 現状、本モジュールは、標準の gauhce.array モジュールにおける  
-  `<f64array>` クラスの以下の演算にのみ対応しています。
+  `<f64array>` クラスのごく一部の演算にのみ対応しています。  
+  (基本的に行列 (すなわち2次元のarray) のみが対象です)
 
   - `(eigen-array-nearly=? A B [precision])`  
     行列A と 行列B の各要素がほぼ等しければ #t を返します。  
@@ -126,6 +128,9 @@
   - `(eigen-array-solve A B)`  
     AX=B となる 行列X を計算して返します。
 
+  - `(eigen-array-block A i j p q)`  
+    行列A から 開始位置が (i,j) でサイズが (p,q) の行列を抜き出して返します。
+
 
 ## 注意事項
 1. 本モジュールは、標準の gauche.array モジュールにおける  
@@ -145,6 +150,7 @@
 - 環境
   - MSYS2/MinGW-w64 (64bit/32bit) (gcc version 7.3.0 (Rev2, Built by MSYS2 project))
 - 言語
+  - Gauche v0.9.7
   - Gauche v0.9.6
 - ライブラリ
   - Eigen v3.3.5
@@ -162,6 +168,7 @@
 - 2018-8-18  v1.07 配列の添字ミス修正等
 - 2018-8-20  v1.08 eigen-array-add-scalar,eigen-array-sub-scalar,eigen-array-mul-scalarを追加
 - 2018-8-20  v1.09 v1.08の追加分を削除してジェネリックファンクションで対応
+- 2019-2-22  v1.10 eigen-array-blockを追加
 
 
-(2018-8-20)
+(2019-2-22)
