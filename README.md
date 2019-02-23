@@ -6,8 +6,7 @@
 - Gauche で、Eigen ライブラリ を使って行列の高速演算を行うためのモジュールです。  
   Eigen は、C++ で書かれた線形代数用のライブラリです ( http://eigen.tuxfamily.org )。  
   現状、本モジュールは、標準の gauhce.array モジュールにおける  
-  `<f64array>` クラスのごく一部の演算にのみ対応しています。  
-  (基本的に行列 (すなわち2次元のarray) のみが対象です)
+  `<f64array>` クラスの行列 (すなわち2次元のarray) の演算のみが可能です。
 
 
 ## インストール方法
@@ -80,8 +79,7 @@
     (print (array-ref C 0 1)) ; 行列C の右上の要素の値を表示します。
   ```
 - 現状、本モジュールは、標準の gauhce.array モジュールにおける  
-  `<f64array>` クラスのごく一部の演算にのみ対応しています。  
-  (基本的に行列 (すなわち2次元のarray) のみが対象です)
+  `<f64array>` クラスの行列 (すなわち2次元のarray) の演算のみが可能です。
 
   - `(eigen-array-nearly=? A B [precision])`  
     行列A と 行列B の各要素がほぼ等しければ #t を返します。  
@@ -119,8 +117,32 @@
   - `(eigen-array-mul A r)`  
     行列A と 実数r の積を計算して返します。
 
+  - `(eigen-array-div A r)`  
+    行列A の各要素を 実数r で割り算した結果を返します。
+
+  - `(eigen-array-pow A r)`  
+    行列A の各要素を 実数r を用いてr乗した結果を返します。
+
+  - `(eigen-array-sum A)`  
+    行列A の要素の和を計算して返します。
+
+  - `(eigen-array-min A)`  
+    行列A の要素の最小値を返します。
+
+  - `(eigen-array-max A)`  
+    行列A の要素の最大値を返します。
+
+  - `(eigen-array-mean A)`  
+    行列A の要素の平均を計算して返します。
+
+  - `(eigen-array-trace A)`  
+    行列A のトレースを計算して返します。
+
   - `(eigen-array-determinant A)`  
     行列A の行列式を計算して返します。
+
+  - `(eigen-array-transpose A)`  
+    行列A の転置行列を返します。
 
   - `(eigen-array-inverse A)`  
     行列A の逆行列を計算して返します。
@@ -175,6 +197,9 @@
 - 2018-8-20  v1.09 v1.08の追加分を削除してジェネリックファンクションで対応
 - 2019-2-22  v1.10 eigen-array-blockを追加
 - 2019-2-23  v1.11 eigen-array-blockのコピー機能を追加
+- 2019-2-23  v1.12 eigen-array-div,eigen-array-pow,eigen-array-sum,  
+  eigen-array-min,eigen-array-max,eigen-array-mean,  
+  eigen-array-trace,eigen-array-transposeを追加
 
 
 (2019-2-23)

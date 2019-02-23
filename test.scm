@@ -38,6 +38,7 @@
 (define H (f64array (shape 0 4 0 4) 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16))
 (define J (f64array (shape 0 4 0 4) 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8
                                     0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6))
+(define K (f64array (shape 0 2 0 3) 1 2 3 4 5 6))
 
 (test* "eigen-array-nearly=? 1" #t (eigen-array-nearly=? A A))
 (test* "eigen-array-nearly=? 2" #t (eigen-array-nearly=? A C))
@@ -90,9 +91,47 @@
 (test* "eigen-array-mul 2-3" G
        (eigen-array-mul G 2)   eigen-array-nearly=?)
 
+(test* "eigen-array-div 1" #,(<f64array> (0 2 0 2) 0.5 1.0 1.5 2.0)
+       (eigen-array-div A 2) eigen-array-nearly=?)
+(test* "eigen-array-div 2" #,(<f64array> (0 2 0 2) +inf.0 +inf.0 +inf.0 +inf.0)
+       (eigen-array-div A 0))
+(test* "eigen-array-div 3" G
+       (eigen-array-div G 2) eigen-array-nearly=?)
+
+(test* "eigen-array-pow 1" #,(<f64array> (0 2 0 2) 1 4 9 16)
+       (eigen-array-pow A 2) eigen-array-nearly=?)
+(test* "eigen-array-pow 2" (f64array (shape 0 2 0 2) 1 (sqrt 2) (sqrt 3) 2)
+       (eigen-array-pow A 0.5) eigen-array-nearly=?)
+(test* "eigen-array-pow 3" D
+       (eigen-array-pow A 0) eigen-array-nearly=?)
+(test* "eigen-array-pow 4" G
+       (eigen-array-pow G 2) eigen-array-nearly=?)
+
+(test* "eigen-array-sum 1" 10 (eigen-array-sum A) nearly=?)
+(test* "eigen-array-sum 2" 0  (eigen-array-sum G) nearly=?)
+
+(test* "eigen-array-min 1" 1  (eigen-array-min A) nearly=?)
+(test* "eigen-array-min 2" (test-error <error>) (eigen-array-min G))
+
+(test* "eigen-array-max 1" 4  (eigen-array-max A) nearly=?)
+(test* "eigen-array-max 2" (test-error <error>) (eigen-array-max G))
+
+(test* "eigen-array-mean 1" 2.5 (eigen-array-mean A) nearly=?)
+(test* "eigen-array-mean 2" (test-error <error>) (eigen-array-mean G))
+
+(test* "eigen-array-trace 1" 5  (eigen-array-trace A) nearly=?)
+(test* "eigen-array-trace 2" 0  (eigen-array-trace G) nearly=?)
+
 (test* "eigen-array-determinant 1" -2 (eigen-array-determinant A) nearly=?)
 (test* "eigen-array-determinant 2"  0 (eigen-array-determinant D) nearly=?)
 (test* "eigen-array-determinant 3"  1 (eigen-array-determinant G) nearly=?)
+
+(test* "eigen-array-transpose 1" #,(<f64array> (0 2 0 2) 1 3 2 4)
+       (eigen-array-transpose A) eigen-array-nearly=?)
+(test* "eigen-array-transpose 2" #,(<f64array> (0 3 0 2) 1 4 2 5 3 6)
+       (eigen-array-transpose K) eigen-array-nearly=?)
+(test* "eigen-array-transpose 3" G
+       (eigen-array-transpose G) eigen-array-nearly=?)
 
 (test* "eigen-array-inverse 1" #,(<f64array> (0 2 0 2) -2 1 1.5 -0.5)
        (eigen-array-inverse A) eigen-array-nearly=?)

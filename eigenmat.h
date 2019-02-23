@@ -30,23 +30,37 @@ extern int eigen_matrix_add(double* data1, int n1, int m1,
                             double* data3);
 
 extern int eigen_matrix_add_scalar(double* data1, int n1, int m1,
-                                   double scalar, double* data2);
+                                   double r, double* data2);
 
 extern int eigen_matrix_sub(double* data1, int n1, int m1,
                             double* data2, int n2, int m2,
                             double* data3);
 
 extern int eigen_matrix_sub_scalar(double* data1, int n1, int m1,
-                                   double scalar, double* data2);
+                                   double r, double* data2);
 
 extern int eigen_matrix_mul(double* data1, int n1, int m1,
                             double* data2, int n2, int m2,
                             double* data3);
 
 extern int eigen_matrix_mul_scalar(double* data1, int n1, int m1,
-                                   double scalar, double* data2);
+                                   double r, double* data2);
 
+extern int eigen_matrix_div_scalar(double* data1, int n1, int m1,
+                                   double r, double* data2);
+
+extern int eigen_matrix_pow(double* data1, int n1, int m1,
+                            double r, double* data2);
+
+extern double eigen_matrix_sum(double* data1, int n1, int m1);
+extern double eigen_matrix_min(double* data1, int n1, int m1);
+extern double eigen_matrix_max(double* data1, int n1, int m1);
+extern double eigen_matrix_mean(double* data1, int n1, int m1);
+extern double eigen_matrix_trace(double* data1, int n1, int m1);
 extern double eigen_matrix_determinant(double* data1, int n1, int m1);
+
+extern int eigen_matrix_transpose(double* data1, int n1, int m1,
+                                  double* data2);
 
 extern int eigen_matrix_inverse(double* data1, int n1, int m1,
                                 double* data2);

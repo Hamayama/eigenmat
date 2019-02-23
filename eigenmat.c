@@ -61,10 +61,10 @@ int eigen_matrix_add(double* data1, int n1, int m1,
 
 // 行列とスカラーの和を計算
 int eigen_matrix_add_scalar(double* data1, int n1, int m1,
-                            double scalar, double* data2) {
+                            double r, double* data2) {
     if (n1 < 0 || m1 < 0) return FALSE;
     MatrixXd A = Map<MatrixXd>(data1, n1, m1);
-    MatrixXd B = A.array() + scalar;
+    MatrixXd B = A.array() + r;
     Map<MatrixXd>(data2, n1, m1) = B;
     return TRUE;
 }
@@ -84,10 +84,10 @@ int eigen_matrix_sub(double* data1, int n1, int m1,
 
 // 行列とスカラーの差を計算
 int eigen_matrix_sub_scalar(double* data1, int n1, int m1,
-                            double scalar, double* data2) {
+                            double r, double* data2) {
     if (n1 < 0 || m1 < 0) return FALSE;
     MatrixXd A = Map<MatrixXd>(data1, n1, m1);
-    MatrixXd B = A.array() - scalar;
+    MatrixXd B = A.array() - r;
     Map<MatrixXd>(data2, n1, m1) = B;
     return TRUE;
 }
@@ -107,19 +107,94 @@ int eigen_matrix_mul(double* data1, int n1, int m1,
 
 // 行列とスカラーの積を計算
 int eigen_matrix_mul_scalar(double* data1, int n1, int m1,
-                            double scalar, double* data2) {
+                            double r, double* data2) {
     if (n1 < 0 || m1 < 0) return FALSE;
     MatrixXd A = Map<MatrixXd>(data1, n1, m1);
-    MatrixXd B = A.array() * scalar;
+    MatrixXd B = A.array() * r;
     Map<MatrixXd>(data2, n1, m1) = B;
     return TRUE;
+}
+
+// 行列とスカラーの割り算を計算
+int eigen_matrix_div_scalar(double* data1, int n1, int m1,
+                            double r, double* data2) {
+    if (n1 < 0 || m1 < 0) return FALSE;
+    MatrixXd A = Map<MatrixXd>(data1, n1, m1);
+    MatrixXd B = A.array() / r;
+    Map<MatrixXd>(data2, n1, m1) = B;
+    return TRUE;
+}
+
+// 行列の各要素のべき乗を計算
+int eigen_matrix_pow(double* data1, int n1, int m1,
+                     double r, double* data2) {
+    if (n1 < 0 || m1 < 0) return FALSE;
+    MatrixXd A = Map<MatrixXd>(data1, n1, m1);
+    MatrixXd B = A.array().pow(r);
+    Map<MatrixXd>(data2, n1, m1) = B;
+    return TRUE;
+}
+
+// 行列の要素の和を計算
+double eigen_matrix_sum(double* data1, int n1, int m1) {
+    if (n1 < 0 || m1 < 0) return FALSE;
+    MatrixXd A = Map<MatrixXd>(data1, n1, m1);
+    return (double)A.sum();
+}
+
+// 行列の要素の最小値を計算
+double eigen_matrix_min(double* data1, int n1, int m1) {
+    // (0を許可すると実行時エラーになる)
+    //if (n1 < 0 || m1 < 0) return FALSE;
+    if (n1 <= 0 || m1 <= 0) return FALSE;
+    MatrixXd A = Map<MatrixXd>(data1, n1, m1);
+    return (double)A.minCoeff();
+}
+
+// 行列の要素の最大値を計算
+double eigen_matrix_max(double* data1, int n1, int m1) {
+    // (0を許可すると実行時エラーになる)
+    //if (n1 < 0 || m1 < 0) return FALSE;
+    if (n1 <= 0 || m1 <= 0) return FALSE;
+    MatrixXd A = Map<MatrixXd>(data1, n1, m1);
+    return (double)A.maxCoeff();
+}
+
+// 行列の要素の平均を計算
+double eigen_matrix_mean(double* data1, int n1, int m1) {
+    // (0を許可すると実行時エラーになる)
+    //if (n1 < 0 || m1 < 0) return FALSE;
+    if (n1 <= 0 || m1 <= 0) return FALSE;
+    MatrixXd A = Map<MatrixXd>(data1, n1, m1);
+    return (double)A.mean();
+}
+
+// 行列のトレースを計算
+double eigen_matrix_trace(double* data1, int n1, int m1) {
+    if (n1 < 0 || m1 < 0) return FALSE;
+    // (正方行列でなくても何かしら計算する?)
+    //if (n1 != m1) return FALSE;
+    MatrixXd A = Map<MatrixXd>(data1, n1, m1);
+    return (double)A.trace();
 }
 
 // 行列式を計算
 double eigen_matrix_determinant(double* data1, int n1, int m1) {
     if (n1 < 0 || m1 < 0) return FALSE;
+    // (正方行列でなくても何かしら計算する?)
+    //if (n1 != m1) return FALSE;
     MatrixXd A = Map<MatrixXd>(data1, n1, m1);
     return (double)A.determinant();
+}
+
+// 転置行列を計算
+int eigen_matrix_transpose(double* data1, int n1, int m1,
+                           double* data2) {
+    if (n1 < 0 || m1 < 0) return FALSE;
+    MatrixXd A = Map<MatrixXd>(data1, n1, m1);
+    MatrixXd B = A.transpose();
+    Map<MatrixXd>(data2, m1, n1) = B; // m1, n1 の順なので注意
+    return TRUE;
 }
 
 // 逆行列を計算
@@ -128,6 +203,8 @@ int eigen_matrix_inverse(double* data1, int n1, int m1,
     // (0を許可すると実行時エラーになる)
     //if (n1 < 0 || m1 < 0) return FALSE;
     if (n1 <= 0 || m1 <= 0) return FALSE;
+    // (正方行列でなくても何かしら計算する?)
+    //if (n1 != m1) return FALSE;
     MatrixXd A = Map<MatrixXd>(data1, n1, m1);
     MatrixXd B = A.inverse();
     Map<MatrixXd>(data2, n1, m1) = B;
@@ -147,11 +224,11 @@ int eigen_matrix_solve(double* data1, int n1, int m1,
     MatrixXd A = Map<MatrixXd>(data1, n1, m1);
     MatrixXd B = Map<MatrixXd>(data2, n2, m2);
     MatrixXd X = A.partialPivLu().solve(B);
-    Map<MatrixXd>(data3, n1, m2) = X; // 第3引数はm1ではないので注意
+    Map<MatrixXd>(data3, n1, m2) = X; // m1 ではなく m2 なので注意
     return TRUE;
 }
 
-// 行列A から一部を抜き出す
+// 行列から一部を抜き出す
 int eigen_matrix_block(double* data1, int n1, int m1,
                        double* data2, int n2, int m2,
                        int i1, int j1) {
@@ -163,7 +240,7 @@ int eigen_matrix_block(double* data1, int n1, int m1,
     return TRUE;
 }
 
-// 行列A から一部を抜き出してコピー
+// 行列から一部を抜き出してコピー
 int eigen_matrix_block_copy(double* data1, int n1, int m1,
                             double* data2, int n2, int m2,
                             double* data3, int n3, int m3,
