@@ -56,7 +56,13 @@ extern int eigen_matrix_solve(double* data1, int n1, int m1,
                               double* data3);
 
 extern int eigen_matrix_block(double* data1, int n1, int m1,
-                              double* data2, int i2, int j2, int n2, int m2);
+                              double* data2, int n2, int m2,
+                              int i1, int j1);
+
+extern int eigen_matrix_block_copy(double* data1, int n1, int m1,
+                                   double* data2, int n2, int m2,
+                                   double* data3, int n3, int m3,
+                                   int i1, int j1, int i2, int j2);
 
 /* need for C++ */
 extern void Scm_Init_eigenmat();

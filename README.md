@@ -131,6 +131,11 @@
   - `(eigen-array-block A i j p q)`  
     行列A から 開始位置が (i,j) でサイズが (p,q) の行列を抜き出して返します。
 
+  - `(eigen-array-block A i1 j1 p q B i2 j2)`  
+    行列A から 開始位置が (i1,j1) でサイズが (p,q) の行列を抜き出して、  
+    行列B の (i2,j2) の位置にコピーして返します。  
+    (行列B は変更されません。戻り値を使用してください)
+
 
 ## 注意事項
 1. 本モジュールは、標準の gauche.array モジュールにおける  
@@ -169,6 +174,7 @@
 - 2018-8-20  v1.08 eigen-array-add-scalar,eigen-array-sub-scalar,eigen-array-mul-scalarを追加
 - 2018-8-20  v1.09 v1.08の追加分を削除してジェネリックファンクションで対応
 - 2019-2-22  v1.10 eigen-array-blockを追加
+- 2019-2-23  v1.11 eigen-array-blockのコピー機能を追加
 
 
-(2019-2-22)
+(2019-2-23)

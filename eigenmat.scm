@@ -1,7 +1,7 @@
 ;; -*- coding: utf-8 -*-
 ;;
 ;; eigenmat.scm
-;; 2019-2-22 v1.10
+;; 2019-2-23 v1.11
 ;;
 ;; ＜内容＞
 ;;   Gauche で、Eigen ライブラリ を使って行列の高速演算を行うためのモジュールです。
@@ -202,20 +202,48 @@
 
 ;; 行列A から一部を抜き出す
 (define-method eigen-array-block ((A <f64array>)
-                                  (i1 <integer>) (j1 <integer>)
+                                  (i1r <integer>) (j1r <integer>)
                                   (n2 <integer>) (m2 <integer>))
   (check-array A)
   (let ((data1 (slot-ref A 'backing-storage))
         (n1    (array-length A 0))
         (m1    (array-length A 1))
-        (i2    (- i1 (array-start A 0)))
-        (j2    (- j1 (array-start A 1))))
+        (i1    (- i1r (array-start A 0)))
+        (j1    (- j1r (array-start A 1))))
     (unless (and (>= n2 0) (>= m2 0))
       (error "invalid block size"))
-    (unless (and (>= i2 0) (>= j2 0) (<= (+ i2 n2) n1) (<= (+ j2 m2) m1))
+    (unless (and (>= i1 0) (>= j1 0) (<= (+ i1 n2) n1) (<= (+ j1 m2) m1))
       (error "invalid block range"))
     (let* ((B     (make-f64array (shape 0 n2 0 m2) 0))
            (data2 (slot-ref B 'backing-storage)))
-      (eigen-matrix-block data1 n1 m1 data2 i2 j2 n2 m2)
+      (eigen-matrix-block data1 n1 m1 data2 n2 m2 i1 j1)
       B)))
+
+;; 行列A から一部を抜き出してコピー
+(define-method eigen-array-block ((A <f64array>)
+                                  (i1r <integer>) (j1r <integer>)
+                                  (n3 <integer>) (m3 <integer>)
+                                  (B <f64array>)
+                                  (i2r <integer>) (j2r <integer>))
+  (check-array A B)
+  (let ((data1 (slot-ref A 'backing-storage))
+        (n1    (array-length A 0))
+        (m1    (array-length A 1))
+        (i1    (- i1r (array-start A 0)))
+        (j1    (- j1r (array-start A 1)))
+        (data2 (slot-ref B 'backing-storage))
+        (n2    (array-length B 0))
+        (m2    (array-length B 1))
+        (i2    (- i2r (array-start B 0)))
+        (j2    (- j2r (array-start B 1))))
+    (unless (and (>= n3 0) (>= m3 0))
+      (error "invalid block size"))
+    (unless (and (>= i1 0) (>= j1 0) (<= (+ i1 n3) n1) (<= (+ j1 m3) m1))
+      (error "invalid block range for copy-from"))
+    (unless (and (>= i2 0) (>= j2 0) (<= (+ i2 n3) n2) (<= (+ j2 m3) m2))
+      (error "invalid block range for copy-to"))
+    (let* ((C     (make-f64array (shape 0 n2 0 m2) 0))
+           (data3 (slot-ref C 'backing-storage)))
+      (eigen-matrix-block-copy data1 n1 m1 data2 n2 m2 data3 n3 m3 i1 j1 i2 j2)
+      C)))
 
