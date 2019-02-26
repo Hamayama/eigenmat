@@ -101,7 +101,7 @@ int eigen_matrix_mul(double* data1, int n1, int m1,
     MatrixXd A = Map<MatrixXd>(data1, n1, m1);
     MatrixXd B = Map<MatrixXd>(data2, n2, m2);
     MatrixXd C = A * B;
-    Map<MatrixXd>(data3, n1, m2) = C; // 第3引数はm1ではないので注意
+    Map<MatrixXd>(data3, n1, m2) = C; // 結果は n1 x m2 になる
     return TRUE;
 }
 
@@ -237,7 +237,7 @@ int eigen_matrix_transpose(double* data1, int n1, int m1,
     if (n1 < 0 || m1 < 0) return FALSE;
     MatrixXd A = Map<MatrixXd>(data1, n1, m1);
     MatrixXd B = A.transpose();
-    Map<MatrixXd>(data2, m1, n1) = B; // m1, n1 の順なので注意
+    Map<MatrixXd>(data2, m1, n1) = B; // 結果は m1 x n1 になる
     return TRUE;
 }
 
@@ -251,7 +251,7 @@ int eigen_matrix_inverse(double* data1, int n1, int m1,
     //if (n1 != m1) return FALSE;
     MatrixXd A = Map<MatrixXd>(data1, n1, m1);
     MatrixXd B = A.inverse();
-    Map<MatrixXd>(data2, n1, m1) = B;
+    Map<MatrixXd>(data2, m1, n1) = B; // 結果は m1 x n1 になる
     return TRUE;
 }
 
@@ -264,11 +264,11 @@ int eigen_matrix_solve(double* data1, int n1, int m1,
     if (n1 <= 0 || m1 <= 0 || n2 <= 0 || m2 <= 0) return FALSE;
     // (正方行列でなくても何かしら計算する?)
     //if (n1 != m1) return FALSE;
-    if (m1 != n2) return FALSE;
+    if (n1 != n2) return FALSE;
     MatrixXd A = Map<MatrixXd>(data1, n1, m1);
     MatrixXd B = Map<MatrixXd>(data2, n2, m2);
     MatrixXd X = A.partialPivLu().solve(B);
-    Map<MatrixXd>(data3, n1, m2) = X; // m1 ではなく m2 なので注意
+    Map<MatrixXd>(data3, m1, m2) = X; // 結果は m1 x m2 になる
     return TRUE;
 }
 

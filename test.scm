@@ -14,10 +14,8 @@
   (if (global-variable-bound? 'gauche.array 'f64array)
     (with-module gauche.array f64array)
     (lambda (shape . inits)
-      (rlet1 arr (make-f64array shape 0)
-        (slot-set! arr 'backing-storage
-                   (vector->f64vector
-                    (slot-ref (apply array shape inits) 'backing-storage)))))))
+      (rlet1 ar (make-f64array shape 0)
+        (slot-set! ar 'backing-storage (list->f64vector inits))))))
 
 (test-start "eigenmat")
 (use eigenmat)

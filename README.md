@@ -173,7 +173,7 @@
 
 ## 注意事項
 1. 本モジュールは、標準の gauche.array モジュールにおける  
-   `<f64array>` クラスの内部情報 (backing-storage スロット) を使用しています。  
+   `<f64array>` クラスの内部情報 (backing-storage スロット等) を使用しています。  
    このため、Gauche の将来の変更で動作しなくなる可能性があります。
 
 
@@ -215,6 +215,8 @@
 - 2019-2-26  v1.13 eigen-array-mul-elements,eigen-array-exp,  
   eigen-array-log,eigen-array-sigmoidを追加
 - 2019-2-26  v1.14 (eigen-array-mul A r) を (eigen-array-mul-elements A r) に変更
+- 2019-2-26  v1.15 可能なときは行列の生成にコピーを使用するようにした  
+  eigen-array-inverseとeigen-array-solveの結果の行列サイズ修正
 
 
 (2019-2-26)

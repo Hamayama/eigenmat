@@ -1,7 +1,7 @@
 ;; -*- coding: utf-8 -*-
 ;;
 ;; eigenmat.scm
-;; 2019-2-26 v1.14
+;; 2019-2-26 v1.15
 ;;
 ;; ＜内容＞
 ;;   Gauche で、Eigen ライブラリ を使って行列の高速演算を行うためのモジュールです。
@@ -48,6 +48,25 @@
 ;; Put your Scheme definitions here
 ;;
 
+;; 行列のコピー(内部処理用)(Gauche v0.9.7 以後には存在)
+(define array-copy
+  (if (global-variable-bound? 'gauche.array 'array-copy)
+    (with-module gauche.array array-copy)
+    (lambda (A)
+      (make (class-of A)
+        :start-vector (slot-ref A 'start-vector)
+        :end-vector   (slot-ref A 'end-vector)
+        :mapper       (slot-ref A 'mapper)
+        :backing-storage (let1 v (slot-ref A 'backing-storage)
+                           (if (vector? v) (vector-copy v)
+                                           (uvector-copy v)))))))
+
+;; 行列の生成もしくはコピー(内部処理用)(コピーの方が高速)
+(define (make-f64array-or-copy A n m :optional (copy-ok #t))
+  (if copy-ok
+    (array-copy A)
+    (make-f64array (shape 0 n 0 m) 0)))
+
 ;; 行列のチェック(内部処理用)
 (define (check-array . As)
   (every
@@ -63,7 +82,9 @@
    As))
 
 ;; 行列の一致チェック
-(define-method eigen-array-nearly=? ((A <f64array>) (B <f64array>) :optional (precision 1e-12))
+(define-method eigen-array-nearly=? ((A <f64array>)
+                                     (B <f64array>)
+                                     :optional (precision 1e-12))
   (check-array A B)
   (let ((data1 (slot-ref A 'backing-storage))
         (n1    (array-length A 0))
@@ -76,7 +97,8 @@
     (eigen-matrix-nearly-p data1 n1 m1 data2 n2 m2 precision)))
 
 ;; 行列のゼロチェック
-(define-method eigen-array-nearly-zero? ((A <f64array>) :optional (precision 1e-12))
+(define-method eigen-array-nearly-zero? ((A <f64array>)
+                                         :optional (precision 1e-12))
   (check-array A)
   (let ((data1 (slot-ref A 'backing-storage))
         (n1    (array-length A 0))
@@ -94,7 +116,7 @@
         (m2    (array-length B 1)))
     (unless (and (= n1 n2) (= m1 m2))
       (error "can't add (array shapes mismatch)"))
-    (let* ((C     (make-f64array (shape 0 n1 0 m1) 0))
+    (let* ((C     (make-f64array-or-copy A n1 m1))
            (data3 (slot-ref C 'backing-storage)))
       (eigen-matrix-add data1 n1 m1 data2 n2 m2 data3)
       C)))
@@ -105,7 +127,7 @@
   (let ((data1 (slot-ref A 'backing-storage))
         (n1    (array-length A 0))
         (m1    (array-length A 1)))
-    (let* ((B     (make-f64array (shape 0 n1 0 m1) 0))
+    (let* ((B     (make-f64array-or-copy A n1 m1))
            (data2 (slot-ref B 'backing-storage)))
       (eigen-matrix-add-scalar data1 n1 m1 r data2)
       B)))
@@ -121,7 +143,7 @@
         (m2    (array-length B 1)))
     (unless (and (= n1 n2) (= m1 m2))
       (error "can't subtract (array shapes mismatch)"))
-    (let* ((C     (make-f64array (shape 0 n1 0 m1) 0))
+    (let* ((C     (make-f64array-or-copy A n1 m1))
            (data3 (slot-ref C 'backing-storage)))
       (eigen-matrix-sub data1 n1 m1 data2 n2 m2 data3)
       C)))
@@ -132,7 +154,7 @@
   (let ((data1 (slot-ref A 'backing-storage))
         (n1    (array-length A 0))
         (m1    (array-length A 1)))
-    (let* ((B     (make-f64array (shape 0 n1 0 m1) 0))
+    (let* ((B     (make-f64array-or-copy A n1 m1))
            (data2 (slot-ref B 'backing-storage)))
       (eigen-matrix-sub-scalar data1 n1 m1 r data2)
       B)))
@@ -148,7 +170,8 @@
         (m2    (array-length B 1)))
     (unless (= m1 n2)
       (error "can't multiply (array shapes mismatch)"))
-    (let* ((C     (make-f64array (shape 0 n1 0 m2) 0))
+    (let* ((C     (make-f64array-or-copy A n1 m2           ; 結果は n1 x m2 になる
+                                         (and (= m1 m2)))) ; コピー可能な条件を指定
            (data3 (slot-ref C 'backing-storage)))
       (eigen-matrix-mul data1 n1 m1 data2 n2 m2 data3)
       C)))
@@ -164,7 +187,7 @@
         (m2    (array-length B 1)))
     (unless (and (= n1 n2) (= m1 m2))
       (error "can't multiply elements (array shapes mismatch)"))
-    (let* ((C     (make-f64array (shape 0 n1 0 m1) 0))
+    (let* ((C     (make-f64array-or-copy A n1 m1))
            (data3 (slot-ref C 'backing-storage)))
       (eigen-matrix-mul-elements data1 n1 m1 data2 n2 m2 data3)
       C)))
@@ -175,7 +198,7 @@
   (let ((data1 (slot-ref A 'backing-storage))
         (n1    (array-length A 0))
         (m1    (array-length A 1)))
-    (let* ((B     (make-f64array (shape 0 n1 0 m1) 0))
+    (let* ((B     (make-f64array-or-copy A n1 m1))
            (data2 (slot-ref B 'backing-storage)))
       (eigen-matrix-mul-scalar data1 n1 m1 r data2)
       B)))
@@ -186,7 +209,7 @@
   (let ((data1 (slot-ref A 'backing-storage))
         (n1    (array-length A 0))
         (m1    (array-length A 1)))
-    (let* ((B     (make-f64array (shape 0 n1 0 m1) 0))
+    (let* ((B     (make-f64array-or-copy A n1 m1))
            (data2 (slot-ref B 'backing-storage)))
       (eigen-matrix-div-scalar data1 n1 m1 r data2)
       B)))
@@ -197,7 +220,7 @@
   (let ((data1 (slot-ref A 'backing-storage))
         (n1    (array-length A 0))
         (m1    (array-length A 1)))
-    (let* ((B     (make-f64array (shape 0 n1 0 m1) 0))
+    (let* ((B     (make-f64array-or-copy A n1 m1))
            (data2 (slot-ref B 'backing-storage)))
       (eigen-matrix-pow data1 n1 m1 r data2)
       B)))
@@ -208,7 +231,7 @@
   (let ((data1 (slot-ref A 'backing-storage))
         (n1    (array-length A 0))
         (m1    (array-length A 1)))
-    (let* ((B     (make-f64array (shape 0 n1 0 m1) 0))
+    (let* ((B     (make-f64array-or-copy A n1 m1))
            (data2 (slot-ref B 'backing-storage)))
       (eigen-matrix-exp data1 n1 m1 data2)
       B)))
@@ -219,7 +242,7 @@
   (let ((data1 (slot-ref A 'backing-storage))
         (n1    (array-length A 0))
         (m1    (array-length A 1)))
-    (let* ((B     (make-f64array (shape 0 n1 0 m1) 0))
+    (let* ((B     (make-f64array-or-copy A n1 m1))
            (data2 (slot-ref B 'backing-storage)))
       (eigen-matrix-log data1 n1 m1 data2)
       B)))
@@ -230,7 +253,7 @@
   (let ((data1 (slot-ref A 'backing-storage))
         (n1    (array-length A 0))
         (m1    (array-length A 1)))
-    (let* ((B     (make-f64array (shape 0 n1 0 m1) 0))
+    (let* ((B     (make-f64array-or-copy A n1 m1))
            (data2 (slot-ref B 'backing-storage)))
       (eigen-matrix-sigmoid data1 n1 m1 data2)
       B)))
@@ -304,7 +327,8 @@
   (let ((data1 (slot-ref A 'backing-storage))
         (n1    (array-length A 0))
         (m1    (array-length A 1)))
-    (let* ((B     (make-f64array (shape 0 m1 0 n1) 0)) ; m1, n1 の順なので注意
+    (let* ((B     (make-f64array-or-copy A m1 n1     ; 結果は m1 x n1 になる
+                                         (= n1 m1))) ; コピー可能な条件を指定
            (data2 (slot-ref B 'backing-storage)))
       (eigen-matrix-transpose data1 n1 m1 data2)
       B)))
@@ -321,7 +345,8 @@
     ;; (正方行列でなくても何かしら計算する?)
     ;(unless (= n1 m1)
     ;  (error "array shape must be square"))
-    (let* ((B     (make-f64array (shape 0 n1 0 m1) 0))
+    (let* ((B     (make-f64array-or-copy A m1 n1     ; 結果は m1 x n1 になる
+                                         (= n1 m1))) ; コピー可能な条件を指定
            (data2 (slot-ref B 'backing-storage)))
       (eigen-matrix-inverse data1 n1 m1 data2)
       B)))
@@ -341,9 +366,10 @@
     ;; (正方行列でなくても何かしら計算する?)
     ;(unless (= n1 m1)
     ;  (error "array A's shape must be square"))
-    (unless (= m1 n2)
+    (unless (= n1 n2)
       (error "can't solve (array shapes mismatch)"))
-    (let* ((X     (make-f64array (shape 0 n1 0 m2) 0)) ; m1 ではなく m2 なので注意
+    (let* ((X     (make-f64array-or-copy B m1 m2     ; 結果は m1 x m2 になる
+                                         (= n2 m1))) ; コピー可能な条件を指定
            (data3 (slot-ref X 'backing-storage)))
       (eigen-matrix-solve data1 n1 m1 data2 n2 m2 data3)
       X)))
@@ -362,7 +388,8 @@
       (error "invalid block size"))
     (unless (and (>= i1 0) (>= j1 0) (<= (+ i1 n2) n1) (<= (+ j1 m2) m1))
       (error "invalid block range"))
-    (let* ((B     (make-f64array (shape 0 n2 0 m2) 0))
+    (let* ((B     (make-f64array-or-copy A n2 m2                     ; 結果は n2 x m2 になる
+                                         (and (= n1 n2) (= m1 m2)))) ; コピー可能な条件を指定
            (data2 (slot-ref B 'backing-storage)))
       (eigen-matrix-block data1 n1 m1 data2 n2 m2 i1 j1)
       B)))
@@ -390,7 +417,7 @@
       (error "invalid block range for copy-from"))
     (unless (and (>= i2 0) (>= j2 0) (<= (+ i2 n3) n2) (<= (+ j2 m3) m2))
       (error "invalid block range for copy-to"))
-    (let* ((C     (make-f64array (shape 0 n2 0 m2) 0))
+    (let* ((C     (make-f64array-or-copy B n2 m2))
            (data3 (slot-ref C 'backing-storage)))
       (eigen-matrix-block-copy data1 n1 m1 data2 n2 m2 data3 n3 m3 i1 j1 i2 j2)
       C)))
