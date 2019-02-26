@@ -1,7 +1,7 @@
 ;; -*- coding: utf-8 -*-
 ;;
 ;; eigenmat.scm
-;; 2019-2-23 v1.12
+;; 2019-2-26 v1.13
 ;;
 ;; ＜内容＞
 ;;   Gauche で、Eigen ライブラリ を使って行列の高速演算を行うためのモジュールです。
@@ -22,8 +22,12 @@
     eigen-array-add
     eigen-array-sub
     eigen-array-mul
+    eigen-array-mul-elements
     eigen-array-div
     eigen-array-pow
+    eigen-array-exp
+    eigen-array-log
+    eigen-array-sigmoid
     eigen-array-sum
     eigen-array-min
     eigen-array-max
@@ -160,6 +164,22 @@
       (eigen-matrix-mul-scalar data1 n1 m1 r data2)
       B)))
 
+;; 行列の要素の積を計算
+(define-method eigen-array-mul-elements ((A <f64array>) (B <f64array>))
+  (check-array A B)
+  (let ((data1 (slot-ref A 'backing-storage))
+        (n1    (array-length A 0))
+        (m1    (array-length A 1))
+        (data2 (slot-ref B 'backing-storage))
+        (n2    (array-length B 0))
+        (m2    (array-length B 1)))
+    (unless (and (= n1 n2) (= m1 m2))
+      (error "can't multiply elements (array shapes mismatch)"))
+    (let* ((C     (make-f64array (shape 0 n1 0 m1) 0))
+           (data3 (slot-ref C 'backing-storage)))
+      (eigen-matrix-mul-elements data1 n1 m1 data2 n2 m2 data3)
+      C)))
+
 ;; 行列とスカラーの割り算を計算
 (define-method eigen-array-div ((A <f64array>) (r <real>))
   (check-array A)
@@ -171,7 +191,7 @@
       (eigen-matrix-div-scalar data1 n1 m1 r data2)
       B)))
 
-;; 行列の各要素のべき乗を計算
+;; 行列の要素のべき乗を計算
 (define-method eigen-array-pow ((A <f64array>) (r <real>))
   (check-array A)
   (let ((data1 (slot-ref A 'backing-storage))
@@ -180,6 +200,39 @@
     (let* ((B     (make-f64array (shape 0 n1 0 m1) 0))
            (data2 (slot-ref B 'backing-storage)))
       (eigen-matrix-pow data1 n1 m1 r data2)
+      B)))
+
+;; 行列の要素を指数として、自然対数の底eのべき乗を計算
+(define-method eigen-array-exp ((A <f64array>))
+  (check-array A)
+  (let ((data1 (slot-ref A 'backing-storage))
+        (n1    (array-length A 0))
+        (m1    (array-length A 1)))
+    (let* ((B     (make-f64array (shape 0 n1 0 m1) 0))
+           (data2 (slot-ref B 'backing-storage)))
+      (eigen-matrix-exp data1 n1 m1 data2)
+      B)))
+
+;; 行列の要素の自然対数を計算
+(define-method eigen-array-log ((A <f64array>))
+  (check-array A)
+  (let ((data1 (slot-ref A 'backing-storage))
+        (n1    (array-length A 0))
+        (m1    (array-length A 1)))
+    (let* ((B     (make-f64array (shape 0 n1 0 m1) 0))
+           (data2 (slot-ref B 'backing-storage)))
+      (eigen-matrix-log data1 n1 m1 data2)
+      B)))
+
+;; 行列の要素に対するシグモイド関数を計算
+(define-method eigen-array-sigmoid ((A <f64array>))
+  (check-array A)
+  (let ((data1 (slot-ref A 'backing-storage))
+        (n1    (array-length A 0))
+        (m1    (array-length A 1)))
+    (let* ((B     (make-f64array (shape 0 n1 0 m1) 0))
+           (data2 (slot-ref B 'backing-storage)))
+      (eigen-matrix-sigmoid data1 n1 m1 data2)
       B)))
 
 ;; 行列の要素の和を計算

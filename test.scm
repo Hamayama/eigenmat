@@ -91,6 +91,13 @@
 (test* "eigen-array-mul 2-3" G
        (eigen-array-mul G 2)   eigen-array-nearly=?)
 
+(test* "eigen-array-mul-elements 1" #,(<f64array> (0 2 0 2) 5 12 21 32)
+       (eigen-array-mul-elements A B) eigen-array-nearly=?)
+(test* "eigen-array-mul-elements 2" D
+       (eigen-array-mul-elements D D) eigen-array-nearly=?)
+(test* "eigen-array-mul-elements 3" G
+       (eigen-array-mul-elements G G) eigen-array-nearly=?)
+
 (test* "eigen-array-div 1" #,(<f64array> (0 2 0 2) 0.5 1.0 1.5 2.0)
        (eigen-array-div A 2) eigen-array-nearly=?)
 (test* "eigen-array-div 2" #,(<f64array> (0 2 0 2) +inf.0 +inf.0 +inf.0 +inf.0)
@@ -106,6 +113,30 @@
        (eigen-array-pow A 0) eigen-array-nearly=?)
 (test* "eigen-array-pow 4" G
        (eigen-array-pow G 2) eigen-array-nearly=?)
+
+(test* "eigen-array-exp 1" (f64array (shape 0 2 0 2) (exp 1) (exp 2) (exp 3) (exp 4))
+       (eigen-array-exp A) eigen-array-nearly=?)
+(test* "eigen-array-exp 2" D
+       (eigen-array-exp F) eigen-array-nearly=?)
+(test* "eigen-array-exp 3" G
+       (eigen-array-exp G) eigen-array-nearly=?)
+
+(test* "eigen-array-log 1" (f64array (shape 0 2 0 2) (log 1) (log 2) (log 3) (log 4))
+       (eigen-array-log A) eigen-array-nearly=?)
+(test* "eigen-array-log 2" #,(<f64array> (0 2 0 2) -inf.0 -inf.0 -inf.0 -inf.0)
+       (eigen-array-log F))
+(test* "eigen-array-log 3" G
+       (eigen-array-log G) eigen-array-nearly=?)
+
+(test* "eigen-array-sigmoid 1"
+       (let ()
+         (define (sigmoid x) (/. 1 (+ 1 (exp (- x)))))
+         (f64array (shape 0 2 0 2) (sigmoid 1) (sigmoid 2) (sigmoid 3) (sigmoid 4)))
+       (eigen-array-sigmoid A) eigen-array-nearly=?)
+(test* "eigen-array-sigmoid 2" #,(<f64array> (0 2 0 2) 0.5 0.5 0.5 0.5)
+       (eigen-array-sigmoid F))
+(test* "eigen-array-sigmoid 3" G
+       (eigen-array-sigmoid G) eigen-array-nearly=?)
 
 (test* "eigen-array-sum 1" 10 (eigen-array-sum A) nearly=?)
 (test* "eigen-array-sum 2" 0  (eigen-array-sum G) nearly=?)

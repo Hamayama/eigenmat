@@ -117,11 +117,23 @@
   - `(eigen-array-mul A r)`  
     行列A と 実数r の積を計算して返します。
 
+  - `(eigen-array-mul-elements A B)`  
+    行列A と 行列B の要素の積を計算して返します。
+
   - `(eigen-array-div A r)`  
-    行列A の各要素を 実数r で割り算した結果を返します。
+    行列A の要素を 実数r で割り算した結果を返します。
 
   - `(eigen-array-pow A r)`  
-    行列A の各要素を 実数r を用いてr乗した結果を返します。
+    行列A の要素を 実数r を用いてr乗した結果を返します。
+
+  - `(eigen-array-exp A)`  
+    行列A の要素を指数として、自然対数の底eのべき乗を計算して返します。
+
+  - `(eigen-array-log A)`  
+    行列A の要素の自然対数を計算して返します。
+
+  - `(eigen-array-sigmoid A)`  
+    行列A の要素に対するシグモイド関数を計算して返します。
 
   - `(eigen-array-sum A)`  
     行列A の要素の和を計算して返します。
@@ -155,7 +167,7 @@
 
   - `(eigen-array-block A i1 j1 p q B i2 j2)`  
     行列A から 開始位置が (i1,j1) でサイズが (p,q) の行列を抜き出して、  
-    行列B の (i2,j2) の位置にコピーして返します。  
+    行列B の (i2,j2) の位置にコピーしたものを返します。  
     (行列B は変更されません。戻り値を使用してください)
 
 
@@ -200,6 +212,8 @@
 - 2019-2-23  v1.12 eigen-array-div,eigen-array-pow,eigen-array-sum,  
   eigen-array-min,eigen-array-max,eigen-array-mean,  
   eigen-array-trace,eigen-array-transposeを追加
+- 2019-2-26  v1.13 eigen-array-mul-elements,eigen-array-exp,  
+  eigen-array-log,eigen-array-sigmoidを追加
 
 
-(2019-2-23)
+(2019-2-26)

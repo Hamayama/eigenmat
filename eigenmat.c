@@ -115,6 +115,19 @@ int eigen_matrix_mul_scalar(double* data1, int n1, int m1,
     return TRUE;
 }
 
+// 行列の要素の積を計算
+int eigen_matrix_mul_elements(double* data1, int n1, int m1,
+                              double* data2, int n2, int m2,
+                              double* data3) {
+    if (n1 < 0 || m1 < 0 || n2 < 0 || m2 < 0) return FALSE;
+    if (n1 != n2 || m1 != m2) return FALSE;
+    MatrixXd A = Map<MatrixXd>(data1, n1, m1);
+    MatrixXd B = Map<MatrixXd>(data2, n2, m2);
+    MatrixXd C = A.array() * B.array();
+    Map<MatrixXd>(data3, n1, m1) = C;
+    return TRUE;
+}
+
 // 行列とスカラーの割り算を計算
 int eigen_matrix_div_scalar(double* data1, int n1, int m1,
                             double r, double* data2) {
@@ -125,12 +138,43 @@ int eigen_matrix_div_scalar(double* data1, int n1, int m1,
     return TRUE;
 }
 
-// 行列の各要素のべき乗を計算
+// 行列の要素のべき乗を計算
 int eigen_matrix_pow(double* data1, int n1, int m1,
                      double r, double* data2) {
     if (n1 < 0 || m1 < 0) return FALSE;
     MatrixXd A = Map<MatrixXd>(data1, n1, m1);
     MatrixXd B = A.array().pow(r);
+    Map<MatrixXd>(data2, n1, m1) = B;
+    return TRUE;
+}
+
+// 行列の要素を指数として、自然対数の底eのべき乗を計算
+int eigen_matrix_exp(double* data1, int n1, int m1,
+                     double* data2) {
+    if (n1 < 0 || m1 < 0) return FALSE;
+    MatrixXd A = Map<MatrixXd>(data1, n1, m1);
+    MatrixXd B = A.array().exp();
+    Map<MatrixXd>(data2, n1, m1) = B;
+    return TRUE;
+}
+
+// 行列の要素の自然対数を計算
+int eigen_matrix_log(double* data1, int n1, int m1,
+                     double* data2) {
+    if (n1 < 0 || m1 < 0) return FALSE;
+    MatrixXd A = Map<MatrixXd>(data1, n1, m1);
+    MatrixXd B = A.array().log();
+    Map<MatrixXd>(data2, n1, m1) = B;
+    return TRUE;
+}
+
+// 行列の要素に対するシグモイド関数を計算
+static double sigmoid(double x) { return 1.0 / (1.0 + exp(-x)); }
+int eigen_matrix_sigmoid(double* data1, int n1, int m1,
+                         double* data2) {
+    if (n1 < 0 || m1 < 0) return FALSE;
+    MatrixXd A = Map<MatrixXd>(data1, n1, m1);
+    MatrixXd B = A.unaryExpr(&sigmoid);
     Map<MatrixXd>(data2, n1, m1) = B;
     return TRUE;
 }
