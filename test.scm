@@ -77,26 +77,26 @@
 (test* "eigen-array-sub 2-3" G
        (eigen-array-sub G 1)   eigen-array-nearly=?)
 
-(test* "eigen-array-mul 1-1" #,(<f64array> (0 2 0 2) 19 22 43 50)
+(test* "eigen-array-mul 1" #,(<f64array> (0 2 0 2) 19 22 43 50)
        (eigen-array-mul A B) eigen-array-nearly=?)
-(test* "eigen-array-mul 1-2" #,(<f64array> (0 2 0 2) 2 2 2 2)
+(test* "eigen-array-mul 2" #,(<f64array> (0 2 0 2) 2 2 2 2)
        (eigen-array-mul D D) eigen-array-nearly=?)
-(test* "eigen-array-mul 1-3" G
+(test* "eigen-array-mul 3" G
        (eigen-array-mul G G) eigen-array-nearly=?)
 
-(test* "eigen-array-mul 2-1" #,(<f64array> (0 2 0 2) 2 4 6 8)
-       (eigen-array-mul A 2)   eigen-array-nearly=?)
-(test* "eigen-array-mul 2-2" #,(<f64array> (0 2 0 2) 0.5 0.5 0.5 0.5)
-       (eigen-array-mul D 0.5) eigen-array-nearly=?)
-(test* "eigen-array-mul 2-3" G
-       (eigen-array-mul G 2)   eigen-array-nearly=?)
-
-(test* "eigen-array-mul-elements 1" #,(<f64array> (0 2 0 2) 5 12 21 32)
+(test* "eigen-array-mul-elements 1-1" #,(<f64array> (0 2 0 2) 5 12 21 32)
        (eigen-array-mul-elements A B) eigen-array-nearly=?)
-(test* "eigen-array-mul-elements 2" D
+(test* "eigen-array-mul-elements 1-2" D
        (eigen-array-mul-elements D D) eigen-array-nearly=?)
-(test* "eigen-array-mul-elements 3" G
+(test* "eigen-array-mul-elements 1-3" G
        (eigen-array-mul-elements G G) eigen-array-nearly=?)
+
+(test* "eigen-array-mul-elements 2-1" #,(<f64array> (0 2 0 2) 2 4 6 8)
+       (eigen-array-mul-elements A 2)   eigen-array-nearly=?)
+(test* "eigen-array-mul-elements 2-2" #,(<f64array> (0 2 0 2) 0.5 0.5 0.5 0.5)
+       (eigen-array-mul-elements D 0.5) eigen-array-nearly=?)
+(test* "eigen-array-mul-elements 2-3" G
+       (eigen-array-mul-elements G 2)   eigen-array-nearly=?)
 
 (test* "eigen-array-div 1" #,(<f64array> (0 2 0 2) 0.5 1.0 1.5 2.0)
        (eigen-array-div A 2) eigen-array-nearly=?)

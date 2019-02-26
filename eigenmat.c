@@ -105,16 +105,6 @@ int eigen_matrix_mul(double* data1, int n1, int m1,
     return TRUE;
 }
 
-// 行列とスカラーの積を計算
-int eigen_matrix_mul_scalar(double* data1, int n1, int m1,
-                            double r, double* data2) {
-    if (n1 < 0 || m1 < 0) return FALSE;
-    MatrixXd A = Map<MatrixXd>(data1, n1, m1);
-    MatrixXd B = A.array() * r;
-    Map<MatrixXd>(data2, n1, m1) = B;
-    return TRUE;
-}
-
 // 行列の要素の積を計算
 int eigen_matrix_mul_elements(double* data1, int n1, int m1,
                               double* data2, int n2, int m2,
@@ -125,6 +115,16 @@ int eigen_matrix_mul_elements(double* data1, int n1, int m1,
     MatrixXd B = Map<MatrixXd>(data2, n2, m2);
     MatrixXd C = A.array() * B.array();
     Map<MatrixXd>(data3, n1, m1) = C;
+    return TRUE;
+}
+
+// 行列とスカラーの積を計算
+int eigen_matrix_mul_scalar(double* data1, int n1, int m1,
+                            double r, double* data2) {
+    if (n1 < 0 || m1 < 0) return FALSE;
+    MatrixXd A = Map<MatrixXd>(data1, n1, m1);
+    MatrixXd B = A.array() * r;
+    Map<MatrixXd>(data2, n1, m1) = B;
     return TRUE;
 }
 

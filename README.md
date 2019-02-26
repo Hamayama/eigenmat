@@ -114,11 +114,11 @@
   - `(eigen-array-mul A B)`  
     行列A と 行列B の積を計算して返します。
 
-  - `(eigen-array-mul A r)`  
-    行列A と 実数r の積を計算して返します。
-
   - `(eigen-array-mul-elements A B)`  
     行列A と 行列B の要素の積を計算して返します。
+
+  - `(eigen-array-mul-elements A r)`  
+    行列A の要素と 実数r の積を計算して返します。
 
   - `(eigen-array-div A r)`  
     行列A の要素を 実数r で割り算した結果を返します。
@@ -214,6 +214,7 @@
   eigen-array-trace,eigen-array-transposeを追加
 - 2019-2-26  v1.13 eigen-array-mul-elements,eigen-array-exp,  
   eigen-array-log,eigen-array-sigmoidを追加
+- 2019-2-26  v1.14 (eigen-array-mul A r) を (eigen-array-mul-elements A r) に変更
 
 
 (2019-2-26)

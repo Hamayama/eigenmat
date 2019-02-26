@@ -1,7 +1,7 @@
 ;; -*- coding: utf-8 -*-
 ;;
 ;; eigenmat.scm
-;; 2019-2-26 v1.13
+;; 2019-2-26 v1.14
 ;;
 ;; ＜内容＞
 ;;   Gauche で、Eigen ライブラリ を使って行列の高速演算を行うためのモジュールです。
@@ -153,17 +153,6 @@
       (eigen-matrix-mul data1 n1 m1 data2 n2 m2 data3)
       C)))
 
-;; 行列とスカラーの積を計算
-(define-method eigen-array-mul ((A <f64array>) (r <real>))
-  (check-array A)
-  (let ((data1 (slot-ref A 'backing-storage))
-        (n1    (array-length A 0))
-        (m1    (array-length A 1)))
-    (let* ((B     (make-f64array (shape 0 n1 0 m1) 0))
-           (data2 (slot-ref B 'backing-storage)))
-      (eigen-matrix-mul-scalar data1 n1 m1 r data2)
-      B)))
-
 ;; 行列の要素の積を計算
 (define-method eigen-array-mul-elements ((A <f64array>) (B <f64array>))
   (check-array A B)
@@ -179,6 +168,17 @@
            (data3 (slot-ref C 'backing-storage)))
       (eigen-matrix-mul-elements data1 n1 m1 data2 n2 m2 data3)
       C)))
+
+;; 行列とスカラーの積を計算
+(define-method eigen-array-mul-elements ((A <f64array>) (r <real>))
+  (check-array A)
+  (let ((data1 (slot-ref A 'backing-storage))
+        (n1    (array-length A 0))
+        (m1    (array-length A 1)))
+    (let* ((B     (make-f64array (shape 0 n1 0 m1) 0))
+           (data2 (slot-ref B 'backing-storage)))
+      (eigen-matrix-mul-scalar data1 n1 m1 r data2)
+      B)))
 
 ;; 行列とスカラーの割り算を計算
 (define-method eigen-array-div ((A <f64array>) (r <real>))
