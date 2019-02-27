@@ -65,6 +65,9 @@ extern int eigen_matrix_log(double* data1, int n1, int m1,
 extern int eigen_matrix_sigmoid(double* data1, int n1, int m1,
                                 double* data2);
 
+extern int eigen_matrix_relu(double* data1, int n1, int m1,
+                             double* data2);
+
 extern double eigen_matrix_sum(double* data1, int n1, int m1);
 extern double eigen_matrix_min(double* data1, int n1, int m1);
 extern double eigen_matrix_max(double* data1, int n1, int m1);

@@ -99,6 +99,11 @@
   (result (eigen_matrix_sigmoid (cast (double*) (SCM_F64VECTOR_ELEMENTS data1)) n1 m1
                                 (cast (double*) (SCM_F64VECTOR_ELEMENTS data2)))))
 
+(define-cproc eigen-matrix-relu (data1::<f64vector> n1::<int> m1::<int>
+                                 data2::<f64vector>) ::<boolean>
+  (result (eigen_matrix_relu (cast (double*) (SCM_F64VECTOR_ELEMENTS data1)) n1 m1
+                             (cast (double*) (SCM_F64VECTOR_ELEMENTS data2)))))
+
 (define-cproc eigen-matrix-sum (data1::<f64vector> n1::<int> m1::<int>) ::<double>
   (result (eigen_matrix_sum (cast (double*) (SCM_F64VECTOR_ELEMENTS data1)) n1 m1)))
 

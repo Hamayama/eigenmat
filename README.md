@@ -81,6 +81,25 @@
 - 現状、本モジュールは、標準の gauhce.array モジュールにおける  
   `<f64array>` クラスの行列 (すなわち2次元のarray) の演算のみが可能です。
 
+  - `(eigen-make-array ns ne ms me)`  
+    行列 (2次元のf64array) を生成します。  
+    ns ne ms me には、行列の shape を指定します。  
+    例えば、2x3 の行列を生成する場合には、  
+    `(eigen-make-array 0 2 0 3)` のようにします。  
+    本手続きは、作成した行列をキャッシュに保存しており、  
+    同サイズの行列については、そのコピーを返すことで高速化をはかっています。  
+    もし、メモリ使用量の問題等で、この処理が不要な場合には、  
+    use-eigen-array-cache に #f を設定してください。  
+    (本手続きは、他の演算手続きの内部でも使用しています)
+
+  - `(eigen-array ns ne ms me . inits)`  
+    初期化データを指定して、行列 (2次元のf64array) を生成します。  
+    ns ne ms me には、行列の shape を指定します。  
+    inits には、行列の要素の数だけデータを並べます。  
+    例えば、2x3 の行列を生成する場合には、  
+    `(eigen-make-array 0 2 0 3 1 2 3 4 5 6)` のようにします。  
+    本手続きは、eigen-make-array と同じキャッシュを使用しています。
+
   - `(eigen-array-nearly=? A B [precision])`  
     行列A と 行列B の各要素がほぼ等しければ #t を返します。  
     そうでなければ #f を返します。  
@@ -133,7 +152,10 @@
     行列A の要素の自然対数を計算して返します。
 
   - `(eigen-array-sigmoid A)`  
-    行列A の要素に対するシグモイド関数を計算して返します。
+    行列A の要素に対する シグモイド関数 を計算して返します。
+
+  - `(eigen-array-relu A)`  
+    行列A の要素に対する ReLU関数 を計算して返します。
 
   - `(eigen-array-sum A)`  
     行列A の要素の和を計算して返します。
@@ -217,6 +239,8 @@
 - 2019-2-26  v1.14 (eigen-array-mul A r) を (eigen-array-mul-elements A r) に変更
 - 2019-2-26  v1.15 可能なときは行列の生成にコピーを使用するようにした  
   eigen-array-inverseとeigen-array-solveの結果の行列サイズ修正
+- 2019-2-27  v1.16 eigen-make-array,eigen-array,eigen-array-reluを追加  
+  生成した行列のキャッシュを保存するようにした
 
 
-(2019-2-26)
+(2019-2-27)

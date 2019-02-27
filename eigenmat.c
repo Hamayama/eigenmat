@@ -179,6 +179,17 @@ int eigen_matrix_sigmoid(double* data1, int n1, int m1,
     return TRUE;
 }
 
+// 行列の要素に対するReLU関数を計算
+static double relu(double x) { return x > 0 ? x : 0; }
+int eigen_matrix_relu(double* data1, int n1, int m1,
+                      double* data2) {
+    if (n1 < 0 || m1 < 0) return FALSE;
+    MatrixXd A = Map<MatrixXd>(data1, n1, m1);
+    MatrixXd B = A.unaryExpr(&relu);
+    Map<MatrixXd>(data2, n1, m1) = B;
+    return TRUE;
+}
+
 // 行列の要素の和を計算
 double eigen_matrix_sum(double* data1, int n1, int m1) {
     if (n1 < 0 || m1 < 0) return FALSE;

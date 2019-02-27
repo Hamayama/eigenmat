@@ -37,6 +37,21 @@
 (define J (f64array (shape 0 4 0 4) 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8
                                     0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6))
 (define K (f64array (shape 0 2 0 3) 1 2 3 4 5 6))
+(define L (f64array (shape 0 2 0 3) -2 -1 0 1 2 3))
+
+(test* "eigen-make-array 1" F
+       (eigen-make-array 0 2 0 2) eigen-array-nearly=?)
+(test* "eigen-make-array 2" #,(<f64array> (0 2 0 3) 0 0 0 0 0 0)
+       (eigen-make-array 0 2 0 3) eigen-array-nearly=?)
+(test* "eigen-make-array 3" G
+       (eigen-make-array 0 0 0 0) eigen-array-nearly=?)
+
+(test* "eigen-array 1" A
+       (eigen-array 0 2 0 2 1 2 3 4) eigen-array-nearly=?)
+(test* "eigen-array 2" #,(<f64array> (0 2 0 3) 1 2 3 4 5 6)
+       (eigen-array 0 2 0 3 1 2 3 4 5 6) eigen-array-nearly=?)
+(test* "eigen-array 3" G
+       (eigen-array 0 0 0 0) eigen-array-nearly=?)
 
 (test* "eigen-array-nearly=? 1" #t (eigen-array-nearly=? A A))
 (test* "eigen-array-nearly=? 2" #t (eigen-array-nearly=? A C))
@@ -135,6 +150,13 @@
        (eigen-array-sigmoid F))
 (test* "eigen-array-sigmoid 3" G
        (eigen-array-sigmoid G) eigen-array-nearly=?)
+
+(test* "eigen-array-relu 1" A
+       (eigen-array-relu A) eigen-array-nearly=?)
+(test* "eigen-array-relu 2" #,(<f64array> (0 2 0 3) 0 0 0 1 2 3)
+       (eigen-array-relu L) eigen-array-nearly=?)
+(test* "eigen-array-relu 3" G
+       (eigen-array-relu G) eigen-array-nearly=?)
 
 (test* "eigen-array-sum 1" 10 (eigen-array-sum A) nearly=?)
 (test* "eigen-array-sum 2" 0  (eigen-array-sum G) nearly=?)
