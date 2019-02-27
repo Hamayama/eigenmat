@@ -38,6 +38,7 @@
                                     0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6))
 (define K (f64array (shape 0 2 0 3) 1 2 3 4 5 6))
 (define L (f64array (shape 0 2 0 3) -2 -1 0 1 2 3))
+(define M (f64array (shape 0 3 0 2) 1 2 3 4 5 6))
 
 (test* "eigen-make-array 1" F
        (eigen-make-array 0 2 0 2) eigen-array-nearly=?)
@@ -94,7 +95,9 @@
        (eigen-array-mul A B) eigen-array-nearly=?)
 (test* "eigen-array-mul 2" #,(<f64array> (0 2 0 2) 2 2 2 2)
        (eigen-array-mul D D) eigen-array-nearly=?)
-(test* "eigen-array-mul 3" G
+(test* "eigen-array-mul 3" #,(<f64array> (0 2 0 2) 22 28 49 64)
+       (eigen-array-mul K M) eigen-array-nearly=?)
+(test* "eigen-array-mul 4" G
        (eigen-array-mul G G) eigen-array-nearly=?)
 
 (test* "eigen-array-mul-elements 1-1" #,(<f64array> (0 2 0 2) 5 12 21 32)
