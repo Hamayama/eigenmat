@@ -157,6 +157,9 @@
   - `(eigen-array-relu A)`  
     行列A の要素に対する ReLU関数 を計算して返します。
 
+  - `(eigen-array-step A)`  
+    行列A の要素に対する ステップ関数 を計算して返します。
+
   - `(eigen-array-sum A)`  
     行列A の要素の和を計算して返します。
 
@@ -214,7 +217,7 @@
   - Gauche v0.9.7
   - Gauche v0.9.6
 - ライブラリ
-  - Eigen v3.3.5
+  - Eigen v3.3.7
 
 
 ## 履歴
@@ -241,6 +244,7 @@
   eigen-array-inverseとeigen-array-solveの結果の行列サイズ修正
 - 2019-2-27  v1.16 eigen-make-array,eigen-array,eigen-array-reluを追加  
   生成した行列のキャッシュを保存するようにした
+- 2019-2-27  v1.17 eigen-array-stepを追加
 
 
 (2019-2-27)

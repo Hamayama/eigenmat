@@ -158,6 +158,13 @@
 (test* "eigen-array-relu 3" G
        (eigen-array-relu G) eigen-array-nearly=?)
 
+(test* "eigen-array-step 1" D
+       (eigen-array-step A) eigen-array-nearly=?)
+(test* "eigen-array-step 2" #,(<f64array> (0 2 0 3) 0 0 0 1 1 1)
+       (eigen-array-step L) eigen-array-nearly=?)
+(test* "eigen-array-step 3" G
+       (eigen-array-step G) eigen-array-nearly=?)
+
 (test* "eigen-array-sum 1" 10 (eigen-array-sum A) nearly=?)
 (test* "eigen-array-sum 2" 0  (eigen-array-sum G) nearly=?)
 

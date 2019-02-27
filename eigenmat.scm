@@ -1,7 +1,7 @@
 ;; -*- coding: utf-8 -*-
 ;;
 ;; eigenmat.scm
-;; 2019-2-27 v1.16
+;; 2019-2-27 v1.17
 ;;
 ;; ＜内容＞
 ;;   Gauche で、Eigen ライブラリ を使って行列の高速演算を行うためのモジュールです。
@@ -32,6 +32,7 @@
     eigen-array-log
     eigen-array-sigmoid
     eigen-array-relu
+    eigen-array-step
     eigen-array-sum
     eigen-array-min
     eigen-array-max
@@ -307,6 +308,17 @@
     (let* ((B     (eigen-make-array 0 n1 0 m1))
            (data2 (slot-ref B 'backing-storage)))
       (eigen-matrix-relu data1 n1 m1 data2)
+      B)))
+
+;; 行列の要素に対するステップ関数を計算
+(define-method eigen-array-step ((A <f64array>))
+  (check-array A)
+  (let ((data1 (slot-ref A 'backing-storage))
+        (n1    (array-length A 0))
+        (m1    (array-length A 1)))
+    (let* ((B     (eigen-make-array 0 n1 0 m1))
+           (data2 (slot-ref B 'backing-storage)))
+      (eigen-matrix-step data1 n1 m1 data2)
       B)))
 
 ;; 行列の要素の和を計算
