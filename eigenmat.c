@@ -158,7 +158,7 @@ int eigen_matrix_exp(double* data1, int n1, int m1,
     return TRUE;
 }
 
-// 行列の要素の自然対数を計算
+// 行列の要素に対して、自然対数を計算
 int eigen_matrix_log(double* data1, int n1, int m1,
                      double* data2) {
     if (n1 < 0 || m1 < 0) return FALSE;
@@ -168,7 +168,7 @@ int eigen_matrix_log(double* data1, int n1, int m1,
     return TRUE;
 }
 
-// 行列の要素に対するシグモイド関数を計算
+// 行列の要素に対して、シグモイド関数を計算
 static double sigmoid(double x) { return 1.0 / (1.0 + exp(-x)); }
 int eigen_matrix_sigmoid(double* data1, int n1, int m1,
                          double* data2) {
@@ -179,7 +179,7 @@ int eigen_matrix_sigmoid(double* data1, int n1, int m1,
     return TRUE;
 }
 
-// 行列の要素に対するReLU関数を計算
+// 行列の要素に対して、ReLU関数を計算
 static double relu(double x) { return x > 0 ? x : 0; }
 int eigen_matrix_relu(double* data1, int n1, int m1,
                       double* data2) {
@@ -190,7 +190,7 @@ int eigen_matrix_relu(double* data1, int n1, int m1,
     return TRUE;
 }
 
-// 行列の要素に対するステップ関数を計算
+// 行列の要素に対して、ステップ関数を計算
 static double step(double x) { return x > 0 ? 1 : 0; }
 int eigen_matrix_step(double* data1, int n1, int m1,
                       double* data2) {
@@ -226,7 +226,7 @@ double eigen_matrix_max(double* data1, int n1, int m1) {
     return (double)A.maxCoeff();
 }
 
-// 行列の要素の平均を計算
+// 行列の要素の平均値を計算
 double eigen_matrix_mean(double* data1, int n1, int m1) {
     // (0を許可すると実行時エラーになる)
     //if (n1 < 0 || m1 < 0) return FALSE;

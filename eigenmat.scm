@@ -1,13 +1,13 @@
 ;; -*- coding: utf-8 -*-
 ;;
 ;; eigenmat.scm
-;; 2019-2-27 v1.17
+;; 2019-2-28 v1.18
 ;;
 ;; ＜内容＞
 ;;   Gauche で、Eigen ライブラリ を使って行列の高速演算を行うためのモジュールです。
 ;;   Eigen は、C++ で書かれた線形代数用のライブラリです ( http://eigen.tuxfamily.org )。
 ;;   現状、本モジュールは、標準の gauhce.array モジュールにおける
-;;   <f64array> クラスの行列 (すなわち2次元のarray) の演算のみが可能です。
+;;   2次元の f64array のみ演算が可能です。
 ;;
 ;;   詳細については、以下のページを参照ください。
 ;;   https://github.com/Hamayama/eigenmat
@@ -15,6 +15,7 @@
 (define-module eigenmat
   (use gauche.uvector)
   (use gauche.array)
+  (use gauche.version)
   (export
     test-eigenmat
     use-eigen-array-cache
@@ -58,8 +59,12 @@
 ;; s32vector をハッシュテーブルのキーに使えるようにする
 ;; (Gauche の開発最新版では、デフォルトで使用可能)
 (when (guard (ex (else #t)) (default-hash #s32(1)) #f)
-  (define-method object-hash ((obj <s32vector>) rec-hash)
-    (rec-hash (s32vector->vector obj))))
+  ;; for Gauche v0.9.4
+  (if (version<=? (gauche-version) "0.9.4")
+    (define-method object-hash ((obj <s32vector>))
+      (hash (s32vector->vector obj)))
+    (define-method object-hash ((obj <s32vector>) rec-hash)
+      (rec-hash (s32vector->vector obj)))))
 
 ;; 行列のコピー(Gauche v0.9.7 以後には存在)
 (define array-copy
@@ -71,8 +76,9 @@
         :end-vector   (slot-ref A 'end-vector)
         :mapper       (slot-ref A 'mapper)
         :backing-storage (let1 v (slot-ref A 'backing-storage)
-                           (if (vector? v) (vector-copy v)
-                                           (uvector-copy v)))))))
+                           (if (vector? v)
+                             (vector-copy v)
+                             (uvector-copy v)))))))
 
 ;; 行列の情報取得(エラーチェックなし)
 (define (array-rank   A)
@@ -95,15 +101,14 @@
      ;; shapeのチェック
      (unless (and (>= (array-length A 0) 0)
                   (>= (array-length A 1) 0))
-       (error "invalid array shape"))
-     )
+       (error "invalid array shape")))
    As))
 
 ;; == ここから 公開I/F ==
 
 ;; 行列のキャッシュ(ハッシュテーブル)
 (define use-eigen-array-cache #t) ; 使用有無
-(define array-cache-table (make-hash-table equal-comparator))
+(define array-cache-table (make-hash-table 'equal?))
 
 ;; 行列の生成
 ;; (キャッシュが存在すれば、それをコピーして返す
@@ -121,7 +126,7 @@
 (define (eigen-array ns ne ms me . inits)
   (rlet1 A (eigen-make-array ns ne ms me)
     (f64vector-copy! (slot-ref A 'backing-storage)
-                     0 (apply f64vector inits))))
+                     0 (list->f64vector inits))))
 
 ;; 行列の一致チェック
 (define-method eigen-array-nearly=? ((A <f64array>)
@@ -277,7 +282,7 @@
       (eigen-matrix-exp data1 n1 m1 data2)
       B)))
 
-;; 行列の要素の自然対数を計算
+;; 行列の要素に対して、自然対数を計算
 (define-method eigen-array-log ((A <f64array>))
   (check-array A)
   (let ((data1 (slot-ref A 'backing-storage))
@@ -288,7 +293,7 @@
       (eigen-matrix-log data1 n1 m1 data2)
       B)))
 
-;; 行列の要素に対するシグモイド関数を計算
+;; 行列の要素に対して、シグモイド関数を計算
 (define-method eigen-array-sigmoid ((A <f64array>))
   (check-array A)
   (let ((data1 (slot-ref A 'backing-storage))
@@ -299,7 +304,7 @@
       (eigen-matrix-sigmoid data1 n1 m1 data2)
       B)))
 
-;; 行列の要素に対するReLU関数を計算
+;; 行列の要素に対して、ReLU関数を計算
 (define-method eigen-array-relu ((A <f64array>))
   (check-array A)
   (let ((data1 (slot-ref A 'backing-storage))
@@ -310,7 +315,7 @@
       (eigen-matrix-relu data1 n1 m1 data2)
       B)))
 
-;; 行列の要素に対するステップ関数を計算
+;; 行列の要素に対して、ステップ関数を計算
 (define-method eigen-array-step ((A <f64array>))
   (check-array A)
   (let ((data1 (slot-ref A 'backing-storage))
@@ -351,7 +356,7 @@
       (error "invalid array shape"))
     (eigen-matrix-max data1 n1 m1)))
 
-;; 行列の要素の平均を計算
+;; 行列の要素の平均値を計算
 (define-method eigen-array-mean ((A <f64array>))
   (check-array A)
   (let ((data1 (slot-ref A 'backing-storage))
