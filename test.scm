@@ -41,18 +41,28 @@
 (define M (f64array (shape 0 3 0 2) 1 2 3 4 5 6))
 
 (test* "eigen-make-array 1" F
-       (eigen-make-array 0 2 0 2) eigen-array-nearly=?)
+       (eigen-make-array 0 2 0 2))
 (test* "eigen-make-array 2" #,(<f64array> (0 2 0 3) 0 0 0 0 0 0)
-       (eigen-make-array 0 2 0 3) eigen-array-nearly=?)
-(test* "eigen-make-array 3" G
-       (eigen-make-array 0 0 0 0) eigen-array-nearly=?)
+       (eigen-make-array 0 2 0 3))
+(test* "eigen-make-array 3" #,(<f64array> (0 2 0 3) 0 0 0 0 0 0)
+       (rlet1 ar #f
+         (eigen-array-cache-off)
+         (set! ar (eigen-make-array 0 2 0 3))
+         (eigen-array-cache-on)))
+(test* "eigen-make-array 4" G
+       (eigen-make-array 0 0 0 0))
 
 (test* "eigen-array 1" A
-       (eigen-array 0 2 0 2 1 2 3 4) eigen-array-nearly=?)
-(test* "eigen-array 2" #,(<f64array> (0 2 0 3) 1 2 3 4 5 6)
-       (eigen-array 0 2 0 3 1 2 3 4 5 6) eigen-array-nearly=?)
-(test* "eigen-array 3" G
-       (eigen-array 0 0 0 0) eigen-array-nearly=?)
+       (eigen-array 0 2 0 2 1 2 3 4))
+(test* "eigen-array 2" K
+       (eigen-array 0 2 0 3 1 2 3 4 5 6))
+(test* "eigen-array 3" K
+       (rlet1 ar #f
+         (eigen-array-cache-off)
+         (set! ar (eigen-array 0 2 0 3 1 2 3 4 5 6))
+         (eigen-array-cache-on)))
+(test* "eigen-array 4" G
+       (eigen-array 0 0 0 0))
 
 (test* "eigen-array-nearly=? 1" #t (eigen-array-nearly=? A A))
 (test* "eigen-array-nearly=? 2" #t (eigen-array-nearly=? A C))
@@ -188,11 +198,11 @@
 (test* "eigen-array-determinant 3"  1 (eigen-array-determinant G) nearly=?)
 
 (test* "eigen-array-transpose 1" #,(<f64array> (0 2 0 2) 1 3 2 4)
-       (eigen-array-transpose A) eigen-array-nearly=?)
+       (eigen-array-transpose A))
 (test* "eigen-array-transpose 2" #,(<f64array> (0 3 0 2) 1 4 2 5 3 6)
-       (eigen-array-transpose K) eigen-array-nearly=?)
+       (eigen-array-transpose K))
 (test* "eigen-array-transpose 3" G
-       (eigen-array-transpose G) eigen-array-nearly=?)
+       (eigen-array-transpose G))
 
 (test* "eigen-array-inverse 1" #,(<f64array> (0 2 0 2) -2 1 1.5 -0.5)
        (eigen-array-inverse A) eigen-array-nearly=?)
@@ -208,21 +218,47 @@
 (test* "eigen-array-solve 3" (test-error <error>)
        (eigen-array-solve G G))
 
+(test* "eigen-array-row 1" #,(<f64array> (0 1 0 4) 1 2 3 4)
+       (eigen-array-row H 0))
+(test* "eigen-array-row 2" #,(<f64array> (0 1 0 3) 4 5 6)
+       (eigen-array-row K 1))
+(test* "eigen-array-row 3" (test-error <error>)
+       (eigen-array-row H -1))
+(test* "eigen-array-row 4" (test-error <error>)
+       (eigen-array-row H 4))
+(test* "eigen-array-row 5" (test-error <error>)
+       (eigen-array-row G 0))
+
+(test* "eigen-array-col 1" #,(<f64array> (0 4 0 1) 1 5 9 13)
+       (eigen-array-col H 0))
+(test* "eigen-array-col 2" #,(<f64array> (0 2 0 1) 3 6)
+       (eigen-array-col K 2))
+(test* "eigen-array-col 3" (test-error <error>)
+       (eigen-array-col H -1))
+(test* "eigen-array-col 4" (test-error <error>)
+       (eigen-array-col H 4))
+(test* "eigen-array-col 5" (test-error <error>)
+       (eigen-array-col G 0))
+
 (test* "eigen-array-block 1-1" #,(<f64array> (0 2 0 2) 1 2 5 6)
        (eigen-array-block H 0 0 2 2))
 (test* "eigen-array-block 1-2" #,(<f64array> (0 2 0 3) 6 7 8 10 11 12)
        (eigen-array-block H 1 1 2 3))
 (test* "eigen-array-block 1-3" #,(<f64array> (0 1 0 2) 15 16)
        (eigen-array-block H 3 2 1 2))
-(test* "eigen-array-block 1-4" (test-error <error>)
+(test* "eigen-array-block 1-4" #,(<f64array> (0 2 0 2) 1 2 4 5)
+       (eigen-array-block K 0 0 2 2))
+(test* "eigen-array-block 1-5" #,(<f64array> (0 1 0 2) 5 6)
+       (eigen-array-block K 1 1 1 2))
+(test* "eigen-array-block 1-6" (test-error <error>)
        (eigen-array-block H -1 -1 2 2))
-(test* "eigen-array-block 1-5" (test-error <error>)
+(test* "eigen-array-block 1-7" (test-error <error>)
        (eigen-array-block H 3 3 2 2))
-(test* "eigen-array-block 1-6" G
+(test* "eigen-array-block 1-8" G
        (eigen-array-block H 0 0 0 0))
-(test* "eigen-array-block 1-7" G
+(test* "eigen-array-block 1-9" G
        (eigen-array-block G 0 0 0 0))
-(test* "eigen-array-block 1-8" (test-error <error>)
+(test* "eigen-array-block 1-10" (test-error <error>)
        (eigen-array-block G 0 0 1 1))
 
 (test* "eigen-array-block 2-1" #,(<f64array> (0 4 0 4) 1   2   0.3 0.4 5   6   0.7 0.8
@@ -234,24 +270,30 @@
 (test* "eigen-array-block 2-3" #,(<f64array> (0 4 0 4) 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8
                                                        0.9 1.0 1.1 1.2 1.3 1.4 15  16)
        (eigen-array-block H 3 2 1 2 J 3 2))
-(test* "eigen-array-block 2-4" (test-error <error>)
-       (eigen-array-block H -1 -1 2 2 J 0 0))
-(test* "eigen-array-block 2-5" (test-error <error>)
-       (eigen-array-block H 3 3 2 2 J 0 0))
+(test* "eigen-array-block 2-4" #,(<f64array> (0 2 0 3) -2 1 2 1 4 5)
+       (eigen-array-block K 0 0 2 2 L 0 1))
+(test* "eigen-array-block 2-5" #,(<f64array> (0 2 0 3) -2 5 6 1 2 3)
+       (eigen-array-block K 1 1 1 2 L 0 1))
 (test* "eigen-array-block 2-6" (test-error <error>)
-       (eigen-array-block H 0 0 2 2 J -1 -1))
+       (eigen-array-block H -1 -1 2 2 J 0 0))
 (test* "eigen-array-block 2-7" (test-error <error>)
+       (eigen-array-block H 3 3 2 2 J 0 0))
+(test* "eigen-array-block 2-8" (test-error <error>)
+       (eigen-array-block H 0 0 2 2 J -1 -1))
+(test* "eigen-array-block 2-9" (test-error <error>)
        (eigen-array-block H 0 0 2 2 J 3 3))
-(test* "eigen-array-block 2-8" J
+(test* "eigen-array-block 2-10" J
        (eigen-array-block H 0 0 0 0 J 0 0))
-(test* "eigen-array-block 2-9" J
+(test* "eigen-array-block 2-11" J
        (eigen-array-block G 0 0 0 0 J 0 0))
-(test* "eigen-array-block 2-10" (test-error <error>)
+(test* "eigen-array-block 2-12" (test-error <error>)
        (eigen-array-block G 0 0 1 1 J 0 0))
-(test* "eigen-array-block 2-11" G
+(test* "eigen-array-block 2-13" G
        (eigen-array-block H 0 0 0 0 G 0 0))
-(test* "eigen-array-block 2-11" (test-error <error>)
+(test* "eigen-array-block 2-14" (test-error <error>)
        (eigen-array-block H 0 0 0 0 G 1 1))
+
+(format (current-error-port) "~%~a" ((with-module gauche.test format-summary)))
 
 ;; If you don't want `gosh' to exit with nonzero status even if
 ;; the test fails, pass #f to :exit-on-failure.

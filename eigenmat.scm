@@ -1,7 +1,7 @@
 ;; -*- coding: utf-8 -*-
 ;;
 ;; eigenmat.scm
-;; 2019-2-28 v1.18
+;; 2019-3-1 v1.19
 ;;
 ;; ＜内容＞
 ;;   Gauche で、Eigen ライブラリ を使って行列の高速演算を行うためのモジュールです。
@@ -18,7 +18,8 @@
   (use gauche.version)
   (export
     test-eigenmat
-    use-eigen-array-cache
+    eigen-array-cache-on
+    eigen-array-cache-off
     eigen-make-array
     eigen-array
     eigen-array-nearly=?
@@ -43,6 +44,8 @@
     eigen-array-transpose
     eigen-array-inverse
     eigen-array-solve
+    eigen-array-row
+    eigen-array-col
     eigen-array-block
     ))
 (select-module eigenmat)
@@ -104,11 +107,17 @@
        (error "invalid array shape")))
    As))
 
-;; == ここから 公開I/F ==
-
 ;; 行列のキャッシュ(ハッシュテーブル)
 (define use-eigen-array-cache #t) ; 使用有無
 (define array-cache-table (make-hash-table 'equal?))
+
+;; == ここから 公開I/F ==
+
+;; 行列のキャッシュ使用/未使用
+(define (eigen-array-cache-on)
+  (set! use-eigen-array-cache #t))
+(define (eigen-array-cache-off)
+  (set! use-eigen-array-cache #f))
 
 ;; 行列の生成
 ;; (キャッシュが存在すれば、それをコピーして返す
@@ -438,6 +447,34 @@
            (data3 (slot-ref X 'backing-storage)))
       (eigen-matrix-solve data1 n1 m1 data2 n2 m2 data3)
       X)))
+
+;; 行列から行を抜き出す
+(define-method eigen-array-row ((A <f64array>) (i1r <integer>))
+  (check-array A)
+  (let ((data1 (slot-ref A 'backing-storage))
+        (n1    (array-length A 0))
+        (m1    (array-length A 1))
+        (i1    (- i1r (array-start A 0))))
+    (unless (and (>= i1 0) (< i1 n1))
+      (error "invalid index"))
+    (let* ((B     (eigen-make-array 0 1 0 m1))
+           (data2 (slot-ref B 'backing-storage)))
+      (eigen-matrix-row data1 n1 m1 data2 i1)
+      B)))
+
+;; 行列から列を抜き出す
+(define-method eigen-array-col ((A <f64array>) (j1r <integer>))
+  (check-array A)
+  (let ((data1 (slot-ref A 'backing-storage))
+        (n1    (array-length A 0))
+        (m1    (array-length A 1))
+        (j1    (- j1r (array-start A 1))))
+    (unless (and (>= j1 0) (< j1 m1))
+      (error "invalid index"))
+    (let* ((B     (eigen-make-array 0 n1 0 1))
+           (data2 (slot-ref B 'backing-storage)))
+      (eigen-matrix-col data1 n1 m1 data2 j1)
+      B)))
 
 ;; 行列から一部を抜き出す
 (define-method eigen-array-block ((A <f64array>)

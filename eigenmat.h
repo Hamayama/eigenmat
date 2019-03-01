@@ -88,6 +88,12 @@ extern int eigen_matrix_solve(double* data1, int n1, int m1,
                               double* data2, int n2, int m2,
                               double* data3);
 
+extern int eigen_matrix_row(double* data1, int n1, int m1,
+                            double* data2, int i1);
+
+extern int eigen_matrix_col(double* data1, int n1, int m1,
+                            double* data2, int j1);
+
 extern int eigen_matrix_block(double* data1, int n1, int m1,
                               double* data2, int n2, int m2,
                               int i1, int j1);

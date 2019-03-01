@@ -294,6 +294,28 @@ int eigen_matrix_solve(double* data1, int n1, int m1,
     return TRUE;
 }
 
+// 行列から行を抜き出す
+int eigen_matrix_row(double* data1, int n1, int m1,
+                     double* data2, int i1) {
+    if (n1 < 0 || m1 < 0) return FALSE;
+    if (i1 < 0 || i1 >= n1) return FALSE;
+    MatrixXd A = Map<MatrixXd>(data1, n1, m1);
+    MatrixXd B = A.row(i1);
+    Map<MatrixXd>(data2, 1, m1) = B;
+    return TRUE;
+}
+
+// 行列から列を抜き出す
+int eigen_matrix_col(double* data1, int n1, int m1,
+                     double* data2, int j1) {
+    if (n1 < 0 || m1 < 0) return FALSE;
+    if (j1 < 0 || j1 >= m1) return FALSE;
+    MatrixXd A = Map<MatrixXd>(data1, n1, m1);
+    MatrixXd B = A.col(j1);
+    Map<MatrixXd>(data2, n1, 1) = B;
+    return TRUE;
+}
+
 // 行列から一部を抜き出す
 int eigen_matrix_block(double* data1, int n1, int m1,
                        double* data2, int n2, int m2,

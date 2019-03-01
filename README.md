@@ -78,7 +78,7 @@
     (print (array-ref C 0 0)) ; 行列C の左上の要素の値を表示します。
     (print (array-ref C 0 1)) ; 行列C の右上の要素の値を表示します。
   ```
-- 本モジュールで使用可能な手続きを、以下に示します。  
+- 使用可能な手続きを、以下に示します。  
   (現状、本モジュールは、標準の gauhce.array モジュールにおける  
   2次元の f64array のみ演算が可能です)
 
@@ -90,7 +90,7 @@
     本手続きは、生成した行列をキャッシュに保存します。  
     そして、同一サイズの行列については、キャッシュのコピーを返すことで高速化をはかっています。  
     もし、メモリ使用量等の問題で、この処理が不要な場合には、  
-    モジュール変数 use-eigen-array-cache に #f を設定してください。  
+    `(eigen-array-cache-off)` を実行してください。  
     (本手続きは、他の演算手続きの内部でも使用しています)
 
   - `(eigen-array ns ne ms me . inits)`  
@@ -188,6 +188,12 @@
   - `(eigen-array-solve A B)`  
     AX=B となる 行列X を計算して返します。
 
+  - `(eigen-array-row A i)`  
+    行列A から i 行を抜き出して返します。
+
+  - `(eigen-array-col A j)`  
+    行列A から j 列を抜き出して返します。
+
   - `(eigen-array-block A i j p q)`  
     行列A から 開始位置が (i,j) でサイズが (p,q) の行列を抜き出して返します。
 
@@ -247,6 +253,9 @@
   生成した行列のキャッシュを保存するようにした
 - 2019-2-27  v1.17 eigen-array-stepを追加
 - 2019-2-28  v1.18 プログラムの整理等
+- 2019-3-1   v1.19 use-eigen-array-cacheを削除  
+  eigen-array-cahce-on,eigen-array-cahce-off,  
+  eigen-array-row,eigen-array-colを追加
 
 
-(2019-2-28)
+(2019-3-1)

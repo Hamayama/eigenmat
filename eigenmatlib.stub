@@ -144,6 +144,16 @@
                               (cast (double*) (SCM_F64VECTOR_ELEMENTS data2)) n2 m2
                               (cast (double*) (SCM_F64VECTOR_ELEMENTS data3)))))
 
+(define-cproc eigen-matrix-row (data1::<f64vector> n1::<int> m1::<int>
+                                data2::<f64vector> i1::<int>) ::<boolean>
+  (result (eigen_matrix_row (cast (double*) (SCM_F64VECTOR_ELEMENTS data1)) n1 m1
+                            (cast (double*) (SCM_F64VECTOR_ELEMENTS data2)) i1)))
+
+(define-cproc eigen-matrix-col (data1::<f64vector> n1::<int> m1::<int>
+                                data2::<f64vector> j1::<int>) ::<boolean>
+  (result (eigen_matrix_col (cast (double*) (SCM_F64VECTOR_ELEMENTS data1)) n1 m1
+                            (cast (double*) (SCM_F64VECTOR_ELEMENTS data2)) j1)))
+
 (define-cproc eigen-matrix-block (data1::<f64vector> n1::<int> m1::<int>
                                   data2::<f64vector> n2::<int> m2::<int>
                                   i1::<int> j1::<int>) ::<boolean>
