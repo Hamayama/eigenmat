@@ -226,7 +226,6 @@
 - ライブラリ
   - Eigen v3.3.7
 
-
 ## 履歴
 - 2018-8-13  v1.00 (初版)
 - 2018-8-13  v1.01 コメント修正のみ
@@ -257,6 +256,7 @@
   eigen-array-cahce-on,eigen-array-cahce-off,  
   eigen-array-row,eigen-array-colを追加
 - 2019-3-1   v1.20 行列のチェック見直し
+- 2019-3-1   v1.21 Cの数値の記述見直し
 
 
 (2019-3-1)
