@@ -256,6 +256,7 @@
 - 2019-3-1   v1.19 use-eigen-array-cacheを削除  
   eigen-array-cahce-on,eigen-array-cahce-off,  
   eigen-array-row,eigen-array-colを追加
+- 2019-3-1   v1.20 行列のチェック見直し
 
 
 (2019-3-1)

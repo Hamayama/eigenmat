@@ -1,7 +1,7 @@
 ;; -*- coding: utf-8 -*-
 ;;
 ;; eigenmat.scm
-;; 2019-3-1 v1.19
+;; 2019-3-1 v1.20
 ;;
 ;; ＜内容＞
 ;;   Gauche で、Eigen ライブラリ を使って行列の高速演算を行うためのモジュールです。
@@ -96,15 +96,11 @@
 
 ;; 行列のチェック
 (define (check-array . As)
-  (every
+  (for-each
    (lambda (A)
      ;; 次元数のチェック
      (unless (= (array-rank A) 2)
-       (error "array rank must be 2"))
-     ;; shapeのチェック
-     (unless (and (>= (array-length A 0) 0)
-                  (>= (array-length A 1) 0))
-       (error "invalid array shape")))
+       (error "array rank must be 2")))
    As))
 
 ;; 行列のキャッシュ(ハッシュテーブル)
