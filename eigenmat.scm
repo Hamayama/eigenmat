@@ -1,7 +1,7 @@
 ;; -*- coding: utf-8 -*-
 ;;
 ;; eigenmat.scm
-;; 2019-3-1 v1.21
+;; 2019-3-2 v1.22
 ;;
 ;; ＜内容＞
 ;;   Gauche で、Eigen ライブラリ を使って行列の高速演算を行うためのモジュールです。
@@ -69,39 +69,37 @@
     (define-method object-hash ((obj <s32vector>) rec-hash)
       (rec-hash (s32vector->vector obj)))))
 
-;; 行列のコピー(Gauche v0.9.7 以後には存在)
-(define array-copy
-  (if (global-variable-bound? 'gauche.array 'array-copy)
-    (with-module gauche.array array-copy)
-    (lambda (A)
-      (make (class-of A)
-        :start-vector (slot-ref A 'start-vector)
-        :end-vector   (slot-ref A 'end-vector)
-        :mapper       (slot-ref A 'mapper)
-        :backing-storage (let1 v (slot-ref A 'backing-storage)
-                           (if (vector? v)
-                             (vector-copy v)
-                             (uvector-copy v)))))))
-
 ;; 行列の情報取得(エラーチェックなし)
-(define (array-rank   A)
+(define-inline (array-rank   A)
   (s32vector-length (slot-ref A 'start-vector)))
-(define (array-start  A dim)
+(define-inline (array-start  A dim)
   (s32vector-ref    (slot-ref A 'start-vector) dim))
-(define (array-end    A dim)
+(define-inline (array-end    A dim)
   (s32vector-ref    (slot-ref A 'end-vector)   dim))
-(define (array-length A dim)
+(define-inline (array-length A dim)
   (- (s32vector-ref (slot-ref A 'end-vector)   dim)
      (s32vector-ref (slot-ref A 'start-vector) dim)))
 
-;; 行列のチェック
-(define (check-array . As)
-  (for-each
-   (lambda (A)
-     ;; 次元数のチェック
+;; 行列のコピー(エラーチェックなし)
+(define (array-copy A)
+  (make (class-of A)
+    :start-vector    (slot-ref A 'start-vector)
+    :end-vector      (slot-ref A 'end-vector)
+    :mapper          (slot-ref A 'mapper)
+    :backing-storage (let1 v (slot-ref A 'backing-storage)
+                       (if (vector? v)
+                         (vector-copy v)
+                         (uvector-copy v)))))
+
+;; 行列のチェック(次元数のチェック)
+(define-syntax check-array
+  (syntax-rules ()
+    ((_ A)
      (unless (= (array-rank A) 2)
        (error "array rank must be 2")))
-   As))
+    ((_ A B ...)
+     (unless (= (array-rank A) (array-rank B) ... 2)
+       (error "array rank must be 2")))))
 
 ;; 行列のキャッシュ(ハッシュテーブル)
 (define use-eigen-array-cache #t) ; 使用有無
@@ -452,7 +450,7 @@
         (m1    (array-length A 1))
         (i1    (- i1r (array-start A 0))))
     (unless (and (>= i1 0) (< i1 n1))
-      (error "invalid index"))
+      (error "invalid index value"))
     (let* ((B     (eigen-make-array 0 1 0 m1))
            (data2 (slot-ref B 'backing-storage)))
       (eigen-matrix-row data1 n1 m1 data2 i1)
@@ -466,7 +464,7 @@
         (m1    (array-length A 1))
         (j1    (- j1r (array-start A 1))))
     (unless (and (>= j1 0) (< j1 m1))
-      (error "invalid index"))
+      (error "invalid index value"))
     (let* ((B     (eigen-make-array 0 n1 0 1))
            (data2 (slot-ref B 'backing-storage)))
       (eigen-matrix-col data1 n1 m1 data2 j1)
