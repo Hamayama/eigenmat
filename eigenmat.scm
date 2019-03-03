@@ -1,7 +1,7 @@
 ;; -*- coding: utf-8 -*-
 ;;
 ;; eigenmat.scm
-;; 2019-3-2 v1.22
+;; 2019-3-3 v1.23
 ;;
 ;; ＜内容＞
 ;;   Gauche で、Eigen ライブラリ を使って行列の高速演算を行うためのモジュールです。
@@ -24,17 +24,17 @@
     eigen-array
     eigen-array-nearly=?
     eigen-array-nearly-zero?
-    eigen-array-add
-    eigen-array-sub
-    eigen-array-mul
-    eigen-array-mul-elements
-    eigen-array-div
-    eigen-array-pow
-    eigen-array-exp
-    eigen-array-log
-    eigen-array-sigmoid
-    eigen-array-relu
-    eigen-array-step
+    eigen-array-add          eigen-array-add!
+    eigen-array-sub          eigen-array-sub!
+    eigen-array-mul          eigen-array-mul!
+    eigen-array-mul-elements eigen-array-mul-elements!
+    eigen-array-div          eigen-array-div!
+    eigen-array-pow          eigen-array-pow!
+    eigen-array-exp          eigen-array-exp!
+    eigen-array-log          eigen-array-log!
+    eigen-array-sigmoid      eigen-array-sigmoid!
+    eigen-array-relu         eigen-array-relu!
+    eigen-array-step         eigen-array-step!
     eigen-array-sum
     eigen-array-min
     eigen-array-max
@@ -91,8 +91,8 @@
                          (vector-copy v)
                          (uvector-copy v)))))
 
-;; 行列のチェック(次元数のチェック)
-(define-syntax check-array
+;; 行列の次元数のチェック
+(define-syntax check-array-rank
   (syntax-rules ()
     ((_ A)
      (unless (= (array-rank A) 2)
@@ -135,7 +135,7 @@
 (define-method eigen-array-nearly=? ((A <f64array>)
                                      (B <f64array>)
                                      :optional (precision 1e-12))
-  (check-array A B)
+  (check-array-rank A B)
   (let ((data1 (slot-ref A 'backing-storage))
         (n1    (array-length A 0))
         (m1    (array-length A 1))
@@ -143,75 +143,122 @@
         (n2    (array-length B 0))
         (m2    (array-length B 1)))
     (unless (and (= n1 n2) (= m1 m2))
-      (error "different array shapes"))
+      (error "array shape mismatch"))
     (eigen-matrix-nearly-p data1 n1 m1 data2 n2 m2 precision)))
 
 ;; 行列のゼロチェック
 (define-method eigen-array-nearly-zero? ((A <f64array>)
                                          :optional (precision 1e-12))
-  (check-array A)
+  (check-array-rank A)
   (let ((data1 (slot-ref A 'backing-storage))
         (n1    (array-length A 0))
         (m1    (array-length A 1)))
     (eigen-matrix-nearly-zero-p data1 n1 m1 precision)))
 
+;; 行列の演算生成用マクロ
+;; (行列2個の演算)
+(define-macro (define-eigen-array-op op1)
+  `(define-method ,(symbol-append 'eigen-array- op1) ((A <f64array>) (B <f64array>))
+     (check-array-rank A B)
+     (let ((data1 (slot-ref A 'backing-storage))
+           (n1    (array-length A 0))
+           (m1    (array-length A 1))
+           (data2 (slot-ref B 'backing-storage))
+           (n2    (array-length B 0))
+           (m2    (array-length B 1)))
+       (unless (and (= n1 n2) (= m1 m2))
+         (error "array shape mismatch"))
+       (let* ((C     (eigen-make-array 0 n1 0 m1))
+              (data3 (slot-ref C 'backing-storage)))
+         (,(symbol-append 'eigen-matrix- op1) data1 n1 m1 data2 n2 m2 data3)
+         C))))
+;; (行列2個の演算(破壊的変更版))
+(define-macro (define-eigen-array-op! op1)
+  `(define-method ,(symbol-append 'eigen-array- op1 '!) ((C <f64array>) (A <f64array>) (B <f64array>))
+     (check-array-rank A B)
+     (let ((data1 (slot-ref A 'backing-storage))
+           (n1    (array-length A 0))
+           (m1    (array-length A 1))
+           (data2 (slot-ref B 'backing-storage))
+           (n2    (array-length B 0))
+           (m2    (array-length B 1))
+           (data3 (slot-ref C 'backing-storage))
+           (n3    (array-length C 0))
+           (m3    (array-length C 1)))
+       (unless (and (= n1 n2 n3) (= m1 m2 m3))
+         (error "array shape mismatch"))
+       (,(symbol-append 'eigen-matrix- op1) data1 n1 m1 data2 n2 m2 data3)
+       C)))
+;; (行列とスカラーの演算)
+(define-macro (define-eigen-array-op-scalar op1 op2)
+  `(define-method ,(symbol-append 'eigen-array- op1) ((A <f64array>) (r <real>))
+     (check-array-rank A)
+     (let ((data1 (slot-ref A 'backing-storage))
+           (n1    (array-length A 0))
+           (m1    (array-length A 1)))
+       (let* ((B     (eigen-make-array 0 n1 0 m1))
+              (data2 (slot-ref B 'backing-storage)))
+         (,(symbol-append 'eigen-matrix- op2) data1 n1 m1 r data2)
+         B))))
+;; (行列とスカラーの演算(破壊的変更版))
+(define-macro (define-eigen-array-op-scalar! op1 op2)
+  `(define-method ,(symbol-append 'eigen-array- op1 '!) ((B <f64array>) (A <f64array>) (r <real>))
+     (check-array-rank A)
+     (let ((data1 (slot-ref A 'backing-storage))
+           (n1    (array-length A 0))
+           (m1    (array-length A 1))
+           (data2 (slot-ref B 'backing-storage))
+           (n2    (array-length B 0))
+           (m2    (array-length B 1)))
+       (unless (and (= n1 n2) (= m1 m2))
+         (error "array shape mismatch"))
+       (,(symbol-append 'eigen-matrix- op2) data1 n1 m1 r data2)
+       B)))
+;; (行列1個の演算)
+(define-macro (define-eigen-array-op-unary op1)
+  `(define-method ,(symbol-append 'eigen-array- op1) ((A <f64array>))
+     (check-array-rank A)
+     (let ((data1 (slot-ref A 'backing-storage))
+           (n1    (array-length A 0))
+           (m1    (array-length A 1)))
+       (let* ((B     (eigen-make-array 0 n1 0 m1))
+              (data2 (slot-ref B 'backing-storage)))
+         (,(symbol-append 'eigen-matrix- op1) data1 n1 m1 data2)
+         B))))
+;; (行列1個の演算(破壊的変更版))
+(define-macro (define-eigen-array-op-unary! op1)
+  `(define-method ,(symbol-append 'eigen-array- op1 '!) ((B <f64array>) (A <f64array>))
+     (check-array-rank A)
+     (let ((data1 (slot-ref A 'backing-storage))
+           (n1    (array-length A 0))
+           (m1    (array-length A 1))
+           (data2 (slot-ref B 'backing-storage))
+           (n2    (array-length B 0))
+           (m2    (array-length B 1)))
+       (unless (and (= n1 n2) (= m1 m2))
+         (error "array shape mismatch"))
+       (,(symbol-append 'eigen-matrix- op1) data1 n1 m1 data2)
+       B)))
+
 ;; 行列の和を計算
-(define-method eigen-array-add ((A <f64array>) (B <f64array>))
-  (check-array A B)
-  (let ((data1 (slot-ref A 'backing-storage))
-        (n1    (array-length A 0))
-        (m1    (array-length A 1))
-        (data2 (slot-ref B 'backing-storage))
-        (n2    (array-length B 0))
-        (m2    (array-length B 1)))
-    (unless (and (= n1 n2) (= m1 m2))
-      (error "can't add (array shapes mismatch)"))
-    (let* ((C     (eigen-make-array 0 n1 0 m1))
-           (data3 (slot-ref C 'backing-storage)))
-      (eigen-matrix-add data1 n1 m1 data2 n2 m2 data3)
-      C)))
+(define-eigen-array-op  add)
+(define-eigen-array-op! add)
 
 ;; 行列とスカラーの和を計算
-(define-method eigen-array-add ((A <f64array>) (r <real>))
-  (check-array A)
-  (let ((data1 (slot-ref A 'backing-storage))
-        (n1    (array-length A 0))
-        (m1    (array-length A 1)))
-    (let* ((B     (eigen-make-array 0 n1 0 m1))
-           (data2 (slot-ref B 'backing-storage)))
-      (eigen-matrix-add-scalar data1 n1 m1 r data2)
-      B)))
+(define-eigen-array-op-scalar  add add-scalar)
+(define-eigen-array-op-scalar! add add-scalar)
 
 ;; 行列の差を計算
-(define-method eigen-array-sub ((A <f64array>) (B <f64array>))
-  (check-array A B)
-  (let ((data1 (slot-ref A 'backing-storage))
-        (n1    (array-length A 0))
-        (m1    (array-length A 1))
-        (data2 (slot-ref B 'backing-storage))
-        (n2    (array-length B 0))
-        (m2    (array-length B 1)))
-    (unless (and (= n1 n2) (= m1 m2))
-      (error "can't subtract (array shapes mismatch)"))
-    (let* ((C     (eigen-make-array 0 n1 0 m1))
-           (data3 (slot-ref C 'backing-storage)))
-      (eigen-matrix-sub data1 n1 m1 data2 n2 m2 data3)
-      C)))
+(define-eigen-array-op  sub)
+(define-eigen-array-op! sub)
 
 ;; 行列とスカラーの差を計算
-(define-method eigen-array-sub ((A <f64array>) (r <real>))
-  (check-array A)
-  (let ((data1 (slot-ref A 'backing-storage))
-        (n1    (array-length A 0))
-        (m1    (array-length A 1)))
-    (let* ((B     (eigen-make-array 0 n1 0 m1))
-           (data2 (slot-ref B 'backing-storage)))
-      (eigen-matrix-sub-scalar data1 n1 m1 r data2)
-      B)))
+(define-eigen-array-op-scalar  sub sub-scalar)
+(define-eigen-array-op-scalar! sub sub-scalar)
 
 ;; 行列の積を計算
 (define-method eigen-array-mul ((A <f64array>) (B <f64array>))
-  (check-array A B)
+  (check-array-rank A B)
   (let ((data1 (slot-ref A 'backing-storage))
         (n1    (array-length A 0))
         (m1    (array-length A 1))
@@ -219,119 +266,68 @@
         (n2    (array-length B 0))
         (m2    (array-length B 1)))
     (unless (= m1 n2)
-      (error "can't multiply (array shapes mismatch)"))
+      (error "array shape mismatch"))
     (let* ((C     (eigen-make-array 0 n1 0 m2)) ; 結果は n1 x m2 になる
            (data3 (slot-ref C 'backing-storage)))
       (eigen-matrix-mul data1 n1 m1 data2 n2 m2 data3)
       C)))
 
-;; 行列の要素の積を計算
-(define-method eigen-array-mul-elements ((A <f64array>) (B <f64array>))
-  (check-array A B)
+;; 行列の積を計算(破壊的変更版)
+(define-method eigen-array-mul! ((C <f64array>) (A <f64array>) (B <f64array>))
+  (check-array-rank A B)
   (let ((data1 (slot-ref A 'backing-storage))
         (n1    (array-length A 0))
         (m1    (array-length A 1))
         (data2 (slot-ref B 'backing-storage))
         (n2    (array-length B 0))
-        (m2    (array-length B 1)))
-    (unless (and (= n1 n2) (= m1 m2))
-      (error "can't multiply elements (array shapes mismatch)"))
-    (let* ((C     (eigen-make-array 0 n1 0 m1))
-           (data3 (slot-ref C 'backing-storage)))
-      (eigen-matrix-mul-elements data1 n1 m1 data2 n2 m2 data3)
-      C)))
+        (m2    (array-length B 1))
+        (data3 (slot-ref C 'backing-storage))
+        (n3    (array-length C 0))
+        (m3    (array-length C 1)))
+    (unless (and (= m1 n2) (= n1 n3) (= m2 m3)) ; 結果は n1 x m2 になる
+      (error "array shape mismatch"))
+    (eigen-matrix-mul data1 n1 m1 data2 n2 m2 data3)
+    C))
+
+;; 行列の要素の積を計算
+(define-eigen-array-op  mul-elements)
+(define-eigen-array-op! mul-elements)
 
 ;; 行列とスカラーの積を計算
-(define-method eigen-array-mul-elements ((A <f64array>) (r <real>))
-  (check-array A)
-  (let ((data1 (slot-ref A 'backing-storage))
-        (n1    (array-length A 0))
-        (m1    (array-length A 1)))
-    (let* ((B     (eigen-make-array 0 n1 0 m1))
-           (data2 (slot-ref B 'backing-storage)))
-      (eigen-matrix-mul-scalar data1 n1 m1 r data2)
-      B)))
+(define-eigen-array-op-scalar  mul-elements mul-scalar)
+(define-eigen-array-op-scalar! mul-elements mul-scalar)
 
 ;; 行列とスカラーの割り算を計算
-(define-method eigen-array-div ((A <f64array>) (r <real>))
-  (check-array A)
-  (let ((data1 (slot-ref A 'backing-storage))
-        (n1    (array-length A 0))
-        (m1    (array-length A 1)))
-    (let* ((B     (eigen-make-array 0 n1 0 m1))
-           (data2 (slot-ref B 'backing-storage)))
-      (eigen-matrix-div-scalar data1 n1 m1 r data2)
-      B)))
+(define-eigen-array-op-scalar  div div-scalar)
+(define-eigen-array-op-scalar! div div-scalar)
 
 ;; 行列の要素のべき乗を計算
-(define-method eigen-array-pow ((A <f64array>) (r <real>))
-  (check-array A)
-  (let ((data1 (slot-ref A 'backing-storage))
-        (n1    (array-length A 0))
-        (m1    (array-length A 1)))
-    (let* ((B     (eigen-make-array 0 n1 0 m1))
-           (data2 (slot-ref B 'backing-storage)))
-      (eigen-matrix-pow data1 n1 m1 r data2)
-      B)))
+(define-eigen-array-op-scalar  pow pow)
+(define-eigen-array-op-scalar! pow pow)
 
 ;; 行列の要素を指数として、自然対数の底eのべき乗を計算
-(define-method eigen-array-exp ((A <f64array>))
-  (check-array A)
-  (let ((data1 (slot-ref A 'backing-storage))
-        (n1    (array-length A 0))
-        (m1    (array-length A 1)))
-    (let* ((B     (eigen-make-array 0 n1 0 m1))
-           (data2 (slot-ref B 'backing-storage)))
-      (eigen-matrix-exp data1 n1 m1 data2)
-      B)))
+(define-eigen-array-op-unary  exp)
+(define-eigen-array-op-unary! exp)
 
 ;; 行列の要素に対して、自然対数を計算
-(define-method eigen-array-log ((A <f64array>))
-  (check-array A)
-  (let ((data1 (slot-ref A 'backing-storage))
-        (n1    (array-length A 0))
-        (m1    (array-length A 1)))
-    (let* ((B     (eigen-make-array 0 n1 0 m1))
-           (data2 (slot-ref B 'backing-storage)))
-      (eigen-matrix-log data1 n1 m1 data2)
-      B)))
+(define-eigen-array-op-unary  log)
+(define-eigen-array-op-unary! log)
 
 ;; 行列の要素に対して、シグモイド関数を計算
-(define-method eigen-array-sigmoid ((A <f64array>))
-  (check-array A)
-  (let ((data1 (slot-ref A 'backing-storage))
-        (n1    (array-length A 0))
-        (m1    (array-length A 1)))
-    (let* ((B     (eigen-make-array 0 n1 0 m1))
-           (data2 (slot-ref B 'backing-storage)))
-      (eigen-matrix-sigmoid data1 n1 m1 data2)
-      B)))
+(define-eigen-array-op-unary  sigmoid)
+(define-eigen-array-op-unary! sigmoid)
 
 ;; 行列の要素に対して、ReLU関数を計算
-(define-method eigen-array-relu ((A <f64array>))
-  (check-array A)
-  (let ((data1 (slot-ref A 'backing-storage))
-        (n1    (array-length A 0))
-        (m1    (array-length A 1)))
-    (let* ((B     (eigen-make-array 0 n1 0 m1))
-           (data2 (slot-ref B 'backing-storage)))
-      (eigen-matrix-relu data1 n1 m1 data2)
-      B)))
+(define-eigen-array-op-unary  relu)
+(define-eigen-array-op-unary! relu)
 
 ;; 行列の要素に対して、ステップ関数を計算
-(define-method eigen-array-step ((A <f64array>))
-  (check-array A)
-  (let ((data1 (slot-ref A 'backing-storage))
-        (n1    (array-length A 0))
-        (m1    (array-length A 1)))
-    (let* ((B     (eigen-make-array 0 n1 0 m1))
-           (data2 (slot-ref B 'backing-storage)))
-      (eigen-matrix-step data1 n1 m1 data2)
-      B)))
+(define-eigen-array-op-unary  step)
+(define-eigen-array-op-unary! step)
 
 ;; 行列の要素の和を計算
 (define-method eigen-array-sum ((A <f64array>))
-  (check-array A)
+  (check-array-rank A)
   (let ((data1 (slot-ref A 'backing-storage))
         (n1    (array-length A 0))
         (m1    (array-length A 1)))
@@ -339,7 +335,7 @@
 
 ;; 行列の要素の最小値を計算
 (define-method eigen-array-min ((A <f64array>))
-  (check-array A)
+  (check-array-rank A)
   (let ((data1 (slot-ref A 'backing-storage))
         (n1    (array-length A 0))
         (m1    (array-length A 1)))
@@ -350,7 +346,7 @@
 
 ;; 行列の要素の最大値を計算
 (define-method eigen-array-max ((A <f64array>))
-  (check-array A)
+  (check-array-rank A)
   (let ((data1 (slot-ref A 'backing-storage))
         (n1    (array-length A 0))
         (m1    (array-length A 1)))
@@ -361,7 +357,7 @@
 
 ;; 行列の要素の平均値を計算
 (define-method eigen-array-mean ((A <f64array>))
-  (check-array A)
+  (check-array-rank A)
   (let ((data1 (slot-ref A 'backing-storage))
         (n1    (array-length A 0))
         (m1    (array-length A 1)))
@@ -372,7 +368,7 @@
 
 ;; 行列のトレースを計算
 (define-method eigen-array-trace ((A <f64array>))
-  (check-array A)
+  (check-array-rank A)
   (let ((data1 (slot-ref A 'backing-storage))
         (n1    (array-length A 0))
         (m1    (array-length A 1)))
@@ -383,7 +379,7 @@
 
 ;; 行列式を計算
 (define-method eigen-array-determinant ((A <f64array>))
-  (check-array A)
+  (check-array-rank A)
   (let ((data1 (slot-ref A 'backing-storage))
         (n1    (array-length A 0))
         (m1    (array-length A 1)))
@@ -394,7 +390,7 @@
 
 ;; 転置行列を計算
 (define-method eigen-array-transpose ((A <f64array>))
-  (check-array A)
+  (check-array-rank A)
   (let ((data1 (slot-ref A 'backing-storage))
         (n1    (array-length A 0))
         (m1    (array-length A 1)))
@@ -405,7 +401,7 @@
 
 ;; 逆行列を計算
 (define-method eigen-array-inverse ((A <f64array>))
-  (check-array A)
+  (check-array-rank A)
   (let ((data1 (slot-ref A 'backing-storage))
         (n1    (array-length A 0))
         (m1    (array-length A 1)))
@@ -422,7 +418,7 @@
 
 ;; AX=B となる X を求める
 (define-method eigen-array-solve ((A <f64array>) (B <f64array>))
-  (check-array A B)
+  (check-array-rank A B)
   (let ((data1 (slot-ref A 'backing-storage))
         (n1    (array-length A 0))
         (m1    (array-length A 1))
@@ -436,7 +432,7 @@
     ;(unless (= n1 m1)
     ;  (error "array A's shape must be square"))
     (unless (= n1 n2)
-      (error "can't solve (array shapes mismatch)"))
+      (error "array shape mismatch"))
     (let* ((X     (eigen-make-array 0 m1 0 m2)) ; 結果は m1 x m2 になる
            (data3 (slot-ref X 'backing-storage)))
       (eigen-matrix-solve data1 n1 m1 data2 n2 m2 data3)
@@ -444,7 +440,7 @@
 
 ;; 行列から行を抜き出す
 (define-method eigen-array-row ((A <f64array>) (i1r <integer>))
-  (check-array A)
+  (check-array-rank A)
   (let ((data1 (slot-ref A 'backing-storage))
         (n1    (array-length A 0))
         (m1    (array-length A 1))
@@ -458,7 +454,7 @@
 
 ;; 行列から列を抜き出す
 (define-method eigen-array-col ((A <f64array>) (j1r <integer>))
-  (check-array A)
+  (check-array-rank A)
   (let ((data1 (slot-ref A 'backing-storage))
         (n1    (array-length A 0))
         (m1    (array-length A 1))
@@ -474,7 +470,7 @@
 (define-method eigen-array-block ((A <f64array>)
                                   (i1r <integer>) (j1r <integer>)
                                   (n2 <integer>) (m2 <integer>))
-  (check-array A)
+  (check-array-rank A)
   (let ((data1 (slot-ref A 'backing-storage))
         (n1    (array-length A 0))
         (m1    (array-length A 1))
@@ -495,7 +491,7 @@
                                   (n3 <integer>) (m3 <integer>)
                                   (B <f64array>)
                                   (i2r <integer>) (j2r <integer>))
-  (check-array A B)
+  (check-array-rank A B)
   (let ((data1 (slot-ref A 'backing-storage))
         (n1    (array-length A 0))
         (m1    (array-length A 1))

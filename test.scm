@@ -87,6 +87,24 @@
 (test* "eigen-array-add 2-3" G
        (eigen-array-add G 1)   eigen-array-nearly=?)
 
+(test* "eigen-array-add! 1-1" #,(<f64array> (0 2 0 2) 6 8 10 12)
+       (eigen-array-add! (eigen-make-array 0 2 0 2) A B) eigen-array-nearly=?)
+(test* "eigen-array-add! 1-2" #,(<f64array> (0 2 0 2) 2 2 2 2)
+       (eigen-array-add! (eigen-make-array 0 2 0 2) D D) eigen-array-nearly=?)
+(test* "eigen-array-add! 1-3" (test-error <error>)
+       (eigen-array-add! (eigen-make-array 0 1 0 1) A B))
+(test* "eigen-array-add! 1-4" G
+       (eigen-array-add! (eigen-make-array 0 0 0 0) G G) eigen-array-nearly=?)
+
+(test* "eigen-array-add! 2-1" #,(<f64array> (0 2 0 2) 2 3 4 5)
+       (eigen-array-add! (eigen-make-array 0 2 0 2) A 1)   eigen-array-nearly=?)
+(test* "eigen-array-add! 2-2" #,(<f64array> (0 2 0 2) 1.5 1.5 1.5 1.5)
+       (eigen-array-add! (eigen-make-array 0 2 0 2) D 0.5) eigen-array-nearly=?)
+(test* "eigen-array-add! 2-3" (test-error <error>)
+       (eigen-array-add! (eigen-make-array 0 1 0 1) A 1))
+(test* "eigen-array-add! 2-4" G
+       (eigen-array-add! (eigen-make-array 0 0 0 0) G 1)   eigen-array-nearly=?)
+
 (test* "eigen-array-sub 1-1" #,(<f64array> (0 2 0 2) -4 -4 -4 -4)
        (eigen-array-sub A B) eigen-array-nearly=?)
 (test* "eigen-array-sub 1-2" #,(<f64array> (0 2 0 2) 0 0 0 0)
@@ -101,6 +119,12 @@
 (test* "eigen-array-sub 2-3" G
        (eigen-array-sub G 1)   eigen-array-nearly=?)
 
+(test* "eigen-array-sub! 1-1" #,(<f64array> (0 2 0 2) -4 -4 -4 -4)
+       (eigen-array-sub! (eigen-make-array 0 2 0 2) A B) eigen-array-nearly=?)
+
+(test* "eigen-array-sub! 2-1" #,(<f64array> (0 2 0 2) 0 1 2 3)
+       (eigen-array-sub! (eigen-make-array 0 2 0 2) A 1) eigen-array-nearly=?)
+
 (test* "eigen-array-mul 1" #,(<f64array> (0 2 0 2) 19 22 43 50)
        (eigen-array-mul A B) eigen-array-nearly=?)
 (test* "eigen-array-mul 2" #,(<f64array> (0 2 0 2) 2 2 2 2)
@@ -109,6 +133,9 @@
        (eigen-array-mul K M) eigen-array-nearly=?)
 (test* "eigen-array-mul 4" G
        (eigen-array-mul G G) eigen-array-nearly=?)
+
+(test* "eigen-array-mul! 1" #,(<f64array> (0 2 0 2) 19 22 43 50)
+       (eigen-array-mul! (eigen-make-array 0 2 0 2) A B) eigen-array-nearly=?)
 
 (test* "eigen-array-mul-elements 1-1" #,(<f64array> (0 2 0 2) 5 12 21 32)
        (eigen-array-mul-elements A B) eigen-array-nearly=?)
@@ -124,12 +151,21 @@
 (test* "eigen-array-mul-elements 2-3" G
        (eigen-array-mul-elements G 2)   eigen-array-nearly=?)
 
+(test* "eigen-array-mul-elements! 1-1" #,(<f64array> (0 2 0 2) 5 12 21 32)
+       (eigen-array-mul-elements! (eigen-make-array 0 2 0 2) A B) eigen-array-nearly=?)
+
+(test* "eigen-array-mul-elements! 2-1" #,(<f64array> (0 2 0 2) 2 4 6 8)
+       (eigen-array-mul-elements! (eigen-make-array 0 2 0 2) A 2) eigen-array-nearly=?)
+
 (test* "eigen-array-div 1" #,(<f64array> (0 2 0 2) 0.5 1.0 1.5 2.0)
        (eigen-array-div A 2) eigen-array-nearly=?)
 (test* "eigen-array-div 2" #,(<f64array> (0 2 0 2) +inf.0 +inf.0 +inf.0 +inf.0)
        (eigen-array-div A 0))
 (test* "eigen-array-div 3" G
        (eigen-array-div G 2) eigen-array-nearly=?)
+
+(test* "eigen-array-div! 1" #,(<f64array> (0 2 0 2) 0.5 1.0 1.5 2.0)
+       (eigen-array-div! (eigen-make-array 0 2 0 2) A 2) eigen-array-nearly=?)
 
 (test* "eigen-array-pow 1" #,(<f64array> (0 2 0 2) 1 4 9 16)
        (eigen-array-pow A 2) eigen-array-nearly=?)
@@ -140,6 +176,9 @@
 (test* "eigen-array-pow 4" G
        (eigen-array-pow G 2) eigen-array-nearly=?)
 
+(test* "eigen-array-pow! 1" #,(<f64array> (0 2 0 2) 1 4 9 16)
+       (eigen-array-pow! (eigen-make-array 0 2 0 2) A 2) eigen-array-nearly=?)
+
 (test* "eigen-array-exp 1" (f64array (shape 0 2 0 2) (exp 1) (exp 2) (exp 3) (exp 4))
        (eigen-array-exp A) eigen-array-nearly=?)
 (test* "eigen-array-exp 2" D
@@ -147,12 +186,18 @@
 (test* "eigen-array-exp 3" G
        (eigen-array-exp G) eigen-array-nearly=?)
 
+(test* "eigen-array-exp! 1" (f64array (shape 0 2 0 2) (exp 1) (exp 2) (exp 3) (exp 4))
+       (eigen-array-exp! (eigen-make-array 0 2 0 2) A) eigen-array-nearly=?)
+
 (test* "eigen-array-log 1" (f64array (shape 0 2 0 2) (log 1) (log 2) (log 3) (log 4))
        (eigen-array-log A) eigen-array-nearly=?)
 (test* "eigen-array-log 2" #,(<f64array> (0 2 0 2) -inf.0 -inf.0 -inf.0 -inf.0)
        (eigen-array-log F))
 (test* "eigen-array-log 3" G
        (eigen-array-log G) eigen-array-nearly=?)
+
+(test* "eigen-array-log! 1" (f64array (shape 0 2 0 2) (log 1) (log 2) (log 3) (log 4))
+       (eigen-array-log! (eigen-make-array 0 2 0 2) A) eigen-array-nearly=?)
 
 (test* "eigen-array-sigmoid 1"
        (let ()
@@ -164,6 +209,12 @@
 (test* "eigen-array-sigmoid 3" G
        (eigen-array-sigmoid G) eigen-array-nearly=?)
 
+(test* "eigen-array-sigmoid! 1"
+       (let ()
+         (define (sigmoid x) (/. 1 (+ 1 (exp (- x)))))
+         (f64array (shape 0 2 0 2) (sigmoid 1) (sigmoid 2) (sigmoid 3) (sigmoid 4)))
+       (eigen-array-sigmoid! (eigen-make-array 0 2 0 2) A) eigen-array-nearly=?)
+
 (test* "eigen-array-relu 1" A
        (eigen-array-relu A) eigen-array-nearly=?)
 (test* "eigen-array-relu 2" #,(<f64array> (0 2 0 3) 0 0 0 1 2 3)
@@ -171,12 +222,18 @@
 (test* "eigen-array-relu 3" G
        (eigen-array-relu G) eigen-array-nearly=?)
 
+(test* "eigen-array-relu! 1" A
+       (eigen-array-relu! (eigen-make-array 0 2 0 2) A) eigen-array-nearly=?)
+
 (test* "eigen-array-step 1" D
        (eigen-array-step A) eigen-array-nearly=?)
 (test* "eigen-array-step 2" #,(<f64array> (0 2 0 3) 0 0 0 1 1 1)
        (eigen-array-step L) eigen-array-nearly=?)
 (test* "eigen-array-step 3" G
        (eigen-array-step G) eigen-array-nearly=?)
+
+(test* "eigen-array-step! 1" D
+       (eigen-array-step! (eigen-make-array 0 2 0 2) A) eigen-array-nearly=?)
 
 (test* "eigen-array-sum 1" 10 (eigen-array-sum A) nearly=?)
 (test* "eigen-array-sum 2" 0  (eigen-array-sum G) nearly=?)
