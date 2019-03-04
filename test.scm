@@ -68,10 +68,18 @@
 (test* "eigen-array-nearly=? 2" #t (eigen-array-nearly=? A C))
 (test* "eigen-array-nearly=? 3" #f (eigen-array-nearly=? A D))
 (test* "eigen-array-nearly=? 4" #t (eigen-array-nearly=? G G))
+(test* "eigen-array-nearly=? 5" #f
+       (eigen-array-nearly=? A (f64array (shape 0 2 0 2) 1 2 3 (+ 4 1e-11))))
+(test* "eigen-array-nearly=? 6" #f
+       (eigen-array-nearly=? F (f64array (shape 0 2 0 2) 1 2 3 (+ 4 1e-13))))
 
 (test* "eigen-array-nearly-zero? 1" #t (eigen-array-nearly-zero? F))
 (test* "eigen-array-nearly-zero? 2" #f (eigen-array-nearly-zero? D))
 (test* "eigen-array-nearly-zero? 3" #t (eigen-array-nearly-zero? G))
+(test* "eigen-array-nearly-zero? 4" #t
+       (eigen-array-nearly-zero? (f64array (shape 0 2 0 2) 0 0 0 1e-13)))
+(test* "eigen-array-nearly-zero? 5" #f
+       (eigen-array-nearly-zero? (f64array (shape 0 2 0 2) 0 0 0 1e-11)))
 
 (test* "eigen-array-add 1-1" #,(<f64array> (0 2 0 2) 6 8 10 12)
        (eigen-array-add A B) eigen-array-nearly=?)

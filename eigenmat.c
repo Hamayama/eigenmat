@@ -43,7 +43,7 @@ int eigen_matrix_nearly_zero_p(double* data1, int n1, int m1,
                                double precision) {
     if (n1 < 0 || m1 < 0) return FALSE;
     MatrixXd A = Map<MatrixXd>(data1, n1, m1);
-    return A.isMuchSmallerThan(precision) ? TRUE : FALSE;
+    return A.isMuchSmallerThan(1, precision) ? TRUE : FALSE;
 }
 
 // 行列の和を計算

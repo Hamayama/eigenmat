@@ -1,7 +1,7 @@
 ;; -*- coding: utf-8 -*-
 ;;
 ;; eigenmat.scm
-;; 2019-3-3 v1.23
+;; 2019-3-4 v1.24
 ;;
 ;; ＜内容＞
 ;;   Gauche で、Eigen ライブラリ を使って行列の高速演算を行うためのモジュールです。
@@ -121,8 +121,9 @@
     (let1 key (s32vector ns ne ms me)
       (if-let1 A (hash-table-get array-cache-table key #f)
         (array-copy A)
-        (rlet1 B (make-f64array (shape ns ne ms me) 0)
-          (hash-table-put! array-cache-table key B))))
+        (let1 B (make-f64array (shape ns ne ms me) 0)
+          (hash-table-put! array-cache-table key B)
+          (array-copy B))))
     (make-f64array (shape ns ne ms me) 0)))
 
 ;; 行列の初期化データ付き生成
