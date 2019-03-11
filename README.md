@@ -208,27 +208,41 @@
     行列A の行列式を計算して返します。
 
   - `(eigen-array-transpose A)`  
-    行列A の転置行列を返します。
+    `(eigen-array-transpose! B A)`  
+    行列A の転置行列を返します。  
+    `!` がついたものは、結果を 行列B に格納して返します (行列B は変更されます)。
 
   - `(eigen-array-inverse A)`  
-    行列A の逆行列を計算して返します。
+    `(eigen-array-inverse! B A)`  
+    行列A の逆行列を計算して返します。  
+    `!` がついたものは、結果を 行列B に格納して返します (行列B は変更されます)。
 
   - `(eigen-array-solve A B)`  
-    AX=B となる 行列X を計算して返します。
+    `(eigen-array-solve! X A B)`  
+    AX=B となる 行列X を計算して返します。  
+    `!` がついたものは、結果を 行列X に格納して返します (行列X は変更されます)。
 
   - `(eigen-array-row A i)`  
-    行列A から i 行を抜き出して返します。
+    `(eigen-array-row! B A i)`  
+    行列A から i 行を抜き出して返します。  
+    `!` がついたものは、結果を 行列B に格納して返します (行列B は変更されます)。
 
   - `(eigen-array-col A j)`  
-    行列A から j 列を抜き出して返します。
+  - `(eigen-array-col! B A j)`  
+    行列A から j 列を抜き出して返します。  
+    `!` がついたものは、結果を 行列B に格納して返します (行列B は変更されます)。
 
   - `(eigen-array-block A i j p q)`  
-    行列A から 開始位置が (i,j) でサイズが (p,q) の行列を抜き出して返します。
+    `(eigen-array-block! B A i j p q)`  
+    行列A から 開始位置が (i,j) でサイズが (p,q) の行列を抜き出して返します。  
+    `!` がついたものは、結果を 行列B に格納して返します (行列B は変更されます)。
 
   - `(eigen-array-block A i1 j1 p q B i2 j2)`  
+    `(eigen-array-block! C A i1 j1 p q B i2 j2)`  
     行列A から 開始位置が (i1,j1) でサイズが (p,q) の行列を抜き出して、  
     行列B の (i2,j2) の位置にコピーしたものを返します。  
-    (行列B は変更されません。戻り値を使用してください)
+    (行列B は変更されません。戻り値を使用してください)  
+    `!` がついたものは、結果を 行列C に格納して返します (行列C は変更されます)。
 
 
 ## 注意事項
@@ -289,6 +303,8 @@
 - 2019-3-3   v1.23 演算の破壊的変更版を追加
 - 2019-3-4   v1.24 行列のキャッシュミス修正  
   eigen-array-nearly-zero?のミス修正(EigenのisMuchSmallerThan関数の引数を間違えていた)
+- 2019-3-11  v1.25 eigen-array-transpose!,eigen-array-inverse!,eigen-array-solve!,  
+  eigen-array-row!,eigen-array-col!,eigen-array-block!を追加
 
 
-(2019-3-8)
+(2019-3-11)
