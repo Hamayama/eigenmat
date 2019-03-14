@@ -228,7 +228,7 @@
     `!` がついたものは、結果を 行列B に格納して返します (行列B は変更されます)。
 
   - `(eigen-array-col A j)`  
-  - `(eigen-array-col! B A j)`  
+    `(eigen-array-col! B A j)`  
     行列A から j 列を抜き出して返します。  
     `!` がついたものは、結果を 行列B に格納して返します (行列B は変更されます)。
 
@@ -307,4 +307,4 @@
   eigen-array-row!,eigen-array-col!,eigen-array-block!を追加
 
 
-(2019-3-11)
+(2019-3-14)
