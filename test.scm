@@ -43,26 +43,44 @@
 
 (test* "eigen-make-array 1" F
        (eigen-make-array 0 2 0 2))
-(test* "eigen-make-array 2" N
-       (eigen-make-array 0 2 0 3))
+(test* "eigen-make-array 2" D
+       (eigen-make-array 0 2 0 2 1))
 (test* "eigen-make-array 3" N
+       (eigen-make-array 0 2 0 3))
+(test* "eigen-make-array 4" N
        (rlet1 ar #f
          (eigen-array-cache-off)
          (set! ar (eigen-make-array 0 2 0 3))
          (eigen-array-cache-on)))
-(test* "eigen-make-array 4" G
+(test* "eigen-make-array 5" G
        (eigen-make-array 0 0 0 0))
+
+(test* "eigen-make-array-same-shape 1" F
+       (eigen-make-array-same-shape A))
+(test* "eigen-make-array-same-shape 2" D
+       (eigen-make-array-same-shape A 1))
+(test* "eigen-make-array-same-shape 3" N
+       (eigen-make-array-same-shape K))
+(test* "eigen-make-array-same-shape 4" N
+       (rlet1 ar #f
+         (eigen-array-cache-off)
+         (set! ar (eigen-make-array-same-shape K))
+         (eigen-array-cache-on)))
+(test* "eigen-make-array-same-shape 5" G
+       (eigen-make-array-same-shape G))
 
 (test* "eigen-array 1" A
        (eigen-array 0 2 0 2 1 2 3 4))
-(test* "eigen-array 2" K
-       (eigen-array 0 2 0 3 1 2 3 4 5 6))
+(test* "eigen-array 2" #,(<f64array> (0 2 0 2) 1 2 0 0)
+       (eigen-array 0 2 0 2 1 2))
 (test* "eigen-array 3" K
+       (eigen-array 0 2 0 3 1 2 3 4 5 6))
+(test* "eigen-array 4" K
        (rlet1 ar #f
          (eigen-array-cache-off)
          (set! ar (eigen-array 0 2 0 3 1 2 3 4 5 6))
          (eigen-array-cache-on)))
-(test* "eigen-array 4" G
+(test* "eigen-array 5" G
        (eigen-array 0 0 0 0))
 
 (test* "eigen-array-nearly=? 1" #t (eigen-array-nearly=? A A))

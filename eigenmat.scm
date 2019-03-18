@@ -1,7 +1,7 @@
 ;; -*- coding: utf-8 -*-
 ;;
 ;; eigenmat.scm
-;; 2019-3-11 v1.25
+;; 2019-3-19 v1.26
 ;;
 ;; ＜内容＞
 ;;   Gauche で、Eigen ライブラリ を使って行列の高速演算を行うためのモジュールです。
@@ -18,12 +18,10 @@
   (use gauche.version)
   (export
     test-eigenmat
-    eigen-array-cache-on
-    eigen-array-cache-off
-    eigen-make-array
+    eigen-array-cache-on     eigen-array-cache-off
+    eigen-make-array         eigen-make-array-same-shape
     eigen-array
-    eigen-array-nearly=?
-    eigen-array-nearly-zero?
+    eigen-array-nearly=?     eigen-array-nearly-zero?
     eigen-array-add          eigen-array-add!
     eigen-array-sub          eigen-array-sub!
     eigen-array-mul          eigen-array-mul!
@@ -113,22 +111,35 @@
 (define (eigen-array-cache-off)
   (set! use-eigen-array-cache #f))
 
-;; 行列の生成
-;; (キャッシュが存在すれば、それをコピーして返す
-;;  (生成よりコピーの方が高速なため))
-(define (eigen-make-array ns ne ms me)
+;; 行列の生成(キャッシュ使用)
+(define (eigen-make-array ns ne ms me . maybe-init)
   (if use-eigen-array-cache
     (let1 key (s32vector ns ne ms me)
       (if-let1 A (hash-table-get array-cache-table key #f)
-        (array-copy A)
+        (if (or (null? maybe-init) (= (car maybe-init) 0))
+          (array-copy A)
+          (rlet1 B (array-copy A)
+            (f64vector-fill! (slot-ref B 'backing-storage) (car maybe-init))))
         (let1 B (make-f64array (shape ns ne ms me) 0)
           (hash-table-put! array-cache-table key B)
-          (array-copy B))))
-    (make-f64array (shape ns ne ms me) 0)))
+          (if (or (null? maybe-init) (= (car maybe-init) 0))
+            (array-copy B)
+            (rlet1 C (array-copy B)
+              (f64vector-fill! (slot-ref C 'backing-storage) (car maybe-init)))))))
+    (apply make-f64array (shape ns ne ms me) maybe-init)))
+
+;; 同じ shape の行列の生成
+(define (eigen-make-array-same-shape A . maybe-init)
+  (check-array-rank A)
+  (let ((ns (array-start A 0))
+        (ne (array-end   A 0))
+        (ms (array-start A 1))
+        (me (array-end   A 1)))
+    (apply eigen-make-array ns ne ms me maybe-init)))
 
 ;; 行列の初期化データ付き生成
 (define (eigen-array ns ne ms me . inits)
-  (rlet1 A (eigen-make-array ns ne ms me)
+  (rlet1 A (eigen-make-array ns ne ms me 0)
     (f64vector-copy! (slot-ref A 'backing-storage)
                      0 (list->f64vector inits))))
 
