@@ -90,6 +90,11 @@
   (現状、本モジュールは、標準の gauhce.array モジュールにおける  
   2次元の f64array のみ演算が可能です)
 
+  - `(eigen-array-cache-on)`  
+    `(eigen-array-cache-off)`  
+    行列のキャッシュの使用(ON)/未使用(OFF)を設定します。デフォルトは使用(ON)です。  
+    (行列のキャッシュについては eigen-make-array の説明を参照ください)
+
   - `(eigen-make-array ns ne ms me [maybe-init])`  
     行列 (2次元のf64array) を生成します。  
     ns ne ms me には、行列の shape を指定します。  
@@ -98,24 +103,22 @@
     maybe-init には要素の初期値を指定します。  
     maybe-init は省略可能です。省略した場合は 0 を指定したことになります。  
     本手続きは、生成した行列をキャッシュに保存します。  
-    そして、同一サイズの行列については、キャッシュのコピーを返すことで高速化をはかります。  
+    そして、同一サイズの行列の生成については、キャッシュのコピーを返すことで高速化をはかります。  
     もし、メモリ使用量やマルチスレッド等の関係で、本処理が不要な場合には、  
-    `(eigen-array-cache-off)` を実行してください。  
-    (本手続きは、他の演算手続きの内部でも使用しています)
+    事前に `(eigen-array-cache-off)` を呼び出してください。  
+    (本手続きは、他の手続きの内部でも使用しています)
 
   - `(eigen-make-array-same-shape A [maybe-init])`  
     行列A と同じ shape の行列 (2次元のf64array) を生成します。  
     maybe-init には要素の初期値を指定します。  
-    maybe-init は省略可能です。省略した場合は 0 を指定したことになります。  
-    本手続きは、eigen-make-array と同じキャッシュを使用します。
+    maybe-init は省略可能です。省略した場合は 0 を指定したことになります。
 
   - `(eigen-array ns ne ms me . inits)`  
     初期化データを指定して、行列 (2次元のf64array) を生成します。  
     ns ne ms me には、行列の shape を指定します。  
     inits には、行列の要素の数だけ初期化データを並べます。  
     例えば、2x3 の行列を生成する場合には、  
-    `(eigen-array 0 2 0 3 1 2 3 4 5 6)` のように指定します。  
-    本手続きは、eigen-make-array と同じキャッシュを使用します。
+    `(eigen-array 0 2 0 3 1 2 3 4 5 6)` のように指定します。
 
   - `(eigen-array-nearly=? A B [precision])`  
     行列A と 行列B の各要素がほぼ等しければ #t を返します。  
@@ -322,6 +325,7 @@
 - 2019-3-11  v1.25 eigen-array-transpose!,eigen-array-inverse!,eigen-array-solve!,  
   eigen-array-row!,eigen-array-col!,eigen-array-block!を追加
 - 2019-3-19  v1.26 行列の生成処理見直し。eigen-make-array-same-shapeを追加
+- 2019-3-19  v1.27 不要処理削除
 
 
 (2019-3-19)
