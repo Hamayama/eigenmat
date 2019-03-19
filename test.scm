@@ -15,7 +15,8 @@
     (with-module gauche.array f64array)
     (lambda (shape . inits)
       (rlet1 ar (make-f64array shape 0)
-        (slot-set! ar 'backing-storage (list->f64vector inits))))))
+        (f64vector-copy! (slot-ref ar 'backing-storage)
+                         0 (list->f64vector inits))))))
 
 (test-start "eigenmat")
 (use eigenmat)
@@ -431,6 +432,7 @@
                                                         0.9 1.0 1.1 1.2 1.3 1.4 15  16)
        (eigen-array-block! (eigen-make-array 0 4 0 4) H 3 2 1 2 J 3 2))
 
+;; summary
 (format (current-error-port) "~%~a" ((with-module gauche.test format-summary)))
 
 ;; If you don't want `gosh' to exit with nonzero status even if
