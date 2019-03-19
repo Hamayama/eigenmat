@@ -1,7 +1,7 @@
 ;; -*- coding: utf-8 -*-
 ;;
 ;; eigenmat.scm
-;; 2019-3-19 v1.27
+;; 2019-3-19 v1.28
 ;;
 ;; ＜内容＞
 ;;   Gauche で、Eigen ライブラリ を使って行列の高速演算を行うためのモジュールです。
@@ -19,7 +19,8 @@
   (export
     test-eigenmat
     eigen-array-cache-on     eigen-array-cache-off
-    eigen-make-array         eigen-make-array-same-shape
+    make-eigen-array         make-eigen-array-same-shape
+    eigen-make-array         eigen-make-array-same-shape ; for compatibility
     eigen-array
     eigen-array-nearly=?     eigen-array-nearly-zero?
     eigen-array-add          eigen-array-add!
@@ -109,7 +110,7 @@
   (set! use-eigen-array-cache #f))
 
 ;; 行列の生成(キャッシュ使用)
-(define (eigen-make-array ns ne ms me . maybe-init)
+(define (make-eigen-array ns ne ms me . maybe-init)
   (if use-eigen-array-cache
     (let1 key (s32vector ns ne ms me)
       (if-let1 A (hash-table-get array-cache-table key #f)
@@ -124,19 +125,21 @@
             (rlet1 C (array-copy B)
               (f64vector-fill! (slot-ref C 'backing-storage) (car maybe-init)))))))
     (apply make-f64array (shape ns ne ms me) maybe-init)))
+(define eigen-make-array make-eigen-array)
 
 ;; 同じ shape の行列の生成
-(define (eigen-make-array-same-shape A . maybe-init)
+(define (make-eigen-array-same-shape A . maybe-init)
   (check-array-rank A)
   (let ((ns (array-start A 0))
         (ne (array-end   A 0))
         (ms (array-start A 1))
         (me (array-end   A 1)))
-    (apply eigen-make-array ns ne ms me maybe-init)))
+    (apply make-eigen-array ns ne ms me maybe-init)))
+(define eigen-make-array-same-shape make-eigen-array-same-shape)
 
 ;; 行列の初期化データ付き生成
 (define (eigen-array ns ne ms me . inits)
-  (rlet1 A (eigen-make-array ns ne ms me 0)
+  (rlet1 A (make-eigen-array ns ne ms me 0)
     (f64vector-copy! (slot-ref A 'backing-storage)
                      0 (list->f64vector inits))))
 
@@ -177,7 +180,7 @@
            (m2    (array-length B 1)))
        (unless (and (= n1 n2) (= m1 m2))
          (error "array shape mismatch"))
-       (let* ((C     (eigen-make-array 0 n1 0 m1))
+       (let* ((C     (make-eigen-array 0 n1 0 m1))
               (data3 (slot-ref C 'backing-storage)))
          (,(symbol-append 'eigen-matrix- op1) data1 n1 m1 data2 n2 m2 data3)
          C))))
@@ -205,7 +208,7 @@
      (let ((data1 (slot-ref A 'backing-storage))
            (n1    (array-length A 0))
            (m1    (array-length A 1)))
-       (let* ((B     (eigen-make-array 0 n1 0 m1))
+       (let* ((B     (make-eigen-array 0 n1 0 m1))
               (data2 (slot-ref B 'backing-storage)))
          (,(symbol-append 'eigen-matrix- op2) data1 n1 m1 r data2)
          B))))
@@ -230,7 +233,7 @@
      (let ((data1 (slot-ref A 'backing-storage))
            (n1    (array-length A 0))
            (m1    (array-length A 1)))
-       (let* ((B     (eigen-make-array 0 n1 0 m1))
+       (let* ((B     (make-eigen-array 0 n1 0 m1))
               (data2 (slot-ref B 'backing-storage)))
          (,(symbol-append 'eigen-matrix- op1) data1 n1 m1 data2)
          B))))
@@ -276,7 +279,7 @@
         (m2    (array-length B 1)))
     (unless (= m1 n2)
       (error "array shape mismatch"))
-    (let* ((C     (eigen-make-array 0 n1 0 m2)) ; 結果は n1 x m2 になる
+    (let* ((C     (make-eigen-array 0 n1 0 m2)) ; 結果は n1 x m2 になる
            (data3 (slot-ref C 'backing-storage)))
       (eigen-matrix-mul data1 n1 m1 data2 n2 m2 data3)
       C)))
@@ -403,7 +406,7 @@
   (let ((data1 (slot-ref A 'backing-storage))
         (n1    (array-length A 0))
         (m1    (array-length A 1)))
-    (let* ((B     (eigen-make-array 0 m1 0 n1)) ; 結果は m1 x n1 になる
+    (let* ((B     (make-eigen-array 0 m1 0 n1)) ; 結果は m1 x n1 になる
            (data2 (slot-ref B 'backing-storage)))
       (eigen-matrix-transpose data1 n1 m1 data2)
       B)))
@@ -434,7 +437,7 @@
     ;; (正方行列でなくても何かしら計算する?)
     ;(unless (= n1 m1)
     ;  (error "array shape must be square"))
-    (let* ((B     (eigen-make-array 0 m1 0 n1)) ; 結果は m1 x n1 になる
+    (let* ((B     (make-eigen-array 0 m1 0 n1)) ; 結果は m1 x n1 になる
            (data2 (slot-ref B 'backing-storage)))
       (eigen-matrix-inverse data1 n1 m1 data2)
       B)))
@@ -476,7 +479,7 @@
     ;  (error "array A's shape must be square"))
     (unless (= n1 n2)
       (error "array shape mismatch"))
-    (let* ((X     (eigen-make-array 0 m1 0 m2)) ; 結果は m1 x m2 になる
+    (let* ((X     (make-eigen-array 0 m1 0 m2)) ; 結果は m1 x m2 になる
            (data3 (slot-ref X 'backing-storage)))
       (eigen-matrix-solve data1 n1 m1 data2 n2 m2 data3)
       X)))
@@ -515,7 +518,7 @@
         (i1    (- i1r (array-start A 0))))
     (unless (and (>= i1 0) (< i1 n1))
       (error "invalid index value"))
-    (let* ((B     (eigen-make-array 0 1 0 m1))  ; 結果は 1 x m1 になる
+    (let* ((B     (make-eigen-array 0 1 0 m1))  ; 結果は 1 x m1 になる
            (data2 (slot-ref B 'backing-storage)))
       (eigen-matrix-row data1 n1 m1 data2 i1)
       B)))
@@ -546,7 +549,7 @@
         (j1    (- j1r (array-start A 1))))
     (unless (and (>= j1 0) (< j1 m1))
       (error "invalid index value"))
-    (let* ((B     (eigen-make-array 0 n1 0 1))  ; 結果は n1 x 1 になる
+    (let* ((B     (make-eigen-array 0 n1 0 1))  ; 結果は n1 x 1 になる
            (data2 (slot-ref B 'backing-storage)))
       (eigen-matrix-col data1 n1 m1 data2 j1)
       B)))
@@ -582,7 +585,7 @@
       (error "invalid block size"))
     (unless (and (>= i1 0) (>= j1 0) (<= (+ i1 n2) n1) (<= (+ j1 m2) m1))
       (error "invalid block range"))
-    (let* ((B     (eigen-make-array 0 n2 0 m2)) ; 結果は n2 x m2 になる
+    (let* ((B     (make-eigen-array 0 n2 0 m2)) ; 結果は n2 x m2 になる
            (data2 (slot-ref B 'backing-storage)))
       (eigen-matrix-block data1 n1 m1 data2 n2 m2 i1 j1)
       B)))
@@ -633,7 +636,7 @@
       (error "invalid block range for copy-from"))
     (unless (and (>= i2 0) (>= j2 0) (<= (+ i2 n3) n2) (<= (+ j2 m3) m2))
       (error "invalid block range for copy-to"))
-    (let* ((C     (eigen-make-array 0 n2 0 m2)) ; 結果は n2 x m2 になる
+    (let* ((C     (make-eigen-array 0 n2 0 m2)) ; 結果は n2 x m2 になる
            (data3 (slot-ref C 'backing-storage)))
       (eigen-matrix-block-copy data1 n1 m1 data2 n2 m2 data3 n3 m3 i1 j1 i2 j2)
       C)))

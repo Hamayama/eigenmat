@@ -93,13 +93,13 @@
   - `(eigen-array-cache-on)`  
     `(eigen-array-cache-off)`  
     行列のキャッシュの使用(ON)/未使用(OFF)を設定します。デフォルトは使用(ON)です。  
-    (行列のキャッシュについては eigen-make-array の説明を参照ください)
+    (行列のキャッシュについては make-eigen-array の説明を参照ください)
 
-  - `(eigen-make-array ns ne ms me [maybe-init])`  
+  - `(make-eigen-array ns ne ms me [maybe-init])`  
     行列 (2次元のf64array) を生成します。  
     ns ne ms me には、行列の shape を指定します。  
     例えば、2x3 の行列を生成する場合には、  
-    `(eigen-make-array 0 2 0 3)` のように指定します。  
+    `(make-eigen-array 0 2 0 3)` のように指定します。  
     maybe-init には要素の初期値を指定します。  
     maybe-init は省略可能です。省略した場合は 0 を指定したことになります。  
     本手続きは、生成した行列をキャッシュに保存します。  
@@ -108,7 +108,7 @@
     事前に `(eigen-array-cache-off)` を呼び出してください。  
     (本手続きは、他の手続きの内部でも使用しています)
 
-  - `(eigen-make-array-same-shape A [maybe-init])`  
+  - `(make-eigen-array-same-shape A [maybe-init])`  
     行列A と同じ shape の行列 (2次元のf64array) を生成します。  
     maybe-init には要素の初期値を指定します。  
     maybe-init は省略可能です。省略した場合は 0 を指定したことになります。
@@ -326,6 +326,7 @@
   eigen-array-row!,eigen-array-col!,eigen-array-block!を追加
 - 2019-3-19  v1.26 行列の生成処理見直し。eigen-make-array-same-shapeを追加
 - 2019-3-19  v1.27 不要処理削除
+- 2019-3-19  v1.28 手続き名変更(eigen-make-array → make-eigen-array 等。旧名称も使用可能)
 
 
 (2019-3-19)
