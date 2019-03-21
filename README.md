@@ -93,7 +93,7 @@
   - `(eigen-array-cache-on)`  
     `(eigen-array-cache-off)`  
     行列のキャッシュの使用(ON)/未使用(OFF)を設定します。デフォルトは使用(ON)です。  
-    (行列のキャッシュについては make-eigen-array の説明を参照ください)
+    (行列のキャッシュについては、後述の make-eigen-array の説明を参照ください)
 
   - `(make-eigen-array ns ne ms me [maybe-init])`  
     行列 (2次元のf64array) を生成します。  
@@ -326,6 +326,7 @@
 - 2019-3-19  v1.26 行列の生成処理見直し。eigen-make-array-same-shapeを追加
 - 2019-3-19  v1.27 不要処理削除
 - 2019-3-19  v1.28 手続き名変更(eigen-make-array → make-eigen-array 等。旧名称も使用可能)
+- 2019-3-21  v1.29 行列の情報取得をマクロ化
 
 
-(2019-3-20)
+(2019-3-21)
