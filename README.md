@@ -333,6 +333,8 @@
 - 2019-3-19  v1.28 手続き名変更(eigen-make-array → make-eigen-array 等。旧名称も使用可能)
 - 2019-3-21  v1.29 行列の情報取得をマクロ化
 - 2019-3-22  v1.30 行列の要素の割り算を追加
+- 2019-3-22  v1.31 エラー処理修正(eigen-array-determinant,eigen-array-inverse  
+  eigen-array-inverse!,eigen-array-solve,eigen-array-solve!)
 
 
 (2019-3-22)

@@ -1,7 +1,7 @@
 ;; -*- coding: utf-8 -*-
 ;;
 ;; eigenmat.scm
-;; 2019-3-22 v1.30
+;; 2019-3-22 v1.31
 ;;
 ;; ＜内容＞
 ;;   Gauche で、Eigen ライブラリ を使って行列の高速演算を行うためのモジュールです。
@@ -405,9 +405,9 @@
   (let ((data1 (slot-ref A 'backing-storage))
         (n1    (array-length A 0))
         (m1    (array-length A 1)))
-    ;; (正方行列でなくても何かしら計算する?)
-    ;(unless (= n1 m1)
-    ;  (error "array shape must be square"))
+    ;; (正方行列でないと実行時エラーになる)
+    (unless (= n1 m1)
+      (error "array shape must be square"))
     (eigen-matrix-determinant data1 n1 m1)))
 
 ;; 転置行列を計算
@@ -444,9 +444,9 @@
     ;; (0を許可すると実行時エラーになる)
     (unless (and (> n1 0) (> m1 0))
       (error "invalid array shape"))
-    ;; (正方行列でなくても何かしら計算する?)
-    ;(unless (= n1 m1)
-    ;  (error "array shape must be square"))
+    ;; (正方行列でないと実行時エラーになる)
+    (unless (= n1 m1)
+      (error "array shape must be square"))
     (let* ((B     (make-eigen-array 0 m1 0 n1)) ; 結果は m1 x n1 になる
            (data2 (slot-ref B 'backing-storage)))
       (eigen-matrix-inverse data1 n1 m1 data2)
@@ -464,9 +464,9 @@
     ;; (0を許可すると実行時エラーになる)
     (unless (and (> n1 0) (> m1 0))
       (error "invalid array shape"))
-    ;; (正方行列でなくても何かしら計算する?)
-    ;(unless (= n1 m1)
-    ;  (error "array shape must be square"))
+    ;; (正方行列でないと実行時エラーになる)
+    (unless (= n1 m1)
+      (error "array shape must be square"))
     (unless (and (= n2 m1) (= m2 n1))           ; 結果は m1 x n1 になる
       (error "array shape mismatch"))
     (eigen-matrix-inverse data1 n1 m1 data2)
@@ -484,9 +484,9 @@
     ;; (0を許可すると実行時エラーになる)
     (unless (and (> n1 0) (> m1 0) (> n2 0) (> m2 0))
       (error "invalid array shape"))
-    ;; (正方行列でなくても何かしら計算する?)
-    ;(unless (= n1 m1)
-    ;  (error "array A's shape must be square"))
+    ;; (正方行列でないと実行時エラーになる)
+    (unless (= n1 m1)
+      (error "array A's shape must be square"))
     (unless (= n1 n2)
       (error "array shape mismatch"))
     (let* ((X     (make-eigen-array 0 m1 0 m2)) ; 結果は m1 x m2 になる
@@ -509,9 +509,9 @@
     ;; (0を許可すると実行時エラーになる)
     (unless (and (> n1 0) (> m1 0) (> n2 0) (> m2 0))
       (error "invalid array shape"))
-    ;; (正方行列でなくても何かしら計算する?)
-    ;(unless (= n1 m1)
-    ;  (error "array A's shape must be square"))
+    ;; (正方行列でないと実行時エラーになる)
+    (unless (= n1 m1)
+      (error "array A's shape must be square"))
     (unless (= n1 n2)
       (error "array shape mismatch (A and B)"))
     (unless (and (= n3 m1) (= m3 m2))           ; 結果は m1 x m2 になる

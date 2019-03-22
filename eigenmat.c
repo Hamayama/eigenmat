@@ -260,8 +260,8 @@ double eigen_matrix_trace(double* data1, int n1, int m1) {
 // 行列式を計算
 double eigen_matrix_determinant(double* data1, int n1, int m1) {
     if (n1 < 0 || m1 < 0) return FALSE;
-    // (正方行列でなくても何かしら計算する?)
-    //if (n1 != m1) return FALSE;
+    // (正方行列でないと実行時エラーになる)
+    if (n1 != m1) return FALSE;
     MatrixXd A = Map<MatrixXd>(data1, n1, m1);
     return (double)A.determinant();
 }
@@ -282,8 +282,8 @@ int eigen_matrix_inverse(double* data1, int n1, int m1,
     // (0を許可すると実行時エラーになる)
     //if (n1 < 0 || m1 < 0) return FALSE;
     if (n1 <= 0 || m1 <= 0) return FALSE;
-    // (正方行列でなくても何かしら計算する?)
-    //if (n1 != m1) return FALSE;
+    // (正方行列でないと実行時エラーになる)
+    if (n1 != m1) return FALSE;
     MatrixXd A = Map<MatrixXd>(data1, n1, m1);
     MatrixXd B = A.inverse();
     Map<MatrixXd>(data2, m1, n1) = B; // 結果は m1 x n1 になる
@@ -297,8 +297,8 @@ int eigen_matrix_solve(double* data1, int n1, int m1,
     // (0を許可すると実行時エラーになる)
     //if (n1 < 0 || m1 < 0 || n2 < 0 || m2 < 0) return FALSE;
     if (n1 <= 0 || m1 <= 0 || n2 <= 0 || m2 <= 0) return FALSE;
-    // (正方行列でなくても何かしら計算する?)
-    //if (n1 != m1) return FALSE;
+    // (正方行列でないと実行時エラーになる)
+    if (n1 != m1) return FALSE;
     if (n1 != n2) return FALSE;
     MatrixXd A = Map<MatrixXd>(data1, n1, m1);
     MatrixXd B = Map<MatrixXd>(data2, n2, m2);

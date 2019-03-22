@@ -287,12 +287,14 @@
 (test* "eigen-array-mean 1" 2.5 (eigen-array-mean A) nearly=?)
 (test* "eigen-array-mean 2" (test-error <error>) (eigen-array-mean G))
 
-(test* "eigen-array-trace 1" 5  (eigen-array-trace A) nearly=?)
-(test* "eigen-array-trace 2" 0  (eigen-array-trace G) nearly=?)
+(test* "eigen-array-trace 1" 5 (eigen-array-trace A) nearly=?)
+(test* "eigen-array-trace 2" 6 (eigen-array-trace K) nearly=?)
+(test* "eigen-array-trace 3" 0 (eigen-array-trace G) nearly=?)
 
 (test* "eigen-array-determinant 1" -2 (eigen-array-determinant A) nearly=?)
 (test* "eigen-array-determinant 2"  0 (eigen-array-determinant D) nearly=?)
-(test* "eigen-array-determinant 3"  1 (eigen-array-determinant G) nearly=?)
+(test* "eigen-array-determinant 3" (test-error <error>) (eigen-array-determinant K))
+(test* "eigen-array-determinant 4"  1 (eigen-array-determinant G) nearly=?)
 
 (test* "eigen-array-transpose 1" #,(<f64array> (0 2 0 2) 1 3 2 4)
        (eigen-array-transpose A))
@@ -313,6 +315,8 @@
 (test* "eigen-array-inverse 2" #,(<f64array> (0 2 0 2) +inf.0 -inf.0 -inf.0 +inf.0)
        (eigen-array-inverse D))
 (test* "eigen-array-inverse 3" (test-error <error>)
+       (eigen-array-inverse K))
+(test* "eigen-array-inverse 4" (test-error <error>)
        (eigen-array-inverse G))
 
 (test* "eigen-array-inverse! 1" #,(<f64array> (0 2 0 2) -2 1 1.5 -0.5)
@@ -320,6 +324,8 @@
 (test* "eigen-array-inverse! 2" #,(<f64array> (0 2 0 2) +inf.0 -inf.0 -inf.0 +inf.0)
        (eigen-array-inverse! (make-eigen-array 0 2 0 2) D))
 (test* "eigen-array-inverse! 3" (test-error <error>)
+       (eigen-array-inverse! K))
+(test* "eigen-array-inverse! 4" (test-error <error>)
        (eigen-array-inverse! (make-eigen-array 0 0 0 0) G))
 
 (test* "eigen-array-solve 1" #,(<f64array> (0 2 0 1) 0 0.5)
@@ -327,6 +333,8 @@
 (test* "eigen-array-solve 2" #,(<f64array> (0 2 0 1) -inf.0 +inf.0)
        (eigen-array-solve D E))
 (test* "eigen-array-solve 3" (test-error <error>)
+       (eigen-array-solve K A))
+(test* "eigen-array-solve 4" (test-error <error>)
        (eigen-array-solve G G))
 
 (test* "eigen-array-solve! 1" #,(<f64array> (0 2 0 1) 0 0.5)
@@ -334,6 +342,8 @@
 (test* "eigen-array-solve! 2" #,(<f64array> (0 2 0 1) -inf.0 +inf.0)
        (eigen-array-solve! (make-eigen-array 0 2 0 1) D E))
 (test* "eigen-array-solve! 3" (test-error <error>)
+       (eigen-array-solve! K A))
+(test* "eigen-array-solve! 4" (test-error <error>)
        (eigen-array-solve! (make-eigen-array 0 0 0 0) G G))
 
 (test* "eigen-array-row 1" #,(<f64array> (0 1 0 4) 1 2 3 4)
