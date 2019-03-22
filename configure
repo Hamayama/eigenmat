@@ -25,7 +25,7 @@
 ;; Initialize configure.  This creates the global context, parses
 ;; command-line args and sets up default values.
 (if (version<=? (gauche-version) "0.9.4")
-  (cf-init "eigenmat" "1.31" "fkyo0985@gmail.com")
+  (cf-init "eigenmat" "1.32" "fkyo0985@gmail.com")
   (cf-init))
 
 ;; Set up gauche related commands.  The commands are set by scanning

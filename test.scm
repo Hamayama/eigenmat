@@ -382,75 +382,75 @@
 (test* "eigen-array-col! 3" (test-error <error>)
        (eigen-array-col! (make-eigen-array 0 4 0 1) H -1))
 
-(test* "eigen-array-block 1-1" #,(<f64array> (0 2 0 2) 1 2 5 6)
+(test* "eigen-array-block 1" #,(<f64array> (0 2 0 2) 1 2 5 6)
        (eigen-array-block H 0 0 2 2))
-(test* "eigen-array-block 1-2" #,(<f64array> (0 2 0 3) 6 7 8 10 11 12)
+(test* "eigen-array-block 2" #,(<f64array> (0 2 0 3) 6 7 8 10 11 12)
        (eigen-array-block H 1 1 2 3))
-(test* "eigen-array-block 1-3" #,(<f64array> (0 1 0 2) 15 16)
+(test* "eigen-array-block 3" #,(<f64array> (0 1 0 2) 15 16)
        (eigen-array-block H 3 2 1 2))
-(test* "eigen-array-block 1-4" #,(<f64array> (0 2 0 2) 1 2 4 5)
+(test* "eigen-array-block 4" #,(<f64array> (0 2 0 2) 1 2 4 5)
        (eigen-array-block K 0 0 2 2))
-(test* "eigen-array-block 1-5" #,(<f64array> (0 1 0 2) 5 6)
+(test* "eigen-array-block 5" #,(<f64array> (0 1 0 2) 5 6)
        (eigen-array-block K 1 1 1 2))
-(test* "eigen-array-block 1-6" (test-error <error>)
+(test* "eigen-array-block 6" (test-error <error>)
        (eigen-array-block H -1 -1 2 2))
-(test* "eigen-array-block 1-7" (test-error <error>)
+(test* "eigen-array-block 7" (test-error <error>)
        (eigen-array-block H 3 3 2 2))
-(test* "eigen-array-block 1-8" G
+(test* "eigen-array-block 8" G
        (eigen-array-block H 0 0 0 0))
-(test* "eigen-array-block 1-9" G
+(test* "eigen-array-block 9" G
        (eigen-array-block G 0 0 0 0))
-(test* "eigen-array-block 1-10" (test-error <error>)
+(test* "eigen-array-block 10" (test-error <error>)
        (eigen-array-block G 0 0 1 1))
 
-(test* "eigen-array-block! 1-1" #,(<f64array> (0 2 0 2) 1 2 5 6)
+(test* "eigen-array-block! 1" #,(<f64array> (0 2 0 2) 1 2 5 6)
        (eigen-array-block! (make-eigen-array 0 2 0 2) H 0 0 2 2))
-(test* "eigen-array-block! 1-2" #,(<f64array> (0 2 0 3) 6 7 8 10 11 12)
+(test* "eigen-array-block! 2" #,(<f64array> (0 2 0 3) 6 7 8 10 11 12)
        (eigen-array-block! (make-eigen-array 0 2 0 3) H 1 1 2 3))
-(test* "eigen-array-block! 1-3" #,(<f64array> (0 1 0 2) 15 16)
+(test* "eigen-array-block! 3" #,(<f64array> (0 1 0 2) 15 16)
        (eigen-array-block! (make-eigen-array 0 1 0 2) H 3 2 1 2))
 
-(test* "eigen-array-block 2-1" #,(<f64array> (0 4 0 4) 1   2   0.3 0.4 5   6   0.7 0.8
-                                                       0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6)
-       (eigen-array-block H 0 0 2 2 J 0 0))
-(test* "eigen-array-block 2-2" #,(<f64array> (0 4 0 4) 0.1 0.2 0.3 0.4 0.5 6   7   8
-                                                       0.9 10  11  12  1.3 1.4 1.5 1.6)
-       (eigen-array-block H 1 1 2 3 J 1 1))
-(test* "eigen-array-block 2-3" #,(<f64array> (0 4 0 4) 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8
-                                                       0.9 1.0 1.1 1.2 1.3 1.4 15  16)
-       (eigen-array-block H 3 2 1 2 J 3 2))
-(test* "eigen-array-block 2-4" #,(<f64array> (0 2 0 3) -2 1 2 1 4 5)
-       (eigen-array-block K 0 0 2 2 L 0 1))
-(test* "eigen-array-block 2-5" #,(<f64array> (0 2 0 3) -2 5 6 1 2 3)
-       (eigen-array-block K 1 1 1 2 L 0 1))
-(test* "eigen-array-block 2-6" (test-error <error>)
-       (eigen-array-block H -1 -1 2 2 J 0 0))
-(test* "eigen-array-block 2-7" (test-error <error>)
-       (eigen-array-block H 3 3 2 2 J 0 0))
-(test* "eigen-array-block 2-8" (test-error <error>)
-       (eigen-array-block H 0 0 2 2 J -1 -1))
-(test* "eigen-array-block 2-9" (test-error <error>)
-       (eigen-array-block H 0 0 2 2 J 3 3))
-(test* "eigen-array-block 2-10" J
-       (eigen-array-block H 0 0 0 0 J 0 0))
-(test* "eigen-array-block 2-11" J
-       (eigen-array-block G 0 0 0 0 J 0 0))
-(test* "eigen-array-block 2-12" (test-error <error>)
-       (eigen-array-block G 0 0 1 1 J 0 0))
-(test* "eigen-array-block 2-13" G
-       (eigen-array-block H 0 0 0 0 G 0 0))
-(test* "eigen-array-block 2-14" (test-error <error>)
-       (eigen-array-block H 0 0 0 0 G 1 1))
+(test* "eigen-array-block-copy 1" #,(<f64array> (0 4 0 4) 1   2   0.3 0.4 5   6   0.7 0.8
+                                                          0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6)
+       (eigen-array-block-copy H 0 0 2 2 J 0 0))
+(test* "eigen-array-block-copy 2" #,(<f64array> (0 4 0 4) 0.1 0.2 0.3 0.4 0.5 6   7   8
+                                                          0.9 10  11  12  1.3 1.4 1.5 1.6)
+       (eigen-array-block-copy H 1 1 2 3 J 1 1))
+(test* "eigen-array-block-copy 3" #,(<f64array> (0 4 0 4) 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8
+                                                          0.9 1.0 1.1 1.2 1.3 1.4 15  16)
+       (eigen-array-block-copy H 3 2 1 2 J 3 2))
+(test* "eigen-array-block-copy 4" #,(<f64array> (0 2 0 3) -2 1 2 1 4 5)
+       (eigen-array-block-copy K 0 0 2 2 L 0 1))
+(test* "eigen-array-block-copy 5" #,(<f64array> (0 2 0 3) -2 5 6 1 2 3)
+       (eigen-array-block-copy K 1 1 1 2 L 0 1))
+(test* "eigen-array-block-copy 6" (test-error <error>)
+       (eigen-array-block-copy H -1 -1 2 2 J 0 0))
+(test* "eigen-array-block-copy 7" (test-error <error>)
+       (eigen-array-block-copy H 3 3 2 2 J 0 0))
+(test* "eigen-array-block-copy 8" (test-error <error>)
+       (eigen-array-block-copy H 0 0 2 2 J -1 -1))
+(test* "eigen-array-block-copy 9" (test-error <error>)
+       (eigen-array-block-copy H 0 0 2 2 J 3 3))
+(test* "eigen-array-block-copy 10" J
+       (eigen-array-block-copy H 0 0 0 0 J 0 0))
+(test* "eigen-array-block-copy 11" J
+       (eigen-array-block-copy G 0 0 0 0 J 0 0))
+(test* "eigen-array-block-copy 12" (test-error <error>)
+       (eigen-array-block-copy G 0 0 1 1 J 0 0))
+(test* "eigen-array-block-copy 13" G
+       (eigen-array-block-copy H 0 0 0 0 G 0 0))
+(test* "eigen-array-block-copy 14" (test-error <error>)
+       (eigen-array-block-copy H 0 0 0 0 G 1 1))
 
-(test* "eigen-array-block! 2-1" #,(<f64array> (0 4 0 4) 1   2   0.3 0.4 5   6   0.7 0.8
-                                                        0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6)
-       (eigen-array-block! (make-eigen-array 0 4 0 4) H 0 0 2 2 J 0 0))
-(test* "eigen-array-block! 2-2" #,(<f64array> (0 4 0 4) 0.1 0.2 0.3 0.4 0.5 6   7   8
-                                                        0.9 10  11  12  1.3 1.4 1.5 1.6)
-       (eigen-array-block! (make-eigen-array 0 4 0 4) H 1 1 2 3 J 1 1))
-(test* "eigen-array-block! 2-3" #,(<f64array> (0 4 0 4) 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8
-                                                        0.9 1.0 1.1 1.2 1.3 1.4 15  16)
-       (eigen-array-block! (make-eigen-array 0 4 0 4) H 3 2 1 2 J 3 2))
+(test* "eigen-array-block-copy! 1" #,(<f64array> (0 4 0 4) 1   2   0.3 0.4 5   6   0.7 0.8
+                                                           0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6)
+       (eigen-array-block-copy! (make-eigen-array 0 4 0 4) H 0 0 2 2 J 0 0))
+(test* "eigen-array-block-copy! 2" #,(<f64array> (0 4 0 4) 0.1 0.2 0.3 0.4 0.5 6   7   8
+                                                           0.9 10  11  12  1.3 1.4 1.5 1.6)
+       (eigen-array-block-copy! (make-eigen-array 0 4 0 4) H 1 1 2 3 J 1 1))
+(test* "eigen-array-block-copy! 3" #,(<f64array> (0 4 0 4) 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8
+                                                           0.9 1.0 1.1 1.2 1.3 1.4 15  16)
+       (eigen-array-block-copy! (make-eigen-array 0 4 0 4) H 3 2 1 2 J 3 2))
 
 ;; summary
 (format (current-error-port) "~%~a" ((with-module gauche.test format-summary)))

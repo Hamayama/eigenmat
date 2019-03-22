@@ -1,7 +1,7 @@
 ;; -*- coding: utf-8 -*-
 ;;
 ;; eigenmat.scm
-;; 2019-3-22 v1.31
+;; 2019-3-23 v1.32
 ;;
 ;; ＜内容＞
 ;;   Gauche で、Eigen ライブラリ を使って行列の高速演算を行うためのモジュールです。
@@ -46,6 +46,7 @@
     eigen-array-row          eigen-array-row!
     eigen-array-col          eigen-array-col!
     eigen-array-block        eigen-array-block!
+    eigen-array-block-copy   eigen-array-block-copy!
     ))
 (select-module eigenmat)
 
@@ -624,11 +625,11 @@
     B))
 
 ;; 行列から一部を抜き出してコピー
-(define-method eigen-array-block ((A <f64array>)
-                                  (i1r <integer>) (j1r <integer>)
-                                  (n3  <integer>) (m3  <integer>)
-                                  (B <f64array>)
-                                  (i2r <integer>) (j2r <integer>))
+(define-method eigen-array-block-copy ((A <f64array>)
+                                       (i1r <integer>) (j1r <integer>)
+                                       (n3  <integer>) (m3  <integer>)
+                                       (B <f64array>)
+                                       (i2r <integer>) (j2r <integer>))
   (check-array-rank A B)
   (let ((data1 (slot-ref A 'backing-storage))
         (n1    (array-length A 0))
@@ -652,12 +653,12 @@
       C)))
 
 ;; 行列から一部を抜き出してコピー(破壊的変更版)
-(define-method eigen-array-block! ((C <f64array>)
-                                   (A <f64array>)
-                                   (i1r <integer>) (j1r <integer>)
-                                   (n3  <integer>) (m3  <integer>)
-                                   (B <f64array>)
-                                   (i2r <integer>) (j2r <integer>))
+(define-method eigen-array-block-copy! ((C <f64array>)
+                                        (A <f64array>)
+                                        (i1r <integer>) (j1r <integer>)
+                                        (n3  <integer>) (m3  <integer>)
+                                        (B <f64array>)
+                                        (i2r <integer>) (j2r <integer>))
   (check-array-rank A B C)
   (let ((data1 (slot-ref A 'backing-storage))
         (n1    (array-length A 0))

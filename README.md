@@ -261,8 +261,8 @@
     行列A から 開始位置が (i,j) でサイズが (p,q) の行列を抜き出して返します。  
     `!` がついたものは、結果を 行列B に格納して返します (行列B は変更されます)。
 
-  - `(eigen-array-block A i1 j1 p q B i2 j2)`  
-    `(eigen-array-block! C A i1 j1 p q B i2 j2)`  
+  - `(eigen-array-block-copy A i1 j1 p q B i2 j2)`  
+    `(eigen-array-block-copy! C A i1 j1 p q B i2 j2)`  
     行列A から 開始位置が (i1,j1) でサイズが (p,q) の行列を抜き出して、  
     行列B の (i2,j2) の位置にコピーしたものを返します。  
     (行列B は変更されません。戻り値を使用してください)  
@@ -335,6 +335,7 @@
 - 2019-3-22  v1.30 行列の要素の割り算を追加
 - 2019-3-22  v1.31 エラー処理修正(eigen-array-determinant,eigen-array-inverse  
   eigen-array-inverse!,eigen-array-solve,eigen-array-solve!)
+- 2019-3-23  v1.32 手続き名変更(eigen-array-block → eigen-array-block-copy)
 
 
-(2019-3-22)
+(2019-3-23)
