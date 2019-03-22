@@ -50,6 +50,10 @@ extern int eigen_matrix_mul_elements(double* data1, int n1, int m1,
 extern int eigen_matrix_mul_scalar(double* data1, int n1, int m1,
                                    double r, double* data2);
 
+extern int eigen_matrix_div(double* data1, int n1, int m1,
+                            double* data2, int n2, int m2,
+                            double* data3);
+
 extern int eigen_matrix_div_scalar(double* data1, int n1, int m1,
                                    double r, double* data2);
 

@@ -187,14 +187,24 @@
 (test* "eigen-array-mul-elements! 2-1" #,(<f64array> (0 2 0 2) 2 4 6 8)
        (eigen-array-mul-elements! (make-eigen-array 0 2 0 2) A 2) eigen-array-nearly=?)
 
-(test* "eigen-array-div 1" #,(<f64array> (0 2 0 2) 0.5 1.0 1.5 2.0)
+(test* "eigen-array-div 1-1" #,(<f64array> (0 2 0 2) 1/5 2/6 3/7 4/8)
+       (eigen-array-div A B) eigen-array-nearly=?)
+(test* "eigen-array-div 1-2" D
+       (eigen-array-div D D) eigen-array-nearly=?)
+(test* "eigen-array-div 1-3" G
+       (eigen-array-div G G) eigen-array-nearly=?)
+
+(test* "eigen-array-div 2-1" #,(<f64array> (0 2 0 2) 0.5 1.0 1.5 2.0)
        (eigen-array-div A 2) eigen-array-nearly=?)
-(test* "eigen-array-div 2" #,(<f64array> (0 2 0 2) +inf.0 +inf.0 +inf.0 +inf.0)
+(test* "eigen-array-div 2-2" #,(<f64array> (0 2 0 2) +inf.0 +inf.0 +inf.0 +inf.0)
        (eigen-array-div A 0))
-(test* "eigen-array-div 3" G
+(test* "eigen-array-div 2-3" G
        (eigen-array-div G 2) eigen-array-nearly=?)
 
-(test* "eigen-array-div! 1" #,(<f64array> (0 2 0 2) 0.5 1.0 1.5 2.0)
+(test* "eigen-array-div! 1-1" #,(<f64array> (0 2 0 2) 1/5 2/6 3/7 4/8)
+       (eigen-array-div! (make-eigen-array 0 2 0 2) A B) eigen-array-nearly=?)
+
+(test* "eigen-array-div! 2-1" #,(<f64array> (0 2 0 2) 0.5 1.0 1.5 2.0)
        (eigen-array-div! (make-eigen-array 0 2 0 2) A 2) eigen-array-nearly=?)
 
 (test* "eigen-array-pow 1" #,(<f64array> (0 2 0 2) 1 4 9 16)

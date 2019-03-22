@@ -128,6 +128,19 @@ int eigen_matrix_mul_scalar(double* data1, int n1, int m1,
     return TRUE;
 }
 
+// 行列の割り算を計算
+int eigen_matrix_div(double* data1, int n1, int m1,
+                     double* data2, int n2, int m2,
+                     double* data3) {
+    if (n1 < 0 || m1 < 0 || n2 < 0 || m2 < 0) return FALSE;
+    if (n1 != n2 || m1 != m2) return FALSE;
+    MatrixXd A = Map<MatrixXd>(data1, n1, m1);
+    MatrixXd B = Map<MatrixXd>(data2, n2, m2);
+    MatrixXd C = A.array() / B.array();
+    Map<MatrixXd>(data3, n1, m1) = C;
+    return TRUE;
+}
+
 // 行列とスカラーの割り算を計算
 int eigen_matrix_div_scalar(double* data1, int n1, int m1,
                             double r, double* data2) {

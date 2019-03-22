@@ -1,7 +1,7 @@
 ;; -*- coding: utf-8 -*-
 ;;
 ;; eigenmat.scm
-;; 2019-3-21 v1.29
+;; 2019-3-22 v1.30
 ;;
 ;; ＜内容＞
 ;;   Gauche で、Eigen ライブラリ を使って行列の高速演算を行うためのモジュールです。
@@ -138,11 +138,9 @@
 ;; 同じ shape の行列の生成
 (define (make-eigen-array-same-shape A . maybe-init)
   (check-array-rank A)
-  (let ((ns (array-start A 0))
-        (ne (array-end   A 0))
-        (ms (array-start A 1))
-        (me (array-end   A 1)))
-    (apply make-eigen-array ns ne ms me maybe-init)))
+  (apply make-eigen-array
+         (array-start A 0) (array-end A 0)
+         (array-start A 1) (array-end A 1) maybe-init))
 (define eigen-make-array-same-shape make-eigen-array-same-shape)
 
 ;; 行列の初期化データ付き生成
@@ -316,6 +314,10 @@
 ;; 行列とスカラーの積を計算
 (define-eigen-array-op-scalar  mul-elements mul-scalar)
 (define-eigen-array-op-scalar! mul-elements mul-scalar)
+
+;; 行列の要素の割り算を計算
+(define-eigen-array-op  div)
+(define-eigen-array-op! div)
 
 ;; 行列とスカラーの割り算を計算
 (define-eigen-array-op-scalar  div div-scalar)
