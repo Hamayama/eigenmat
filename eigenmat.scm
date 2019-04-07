@@ -1,7 +1,7 @@
 ;; -*- coding: utf-8 -*-
 ;;
 ;; eigenmat.scm
-;; 2019-3-23 v1.32
+;; 2019-4-7 v1.33
 ;;
 ;; ＜内容＞
 ;;   Gauche で、Eigen ライブラリ を使って行列の高速演算を行うためのモジュールです。
@@ -119,29 +119,28 @@
   (set! use-eigen-array-cache #f))
 
 ;; 行列の生成(キャッシュ使用)
-(define (make-eigen-array ns ne ms me . maybe-init)
+(define (make-eigen-array ns ne ms me :optional (maybe-init 0))
   (if use-eigen-array-cache
     (let1 key (s32vector ns ne ms me)
       (if-let1 A (hash-table-get array-cache-table key #f)
-        (if (or (null? maybe-init) (= (car maybe-init) 0))
+        (if (= maybe-init 0)
           (array-copy A)
           (rlet1 B (array-copy A)
-            (f64vector-fill! (slot-ref B 'backing-storage) (car maybe-init))))
+            (f64vector-fill! (slot-ref B 'backing-storage) maybe-init)))
         (let1 B (make-f64array (shape ns ne ms me) 0)
           (hash-table-put! array-cache-table key B)
-          (if (or (null? maybe-init) (= (car maybe-init) 0))
+          (if (= maybe-init 0)
             (array-copy B)
             (rlet1 C (array-copy B)
-              (f64vector-fill! (slot-ref C 'backing-storage) (car maybe-init)))))))
-    (apply make-f64array (shape ns ne ms me) maybe-init)))
+              (f64vector-fill! (slot-ref C 'backing-storage) maybe-init))))))
+    (make-f64array (shape ns ne ms me) maybe-init)))
 (define eigen-make-array make-eigen-array)
 
 ;; 同じ shape の行列の生成
-(define (make-eigen-array-same-shape A . maybe-init)
+(define (make-eigen-array-same-shape A :optional (maybe-init 0))
   (check-array-rank A)
-  (apply make-eigen-array
-         (array-start A 0) (array-end A 0)
-         (array-start A 1) (array-end A 1) maybe-init))
+  (make-eigen-array (array-start A 0) (array-end A 0)
+                    (array-start A 1) (array-end A 1) maybe-init))
 (define eigen-make-array-same-shape make-eigen-array-same-shape)
 
 ;; 行列の初期化データ付き生成

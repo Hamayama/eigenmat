@@ -55,6 +55,8 @@
          (eigen-array-cache-on)))
 (test* "make-eigen-array 5" G
        (make-eigen-array 0 0 0 0))
+(test* "make-eigen-array 6" (test-error <error>)
+       (make-eigen-array 0 2 0 2 1 2))
 
 (test* "make-eigen-array-same-shape 1" F
        (make-eigen-array-same-shape A))
@@ -69,6 +71,8 @@
          (eigen-array-cache-on)))
 (test* "make-eigen-array-same-shape 5" G
        (make-eigen-array-same-shape G))
+(test* "make-eigen-array-same-shape 6" (test-error <error>)
+       (make-eigen-array-same-shape A 1 2))
 
 (test* "eigen-array 1" A
        (eigen-array 0 2 0 2 1 2 3 4))

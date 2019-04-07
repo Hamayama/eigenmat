@@ -336,6 +336,7 @@
 - 2019-3-22  v1.31 エラー処理修正(eigen-array-determinant,eigen-array-inverse  
   eigen-array-inverse!,eigen-array-solve,eigen-array-solve!)
 - 2019-3-23  v1.32 手続き名変更(eigen-array-block → eigen-array-block-copy)
+- 2019-4-7   v1.33 引数チェック強化(make-eigen-array,make-eigen-array-same-shape)
 
 
-(2019-3-23)
+(2019-4-7)
