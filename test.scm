@@ -243,6 +243,36 @@
 (test* "eigen-array-log! 1" (f64array (shape 0 2 0 2) (log 1) (log 2) (log 3) (log 4))
        (eigen-array-log! (make-eigen-array 0 2 0 2) A) eigen-array-nearly=?)
 
+(test* "eigen-array-sinh 1" (f64array (shape 0 2 0 2) (sinh 1) (sinh 2) (sinh 3) (sinh 4))
+       (eigen-array-sinh A) eigen-array-nearly=?)
+(test* "eigen-array-sinh 2" F
+       (eigen-array-sinh F) eigen-array-nearly=?)
+(test* "eigen-array-sinh 3" G
+       (eigen-array-sinh G) eigen-array-nearly=?)
+
+(test* "eigen-array-sinh! 1" (f64array (shape 0 2 0 2) (sinh 1) (sinh 2) (sinh 3) (sinh 4))
+       (eigen-array-sinh! (make-eigen-array 0 2 0 2) A) eigen-array-nearly=?)
+
+(test* "eigen-array-cosh 1" (f64array (shape 0 2 0 2) (cosh 1) (cosh 2) (cosh 3) (cosh 4))
+       (eigen-array-cosh A) eigen-array-nearly=?)
+(test* "eigen-array-cosh 2" D
+       (eigen-array-cosh F) eigen-array-nearly=?)
+(test* "eigen-array-cosh 3" G
+       (eigen-array-cosh G) eigen-array-nearly=?)
+
+(test* "eigen-array-cosh! 1" (f64array (shape 0 2 0 2) (cosh 1) (cosh 2) (cosh 3) (cosh 4))
+       (eigen-array-cosh! (make-eigen-array 0 2 0 2) A) eigen-array-nearly=?)
+
+(test* "eigen-array-tanh 1" (f64array (shape 0 2 0 2) (tanh 1) (tanh 2) (tanh 3) (tanh 4))
+       (eigen-array-tanh A) eigen-array-nearly=?)
+(test* "eigen-array-tanh 2" F
+       (eigen-array-tanh F) eigen-array-nearly=?)
+(test* "eigen-array-tanh 3" G
+       (eigen-array-tanh G) eigen-array-nearly=?)
+
+(test* "eigen-array-tanh! 1" (f64array (shape 0 2 0 2) (tanh 1) (tanh 2) (tanh 3) (tanh 4))
+       (eigen-array-tanh! (make-eigen-array 0 2 0 2) A) eigen-array-nearly=?)
+
 (test* "eigen-array-sigmoid 1"
        (let ()
          (define (sigmoid x) (/. 1 (+ 1 (exp (- x)))))

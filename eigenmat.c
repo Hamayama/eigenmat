@@ -181,10 +181,36 @@ int eigen_matrix_log(double* data1, int n1, int m1,
     return TRUE;
 }
 
+// 行列の要素に対して、sinh を計算
+int eigen_matrix_sinh(double* data1, int n1, int m1, double* data2) {
+    if (n1 < 0 || m1 < 0) return FALSE;
+    MatrixXd A = Map<MatrixXd>(data1, n1, m1);
+    MatrixXd B = A.array().sinh();
+    Map<MatrixXd>(data2, n1, m1) = B;
+    return TRUE;
+}
+
+// 行列の要素に対して、cosh を計算
+int eigen_matrix_cosh(double* data1, int n1, int m1, double* data2) {
+    if (n1 < 0 || m1 < 0) return FALSE;
+    MatrixXd A = Map<MatrixXd>(data1, n1, m1);
+    MatrixXd B = A.array().cosh();
+    Map<MatrixXd>(data2, n1, m1) = B;
+    return TRUE;
+}
+
+// 行列の要素に対して、tanh を計算
+int eigen_matrix_tanh(double* data1, int n1, int m1, double* data2) {
+    if (n1 < 0 || m1 < 0) return FALSE;
+    MatrixXd A = Map<MatrixXd>(data1, n1, m1);
+    MatrixXd B = A.array().tanh();
+    Map<MatrixXd>(data2, n1, m1) = B;
+    return TRUE;
+}
+
 // 行列の要素に対して、シグモイド関数を計算
 static double sigmoid(double x) { return 1.0 / (1.0 + exp(-x)); }
-int eigen_matrix_sigmoid(double* data1, int n1, int m1,
-                         double* data2) {
+int eigen_matrix_sigmoid(double* data1, int n1, int m1, double* data2) {
     if (n1 < 0 || m1 < 0) return FALSE;
     MatrixXd A = Map<MatrixXd>(data1, n1, m1);
     MatrixXd B = A.unaryExpr(&sigmoid);
@@ -194,8 +220,7 @@ int eigen_matrix_sigmoid(double* data1, int n1, int m1,
 
 // 行列の要素に対して、ReLU関数を計算
 static double relu(double x) { return x > 0.0 ? x : 0.0; }
-int eigen_matrix_relu(double* data1, int n1, int m1,
-                      double* data2) {
+int eigen_matrix_relu(double* data1, int n1, int m1, double* data2) {
     if (n1 < 0 || m1 < 0) return FALSE;
     MatrixXd A = Map<MatrixXd>(data1, n1, m1);
     MatrixXd B = A.unaryExpr(&relu);
@@ -205,8 +230,7 @@ int eigen_matrix_relu(double* data1, int n1, int m1,
 
 // 行列の要素に対して、ステップ関数を計算
 static double step(double x) { return x > 0.0 ? 1.0 : 0.0; }
-int eigen_matrix_step(double* data1, int n1, int m1,
-                      double* data2) {
+int eigen_matrix_step(double* data1, int n1, int m1, double* data2) {
     if (n1 < 0 || m1 < 0) return FALSE;
     MatrixXd A = Map<MatrixXd>(data1, n1, m1);
     MatrixXd B = A.unaryExpr(&step);

@@ -101,6 +101,21 @@
   (result (eigen_matrix_log (cast (double*) (SCM_F64VECTOR_ELEMENTS data1)) n1 m1
                             (cast (double*) (SCM_F64VECTOR_ELEMENTS data2)))))
 
+(define-cproc eigen-matrix-sinh (data1::<f64vector> n1::<int> m1::<int>
+                                 data2::<f64vector>) ::<boolean>
+  (result (eigen_matrix_sinh (cast (double*) (SCM_F64VECTOR_ELEMENTS data1)) n1 m1
+                             (cast (double*) (SCM_F64VECTOR_ELEMENTS data2)))))
+
+(define-cproc eigen-matrix-cosh (data1::<f64vector> n1::<int> m1::<int>
+                                 data2::<f64vector>) ::<boolean>
+  (result (eigen_matrix_cosh (cast (double*) (SCM_F64VECTOR_ELEMENTS data1)) n1 m1
+                             (cast (double*) (SCM_F64VECTOR_ELEMENTS data2)))))
+
+(define-cproc eigen-matrix-tanh (data1::<f64vector> n1::<int> m1::<int>
+                                 data2::<f64vector>) ::<boolean>
+  (result (eigen_matrix_tanh (cast (double*) (SCM_F64VECTOR_ELEMENTS data1)) n1 m1
+                             (cast (double*) (SCM_F64VECTOR_ELEMENTS data2)))))
+
 (define-cproc eigen-matrix-sigmoid (data1::<f64vector> n1::<int> m1::<int>
                                     data2::<f64vector>) ::<boolean>
   (result (eigen_matrix_sigmoid (cast (double*) (SCM_F64VECTOR_ELEMENTS data1)) n1 m1

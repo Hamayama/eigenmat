@@ -1,7 +1,7 @@
 ;; -*- coding: utf-8 -*-
 ;;
 ;; eigenmat.scm
-;; 2019-4-7 v1.33
+;; 2019-4-13 v1.34
 ;;
 ;; ＜内容＞
 ;;   Gauche で、Eigen ライブラリ を使って行列の高速演算を行うためのモジュールです。
@@ -31,6 +31,9 @@
     eigen-array-pow          eigen-array-pow!
     eigen-array-exp          eigen-array-exp!
     eigen-array-log          eigen-array-log!
+    eigen-array-sinh         eigen-array-sinh!
+    eigen-array-cosh         eigen-array-cosh!
+    eigen-array-tanh         eigen-array-tanh!
     eigen-array-sigmoid      eigen-array-sigmoid!
     eigen-array-relu         eigen-array-relu!
     eigen-array-step         eigen-array-step!
@@ -334,6 +337,18 @@
 ;; 行列の要素に対して、自然対数を計算
 (define-eigen-array-op-unary  log)
 (define-eigen-array-op-unary! log)
+
+;; 行列の要素に対して、sinh を計算
+(define-eigen-array-op-unary  sinh)
+(define-eigen-array-op-unary! sinh)
+
+;; 行列の要素に対して、cosh を計算
+(define-eigen-array-op-unary  cosh)
+(define-eigen-array-op-unary! cosh)
+
+;; 行列の要素に対して、tanh を計算
+(define-eigen-array-op-unary  tanh)
+(define-eigen-array-op-unary! tanh)
 
 ;; 行列の要素に対して、シグモイド関数を計算
 (define-eigen-array-op-unary  sigmoid)

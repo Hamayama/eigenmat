@@ -198,6 +198,21 @@
     行列A の要素に対して、自然対数を計算して返します。  
     `!` がついたものは、結果を 行列B に格納して返します (行列B は変更されます)。
 
+  - `(eigen-array-sinh A)`  
+    `(eigen-array-sinh! B A)`  
+    行列A の要素に対して、sinh を計算して返します。  
+    `!` がついたものは、結果を 行列B に格納して返します (行列B は変更されます)。
+
+  - `(eigen-array-cosh A)`  
+    `(eigen-array-cosh! B A)`  
+    行列A の要素に対して、cosh を計算して返します。  
+    `!` がついたものは、結果を 行列B に格納して返します (行列B は変更されます)。
+
+  - `(eigen-array-tanh A)`  
+    `(eigen-array-tanh! B A)`  
+    行列A の要素に対して、tanh を計算して返します。  
+    `!` がついたものは、結果を 行列B に格納して返します (行列B は変更されます)。
+
   - `(eigen-array-sigmoid A)`  
     `(eigen-array-sigmoid! B A)`  
     行列A の要素に対して、シグモイド関数 を計算して返します。  
@@ -337,6 +352,9 @@
   eigen-array-inverse!,eigen-array-solve,eigen-array-solve!)
 - 2019-3-23  v1.32 手続き名変更(eigen-array-block → eigen-array-block-copy)
 - 2019-4-7   v1.33 引数チェック強化(make-eigen-array,make-eigen-array-same-shape)
+- 2019-4-13  v1.34 eigen-array-sinh,eigen-array-sinh!,  
+  eigen-array-cosh,eigen-array-cosh!,  
+  eigen-array-tanh,eigen-array-tanh!を追加
 
 
-(2019-4-7)
+(2019-4-13)
