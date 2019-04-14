@@ -1,7 +1,7 @@
 ;; -*- coding: utf-8 -*-
 ;;
 ;; eigenmat.scm
-;; 2019-4-13 v1.34
+;; 2019-4-14 v1.35
 ;;
 ;; ＜内容＞
 ;;   Gauche で、Eigen ライブラリ を使って行列の高速演算を行うためのモジュールです。
@@ -43,6 +43,7 @@
     eigen-array-mean
     eigen-array-trace
     eigen-array-determinant
+    eigen-array-identity     eigen-array-identity!
     eigen-array-transpose    eigen-array-transpose!
     eigen-array-inverse      eigen-array-inverse!
     eigen-array-solve        eigen-array-solve!
@@ -424,6 +425,22 @@
     (unless (= n1 m1)
       (error "array shape must be square"))
     (eigen-matrix-determinant data1 n1 m1)))
+
+;; 単位行列を計算
+(define-method eigen-array-identity ((n1 <integer>) (m1 <integer>))
+  (let* ((A     (make-eigen-array 0 n1 0 m1))
+         (data1 (slot-ref A 'backing-storage)))
+    (eigen-matrix-identity data1 n1 m1)
+    A))
+
+;; 単位行列を計算(破壊的変更版)
+(define-method eigen-array-identity! ((A <f64array>))
+  (check-array-rank A)
+  (let ((data1 (slot-ref A 'backing-storage))
+        (n1    (array-length A 0))
+        (m1    (array-length A 1)))
+    (eigen-matrix-identity data1 n1 m1)
+    A))
 
 ;; 転置行列を計算
 (define-method eigen-array-transpose ((A <f64array>))

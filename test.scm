@@ -330,6 +330,20 @@
 (test* "eigen-array-determinant 3" (test-error <error>) (eigen-array-determinant K))
 (test* "eigen-array-determinant 4"  1 (eigen-array-determinant G) nearly=?)
 
+(test* "eigen-array-identity 1" #,(<f64array> (0 2 0 2) 1 0 0 1)
+       (eigen-array-identity 2 2))
+(test* "eigen-array-identity 2" #,(<f64array> (0 2 0 3) 1 0 0 0 1 0)
+       (eigen-array-identity 2 3))
+(test* "eigen-array-identity 3" G
+       (eigen-array-identity 0 0))
+
+(test* "eigen-array-identity! 1" #,(<f64array> (0 2 0 2) 1 0 0 1)
+       (eigen-array-identity! (make-eigen-array 0 2 0 2)))
+(test* "eigen-array-identity! 2" #,(<f64array> (0 2 0 3) 1 0 0 0 1 0)
+       (eigen-array-identity! (make-eigen-array 0 2 0 3)))
+(test* "eigen-array-identity! 3" G
+       (eigen-array-identity! (make-eigen-array 0 0 0 0)))
+
 (test* "eigen-array-transpose 1" #,(<f64array> (0 2 0 2) 1 3 2 4)
        (eigen-array-transpose A))
 (test* "eigen-array-transpose 2" #,(<f64array> (0 3 0 2) 1 4 2 5 3 6)

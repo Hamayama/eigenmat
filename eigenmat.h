@@ -81,6 +81,8 @@ extern double eigen_matrix_mean(double* data1, int n1, int m1);
 extern double eigen_matrix_trace(double* data1, int n1, int m1);
 extern double eigen_matrix_determinant(double* data1, int n1, int m1);
 
+extern int eigen_matrix_identity(double* data1, int n1, int m1);
+
 extern int eigen_matrix_transpose(double* data1, int n1, int m1,
                                   double* data2);
 

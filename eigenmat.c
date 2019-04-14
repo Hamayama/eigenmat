@@ -290,6 +290,14 @@ double eigen_matrix_determinant(double* data1, int n1, int m1) {
     return (double)A.determinant();
 }
 
+// 単位行列を計算
+int eigen_matrix_identity(double* data1, int n1, int m1) {
+    if (n1 < 0 || m1 < 0) return FALSE;
+    MatrixXd A = MatrixXd::Identity(n1, m1);
+    Map<MatrixXd>(data1, n1, m1) = A;
+    return TRUE;
+}
+
 // 転置行列を計算
 int eigen_matrix_transpose(double* data1, int n1, int m1,
                            double* data2) {

@@ -246,6 +246,11 @@
   - `(eigen-array-determinant A)`  
     行列A の行列式を計算して返します。
 
+  - `(eigen-array-identity n m)`  
+    `(eigen-array-identity! A)`  
+    サイズが n x m の単位行列を返します。  
+    `!` がついたものは、行列A を (サイズは変えずに) 単位行列にして返します (行列A は変更されます)。
+
   - `(eigen-array-transpose A)`  
     `(eigen-array-transpose! B A)`  
     行列A の転置行列を返します。  
@@ -355,6 +360,7 @@
 - 2019-4-13  v1.34 eigen-array-sinh,eigen-array-sinh!,  
   eigen-array-cosh,eigen-array-cosh!,  
   eigen-array-tanh,eigen-array-tanh!を追加
+- 2019-4-14  v1.35 eigen-array-identity,eigen-array-identity!を追加
 
 
-(2019-4-13)
+(2019-4-14)

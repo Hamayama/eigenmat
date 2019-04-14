@@ -149,6 +149,9 @@
 (define-cproc eigen-matrix-determinant (data1::<f64vector> n1::<int> m1::<int>) ::<double>
   (result (eigen_matrix_determinant (cast (double*) (SCM_F64VECTOR_ELEMENTS data1)) n1 m1)))
 
+(define-cproc eigen-matrix-identity (data1::<f64vector> n1::<int> m1::<int>) ::<boolean>
+  (result (eigen_matrix_identity (cast (double*) (SCM_F64VECTOR_ELEMENTS data1)) n1 m1)))
+
 (define-cproc eigen-matrix-transpose (data1::<f64vector> n1::<int> m1::<int>
                                       data2::<f64vector>) ::<boolean>
   (result (eigen_matrix_transpose (cast (double*) (SCM_F64VECTOR_ELEMENTS data1)) n1 m1
