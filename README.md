@@ -361,6 +361,7 @@
   eigen-array-cosh,eigen-array-cosh!,  
   eigen-array-tanh,eigen-array-tanh!を追加
 - 2019-4-14  v1.35 eigen-array-identity,eigen-array-identity!を追加
+- 2019-4-16  v1.36 Cの処理見直し(データコピー削減)
 
 
-(2019-4-14)
+(2019-4-16)

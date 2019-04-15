@@ -33,8 +33,8 @@ int eigen_matrix_nearly_p(double* data1, int n1, int m1,
                           double precision) {
     if (n1 < 0 || m1 < 0 || n2 < 0 || m2 < 0) return FALSE;
     if (n1 != n2 || m1 != m2) return FALSE;
-    MatrixXd A = Map<MatrixXd>(data1, n1, m1);
-    MatrixXd B = Map<MatrixXd>(data2, n2, m2);
+    Map<MatrixXd> A(data1, n1, m1);
+    Map<MatrixXd> B(data2, n2, m2);
     return A.isApprox(B, precision) ? TRUE : FALSE;
 }
 
@@ -42,7 +42,7 @@ int eigen_matrix_nearly_p(double* data1, int n1, int m1,
 int eigen_matrix_nearly_zero_p(double* data1, int n1, int m1,
                                double precision) {
     if (n1 < 0 || m1 < 0) return FALSE;
-    MatrixXd A = Map<MatrixXd>(data1, n1, m1);
+    Map<MatrixXd> A(data1, n1, m1);
     return A.isMuchSmallerThan(1, precision) ? TRUE : FALSE;
 }
 
@@ -52,10 +52,10 @@ int eigen_matrix_add(double* data1, int n1, int m1,
                      double* data3) {
     if (n1 < 0 || m1 < 0 || n2 < 0 || m2 < 0) return FALSE;
     if (n1 != n2 || m1 != m2) return FALSE;
-    MatrixXd A = Map<MatrixXd>(data1, n1, m1);
-    MatrixXd B = Map<MatrixXd>(data2, n2, m2);
-    MatrixXd C = A + B;
-    Map<MatrixXd>(data3, n1, m1) = C;
+    Map<MatrixXd> A(data1, n1, m1);
+    Map<MatrixXd> B(data2, n2, m2);
+    Map<MatrixXd> C(data3, n1, m1);
+    C = A + B;
     return TRUE;
 }
 
@@ -63,9 +63,9 @@ int eigen_matrix_add(double* data1, int n1, int m1,
 int eigen_matrix_add_scalar(double* data1, int n1, int m1,
                             double r, double* data2) {
     if (n1 < 0 || m1 < 0) return FALSE;
-    MatrixXd A = Map<MatrixXd>(data1, n1, m1);
-    MatrixXd B = A.array() + r;
-    Map<MatrixXd>(data2, n1, m1) = B;
+    Map<MatrixXd> A(data1, n1, m1);
+    Map<MatrixXd> B(data2, n1, m1);
+    B = A.array() + r;
     return TRUE;
 }
 
@@ -75,10 +75,10 @@ int eigen_matrix_sub(double* data1, int n1, int m1,
                      double* data3) {
     if (n1 < 0 || m1 < 0 || n2 < 0 || m2 < 0) return FALSE;
     if (n1 != n2 || m1 != m2) return FALSE;
-    MatrixXd A = Map<MatrixXd>(data1, n1, m1);
-    MatrixXd B = Map<MatrixXd>(data2, n2, m2);
-    MatrixXd C = A - B;
-    Map<MatrixXd>(data3, n1, m1) = C;
+    Map<MatrixXd> A(data1, n1, m1);
+    Map<MatrixXd> B(data2, n2, m2);
+    Map<MatrixXd> C(data3, n1, m1);
+    C = A - B;
     return TRUE;
 }
 
@@ -86,9 +86,9 @@ int eigen_matrix_sub(double* data1, int n1, int m1,
 int eigen_matrix_sub_scalar(double* data1, int n1, int m1,
                             double r, double* data2) {
     if (n1 < 0 || m1 < 0) return FALSE;
-    MatrixXd A = Map<MatrixXd>(data1, n1, m1);
-    MatrixXd B = A.array() - r;
-    Map<MatrixXd>(data2, n1, m1) = B;
+    Map<MatrixXd> A(data1, n1, m1);
+    Map<MatrixXd> B(data2, n1, m1);
+    B = A.array() - r;
     return TRUE;
 }
 
@@ -98,10 +98,10 @@ int eigen_matrix_mul(double* data1, int n1, int m1,
                      double* data3) {
     if (n1 < 0 || m1 < 0 || n2 < 0 || m2 < 0) return FALSE;
     if (m1 != n2) return FALSE;
-    MatrixXd A = Map<MatrixXd>(data1, n1, m1);
-    MatrixXd B = Map<MatrixXd>(data2, n2, m2);
-    MatrixXd C = A * B;
-    Map<MatrixXd>(data3, n1, m2) = C; // 結果は n1 x m2 になる
+    Map<MatrixXd> A(data1, n1, m1);
+    Map<MatrixXd> B(data2, n2, m2);
+    Map<MatrixXd> C(data3, n1, m2); // 結果は n1 x m2 になる
+    C = A * B;
     return TRUE;
 }
 
@@ -111,10 +111,10 @@ int eigen_matrix_mul_elements(double* data1, int n1, int m1,
                               double* data3) {
     if (n1 < 0 || m1 < 0 || n2 < 0 || m2 < 0) return FALSE;
     if (n1 != n2 || m1 != m2) return FALSE;
-    MatrixXd A = Map<MatrixXd>(data1, n1, m1);
-    MatrixXd B = Map<MatrixXd>(data2, n2, m2);
-    MatrixXd C = A.array() * B.array();
-    Map<MatrixXd>(data3, n1, m1) = C;
+    Map<MatrixXd> A(data1, n1, m1);
+    Map<MatrixXd> B(data2, n2, m2);
+    Map<MatrixXd> C(data3, n1, m1);
+    C = A.array() * B.array();
     return TRUE;
 }
 
@@ -122,9 +122,9 @@ int eigen_matrix_mul_elements(double* data1, int n1, int m1,
 int eigen_matrix_mul_scalar(double* data1, int n1, int m1,
                             double r, double* data2) {
     if (n1 < 0 || m1 < 0) return FALSE;
-    MatrixXd A = Map<MatrixXd>(data1, n1, m1);
-    MatrixXd B = A.array() * r;
-    Map<MatrixXd>(data2, n1, m1) = B;
+    Map<MatrixXd> A(data1, n1, m1);
+    Map<MatrixXd> B(data2, n1, m1);
+    B = A.array() * r;
     return TRUE;
 }
 
@@ -134,10 +134,10 @@ int eigen_matrix_div(double* data1, int n1, int m1,
                      double* data3) {
     if (n1 < 0 || m1 < 0 || n2 < 0 || m2 < 0) return FALSE;
     if (n1 != n2 || m1 != m2) return FALSE;
-    MatrixXd A = Map<MatrixXd>(data1, n1, m1);
-    MatrixXd B = Map<MatrixXd>(data2, n2, m2);
-    MatrixXd C = A.array() / B.array();
-    Map<MatrixXd>(data3, n1, m1) = C;
+    Map<MatrixXd> A(data1, n1, m1);
+    Map<MatrixXd> B(data2, n2, m2);
+    Map<MatrixXd> C(data3, n1, m1);
+    C = A.array() / B.array();
     return TRUE;
 }
 
@@ -145,9 +145,9 @@ int eigen_matrix_div(double* data1, int n1, int m1,
 int eigen_matrix_div_scalar(double* data1, int n1, int m1,
                             double r, double* data2) {
     if (n1 < 0 || m1 < 0) return FALSE;
-    MatrixXd A = Map<MatrixXd>(data1, n1, m1);
-    MatrixXd B = A.array() / r;
-    Map<MatrixXd>(data2, n1, m1) = B;
+    Map<MatrixXd> A(data1, n1, m1);
+    Map<MatrixXd> B(data2, n1, m1);
+    B = A.array() / r;
     return TRUE;
 }
 
@@ -155,9 +155,9 @@ int eigen_matrix_div_scalar(double* data1, int n1, int m1,
 int eigen_matrix_pow(double* data1, int n1, int m1,
                      double r, double* data2) {
     if (n1 < 0 || m1 < 0) return FALSE;
-    MatrixXd A = Map<MatrixXd>(data1, n1, m1);
-    MatrixXd B = A.array().pow(r);
-    Map<MatrixXd>(data2, n1, m1) = B;
+    Map<MatrixXd> A(data1, n1, m1);
+    Map<MatrixXd> B(data2, n1, m1);
+    B = A.array().pow(r);
     return TRUE;
 }
 
@@ -165,9 +165,9 @@ int eigen_matrix_pow(double* data1, int n1, int m1,
 int eigen_matrix_exp(double* data1, int n1, int m1,
                      double* data2) {
     if (n1 < 0 || m1 < 0) return FALSE;
-    MatrixXd A = Map<MatrixXd>(data1, n1, m1);
-    MatrixXd B = A.array().exp();
-    Map<MatrixXd>(data2, n1, m1) = B;
+    Map<MatrixXd> A(data1, n1, m1);
+    Map<MatrixXd> B(data2, n1, m1);
+    B = A.array().exp();
     return TRUE;
 }
 
@@ -175,36 +175,36 @@ int eigen_matrix_exp(double* data1, int n1, int m1,
 int eigen_matrix_log(double* data1, int n1, int m1,
                      double* data2) {
     if (n1 < 0 || m1 < 0) return FALSE;
-    MatrixXd A = Map<MatrixXd>(data1, n1, m1);
-    MatrixXd B = A.array().log();
-    Map<MatrixXd>(data2, n1, m1) = B;
+    Map<MatrixXd> A(data1, n1, m1);
+    Map<MatrixXd> B(data2, n1, m1);
+    B = A.array().log();
     return TRUE;
 }
 
 // 行列の要素に対して、sinh を計算
 int eigen_matrix_sinh(double* data1, int n1, int m1, double* data2) {
     if (n1 < 0 || m1 < 0) return FALSE;
-    MatrixXd A = Map<MatrixXd>(data1, n1, m1);
-    MatrixXd B = A.array().sinh();
-    Map<MatrixXd>(data2, n1, m1) = B;
+    Map<MatrixXd> A(data1, n1, m1);
+    Map<MatrixXd> B(data2, n1, m1);
+    B = A.array().sinh();
     return TRUE;
 }
 
 // 行列の要素に対して、cosh を計算
 int eigen_matrix_cosh(double* data1, int n1, int m1, double* data2) {
     if (n1 < 0 || m1 < 0) return FALSE;
-    MatrixXd A = Map<MatrixXd>(data1, n1, m1);
-    MatrixXd B = A.array().cosh();
-    Map<MatrixXd>(data2, n1, m1) = B;
+    Map<MatrixXd> A(data1, n1, m1);
+    Map<MatrixXd> B(data2, n1, m1);
+    B = A.array().cosh();
     return TRUE;
 }
 
 // 行列の要素に対して、tanh を計算
 int eigen_matrix_tanh(double* data1, int n1, int m1, double* data2) {
     if (n1 < 0 || m1 < 0) return FALSE;
-    MatrixXd A = Map<MatrixXd>(data1, n1, m1);
-    MatrixXd B = A.array().tanh();
-    Map<MatrixXd>(data2, n1, m1) = B;
+    Map<MatrixXd> A(data1, n1, m1);
+    Map<MatrixXd> B(data2, n1, m1);
+    B = A.array().tanh();
     return TRUE;
 }
 
@@ -212,9 +212,9 @@ int eigen_matrix_tanh(double* data1, int n1, int m1, double* data2) {
 static double sigmoid(double x) { return 1.0 / (1.0 + exp(-x)); }
 int eigen_matrix_sigmoid(double* data1, int n1, int m1, double* data2) {
     if (n1 < 0 || m1 < 0) return FALSE;
-    MatrixXd A = Map<MatrixXd>(data1, n1, m1);
-    MatrixXd B = A.unaryExpr(&sigmoid);
-    Map<MatrixXd>(data2, n1, m1) = B;
+    Map<MatrixXd> A(data1, n1, m1);
+    Map<MatrixXd> B(data2, n1, m1);
+    B = A.unaryExpr(&sigmoid);
     return TRUE;
 }
 
@@ -222,9 +222,9 @@ int eigen_matrix_sigmoid(double* data1, int n1, int m1, double* data2) {
 static double relu(double x) { return x > 0.0 ? x : 0.0; }
 int eigen_matrix_relu(double* data1, int n1, int m1, double* data2) {
     if (n1 < 0 || m1 < 0) return FALSE;
-    MatrixXd A = Map<MatrixXd>(data1, n1, m1);
-    MatrixXd B = A.unaryExpr(&relu);
-    Map<MatrixXd>(data2, n1, m1) = B;
+    Map<MatrixXd> A(data1, n1, m1);
+    Map<MatrixXd> B(data2, n1, m1);
+    B = A.unaryExpr(&relu);
     return TRUE;
 }
 
@@ -232,16 +232,16 @@ int eigen_matrix_relu(double* data1, int n1, int m1, double* data2) {
 static double step(double x) { return x > 0.0 ? 1.0 : 0.0; }
 int eigen_matrix_step(double* data1, int n1, int m1, double* data2) {
     if (n1 < 0 || m1 < 0) return FALSE;
-    MatrixXd A = Map<MatrixXd>(data1, n1, m1);
-    MatrixXd B = A.unaryExpr(&step);
-    Map<MatrixXd>(data2, n1, m1) = B;
+    Map<MatrixXd> A(data1, n1, m1);
+    Map<MatrixXd> B(data2, n1, m1);
+    B = A.unaryExpr(&step);
     return TRUE;
 }
 
 // 行列の要素の和を計算
 double eigen_matrix_sum(double* data1, int n1, int m1) {
     if (n1 < 0 || m1 < 0) return FALSE;
-    MatrixXd A = Map<MatrixXd>(data1, n1, m1);
+    Map<MatrixXd> A(data1, n1, m1);
     return (double)A.sum();
 }
 
@@ -250,7 +250,7 @@ double eigen_matrix_min(double* data1, int n1, int m1) {
     // (0を許可すると実行時エラーになる)
     //if (n1 < 0 || m1 < 0) return FALSE;
     if (n1 <= 0 || m1 <= 0) return FALSE;
-    MatrixXd A = Map<MatrixXd>(data1, n1, m1);
+    Map<MatrixXd> A(data1, n1, m1);
     return (double)A.minCoeff();
 }
 
@@ -259,7 +259,7 @@ double eigen_matrix_max(double* data1, int n1, int m1) {
     // (0を許可すると実行時エラーになる)
     //if (n1 < 0 || m1 < 0) return FALSE;
     if (n1 <= 0 || m1 <= 0) return FALSE;
-    MatrixXd A = Map<MatrixXd>(data1, n1, m1);
+    Map<MatrixXd> A(data1, n1, m1);
     return (double)A.maxCoeff();
 }
 
@@ -268,7 +268,7 @@ double eigen_matrix_mean(double* data1, int n1, int m1) {
     // (0を許可すると実行時エラーになる)
     //if (n1 < 0 || m1 < 0) return FALSE;
     if (n1 <= 0 || m1 <= 0) return FALSE;
-    MatrixXd A = Map<MatrixXd>(data1, n1, m1);
+    Map<MatrixXd> A(data1, n1, m1);
     return (double)A.mean();
 }
 
@@ -277,7 +277,7 @@ double eigen_matrix_trace(double* data1, int n1, int m1) {
     if (n1 < 0 || m1 < 0) return FALSE;
     // (正方行列でなくても何かしら計算する?)
     //if (n1 != m1) return FALSE;
-    MatrixXd A = Map<MatrixXd>(data1, n1, m1);
+    Map<MatrixXd> A(data1, n1, m1);
     return (double)A.trace();
 }
 
@@ -286,15 +286,15 @@ double eigen_matrix_determinant(double* data1, int n1, int m1) {
     if (n1 < 0 || m1 < 0) return FALSE;
     // (正方行列でないと実行時エラーになる)
     if (n1 != m1) return FALSE;
-    MatrixXd A = Map<MatrixXd>(data1, n1, m1);
+    Map<MatrixXd> A(data1, n1, m1);
     return (double)A.determinant();
 }
 
 // 単位行列を計算
 int eigen_matrix_identity(double* data1, int n1, int m1) {
     if (n1 < 0 || m1 < 0) return FALSE;
-    MatrixXd A = MatrixXd::Identity(n1, m1);
-    Map<MatrixXd>(data1, n1, m1) = A;
+    Map<MatrixXd> A(data1, n1, m1);
+    A.setIdentity();
     return TRUE;
 }
 
@@ -302,9 +302,9 @@ int eigen_matrix_identity(double* data1, int n1, int m1) {
 int eigen_matrix_transpose(double* data1, int n1, int m1,
                            double* data2) {
     if (n1 < 0 || m1 < 0) return FALSE;
-    MatrixXd A = Map<MatrixXd>(data1, n1, m1);
-    MatrixXd B = A.transpose();
-    Map<MatrixXd>(data2, m1, n1) = B; // 結果は m1 x n1 になる
+    Map<MatrixXd> A(data1, n1, m1);
+    Map<MatrixXd> B(data2, m1, n1); // 結果は m1 x n1 になる
+    B = A.transpose();
     return TRUE;
 }
 
@@ -316,9 +316,9 @@ int eigen_matrix_inverse(double* data1, int n1, int m1,
     if (n1 <= 0 || m1 <= 0) return FALSE;
     // (正方行列でないと実行時エラーになる)
     if (n1 != m1) return FALSE;
-    MatrixXd A = Map<MatrixXd>(data1, n1, m1);
-    MatrixXd B = A.inverse();
-    Map<MatrixXd>(data2, m1, n1) = B; // 結果は m1 x n1 になる
+    Map<MatrixXd> A(data1, n1, m1);
+    Map<MatrixXd> B(data2, m1, n1); // 結果は m1 x n1 になる
+    B = A.inverse();
     return TRUE;
 }
 
@@ -332,10 +332,10 @@ int eigen_matrix_solve(double* data1, int n1, int m1,
     // (正方行列でないと実行時エラーになる)
     if (n1 != m1) return FALSE;
     if (n1 != n2) return FALSE;
-    MatrixXd A = Map<MatrixXd>(data1, n1, m1);
-    MatrixXd B = Map<MatrixXd>(data2, n2, m2);
-    MatrixXd X = A.partialPivLu().solve(B);
-    Map<MatrixXd>(data3, m1, m2) = X; // 結果は m1 x m2 になる
+    Map<MatrixXd> A(data1, n1, m1);
+    Map<MatrixXd> B(data2, n2, m2);
+    Map<MatrixXd> X(data3, m1, m2); // 結果は m1 x m2 になる
+    X = A.partialPivLu().solve(B);
     return TRUE;
 }
 
@@ -344,9 +344,9 @@ int eigen_matrix_row(double* data1, int n1, int m1,
                      double* data2, int i1) {
     if (n1 < 0 || m1 < 0) return FALSE;
     if (i1 < 0 || i1 >= n1) return FALSE;
-    MatrixXd A = Map<MatrixXd>(data1, n1, m1);
-    MatrixXd B = A.row(i1);
-    Map<MatrixXd>(data2, 1, m1) = B;
+    Map<MatrixXd> A(data1, n1, m1);
+    Map<MatrixXd> B(data2,  1, m1);
+    B = A.row(i1);
     return TRUE;
 }
 
@@ -355,9 +355,9 @@ int eigen_matrix_col(double* data1, int n1, int m1,
                      double* data2, int j1) {
     if (n1 < 0 || m1 < 0) return FALSE;
     if (j1 < 0 || j1 >= m1) return FALSE;
-    MatrixXd A = Map<MatrixXd>(data1, n1, m1);
-    MatrixXd B = A.col(j1);
-    Map<MatrixXd>(data2, n1, 1) = B;
+    Map<MatrixXd> A(data1, n1, m1);
+    Map<MatrixXd> B(data2, n1,  1);
+    B = A.col(j1);
     return TRUE;
 }
 
@@ -367,9 +367,9 @@ int eigen_matrix_block(double* data1, int n1, int m1,
                        int i1, int j1) {
     if (n1 < 0 || m1 < 0 || n2 < 0 || m2 < 0) return FALSE;
     if (i1 < 0 || j1 < 0 || i1 + n2 > n1 || j1 + m2 > m1) return FALSE;
-    MatrixXd A = Map<MatrixXd>(data1, n1, m1);
-    MatrixXd B = A.block(i1, j1, n2, m2);
-    Map<MatrixXd>(data2, n2, m2) = B;
+    Map<MatrixXd> A(data1, n1, m1);
+    Map<MatrixXd> B(data2, n2, m2);
+    B = A.block(i1, j1, n2, m2);
     return TRUE;
 }
 
@@ -381,11 +381,11 @@ int eigen_matrix_block_copy(double* data1, int n1, int m1,
     if (n1 < 0 || m1 < 0 || n2 < 0 || m2 < 0 || n3 < 0 || m3 < 0) return FALSE;
     if (i1 < 0 || j1 < 0 || i1 + n3 > n1 || j1 + m3 > m1) return FALSE;
     if (i2 < 0 || j2 < 0 || i2 + n3 > n2 || j2 + m3 > m2) return FALSE;
-    MatrixXd A = Map<MatrixXd>(data1, n1, m1);
-    MatrixXd B = Map<MatrixXd>(data2, n2, m2);
-    MatrixXd C = B;
+    Map<MatrixXd> A(data1, n1, m1);
+    Map<MatrixXd> B(data2, n2, m2);
+    Map<MatrixXd> C(data3, n2, m2);
+    C = B;
     C.block(i2, j2, n3, m3) = A.block(i1, j1, n3, m3);
-    Map<MatrixXd>(data3, n2, m2) = C;
     return TRUE;
 }
 
