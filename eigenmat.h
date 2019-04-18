@@ -18,94 +18,94 @@ SCM_DECL_BEGIN
 
 extern ScmObj test_eigenmat(void);
 
-extern int eigen_matrix_nearly_p(double* data1, int m1, int n1,
-                                 double* data2, int m2, int n2,
+extern int eigen_matrix_nearly_p(double* data1, int n1, int m1,
+                                 double* data2, int n2, int m2,
                                  double precision);
 
-extern int eigen_matrix_nearly_zero_p(double* data1, int m1, int n1,
+extern int eigen_matrix_nearly_zero_p(double* data1, int n1, int m1,
                                       double precision);
 
-extern int eigen_matrix_add(double* data1, int m1, int n1,
-                            double* data2, int m2, int n2,
+extern int eigen_matrix_add(double* data1, int n1, int m1,
+                            double* data2, int n2, int m2,
                             double* data3);
 
-extern int eigen_matrix_add_scalar(double* data1, int m1, int n1,
+extern int eigen_matrix_add_scalar(double* data1, int n1, int m1,
                                    double r, double* data2);
 
-extern int eigen_matrix_sub(double* data1, int m1, int n1,
-                            double* data2, int m2, int n2,
+extern int eigen_matrix_sub(double* data1, int n1, int m1,
+                            double* data2, int n2, int m2,
                             double* data3);
 
-extern int eigen_matrix_sub_scalar(double* data1, int m1, int n1,
+extern int eigen_matrix_sub_scalar(double* data1, int n1, int m1,
                                    double r, double* data2);
 
-extern int eigen_matrix_mul(double* data1, int m1, int n1,
-                            double* data2, int m2, int n2,
+extern int eigen_matrix_mul(double* data1, int n1, int m1,
+                            double* data2, int n2, int m2,
                             double* data3);
 
-extern int eigen_matrix_mul_elements(double* data1, int m1, int n1,
-                                     double* data2, int m2, int n2,
+extern int eigen_matrix_mul_elements(double* data1, int n1, int m1,
+                                     double* data2, int n2, int m2,
                                      double* data3);
 
-extern int eigen_matrix_mul_scalar(double* data1, int m1, int n1,
+extern int eigen_matrix_mul_scalar(double* data1, int n1, int m1,
                                    double r, double* data2);
 
-extern int eigen_matrix_div(double* data1, int m1, int n1,
-                            double* data2, int m2, int n2,
+extern int eigen_matrix_div(double* data1, int n1, int m1,
+                            double* data2, int n2, int m2,
                             double* data3);
 
-extern int eigen_matrix_div_scalar(double* data1, int m1, int n1,
+extern int eigen_matrix_div_scalar(double* data1, int n1, int m1,
                                    double r, double* data2);
 
-extern int eigen_matrix_pow(double* data1, int m1, int n1,
+extern int eigen_matrix_pow(double* data1, int n1, int m1,
                             double r, double* data2);
 
-extern int eigen_matrix_exp(double* data1, int m1, int n1,
+extern int eigen_matrix_exp(double* data1, int n1, int m1,
                             double* data2);
 
-extern int eigen_matrix_log(double* data1, int m1, int n1,
+extern int eigen_matrix_log(double* data1, int n1, int m1,
                             double* data2);
 
-extern int eigen_matrix_sinh(double* data1, int m1, int n1, double* data2);
-extern int eigen_matrix_cosh(double* data1, int m1, int n1, double* data2);
-extern int eigen_matrix_tanh(double* data1, int m1, int n1, double* data2);
+extern int eigen_matrix_sinh(double* data1, int n1, int m1, double* data2);
+extern int eigen_matrix_cosh(double* data1, int n1, int m1, double* data2);
+extern int eigen_matrix_tanh(double* data1, int n1, int m1, double* data2);
 
-extern int eigen_matrix_sigmoid(double* data1, int m1, int n1, double* data2);
-extern int eigen_matrix_relu(double* data1, int m1, int n1, double* data2);
-extern int eigen_matrix_step(double* data1, int m1, int n1, double* data2);
+extern int eigen_matrix_sigmoid(double* data1, int n1, int m1, double* data2);
+extern int eigen_matrix_relu(double* data1, int n1, int m1, double* data2);
+extern int eigen_matrix_step(double* data1, int n1, int m1, double* data2);
 
-extern double eigen_matrix_sum(double* data1, int m1, int n1);
-extern double eigen_matrix_min(double* data1, int m1, int n1);
-extern double eigen_matrix_max(double* data1, int m1, int n1);
-extern double eigen_matrix_mean(double* data1, int m1, int n1);
-extern double eigen_matrix_trace(double* data1, int m1, int n1);
-extern double eigen_matrix_determinant(double* data1, int m1, int n1);
+extern double eigen_matrix_sum(double* data1, int n1, int m1);
+extern double eigen_matrix_min(double* data1, int n1, int m1);
+extern double eigen_matrix_max(double* data1, int n1, int m1);
+extern double eigen_matrix_mean(double* data1, int n1, int m1);
+extern double eigen_matrix_trace(double* data1, int n1, int m1);
+extern double eigen_matrix_determinant(double* data1, int n1, int m1);
 
-extern int eigen_matrix_identity(double* data1, int m1, int n1);
+extern int eigen_matrix_identity(double* data1, int n1, int m1);
 
-extern int eigen_matrix_transpose(double* data1, int m1, int n1,
+extern int eigen_matrix_transpose(double* data1, int n1, int m1,
                                   double* data2);
 
-extern int eigen_matrix_inverse(double* data1, int m1, int n1,
+extern int eigen_matrix_inverse(double* data1, int n1, int m1,
                                 double* data2);
 
-extern int eigen_matrix_solve(double* data1, int m1, int n1,
-                              double* data2, int m2, int n2,
+extern int eigen_matrix_solve(double* data1, int n1, int m1,
+                              double* data2, int n2, int m2,
                               double* data3);
 
-extern int eigen_matrix_row(double* data1, int m1, int n1,
+extern int eigen_matrix_row(double* data1, int n1, int m1,
                             double* data2, int i1);
 
-extern int eigen_matrix_col(double* data1, int m1, int n1,
+extern int eigen_matrix_col(double* data1, int n1, int m1,
                             double* data2, int j1);
 
-extern int eigen_matrix_block(double* data1, int m1, int n1,
-                              double* data2, int m2, int n2,
+extern int eigen_matrix_block(double* data1, int n1, int m1,
+                              double* data2, int n2, int m2,
                               int i1, int j1);
 
-extern int eigen_matrix_block_copy(double* data1, int m1, int n1,
-                                   double* data2, int m2, int n2,
-                                   double* data3, int m3, int n3,
+extern int eigen_matrix_block_copy(double* data1, int n1, int m1,
+                                   double* data2, int n2, int m2,
+                                   double* data3, int n3, int m3,
                                    int i1, int j1, int i2, int j2);
 
 /* need for C++ */

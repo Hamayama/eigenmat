@@ -95,9 +95,9 @@
     行列のキャッシュの使用(ON)/未使用(OFF)を設定します。デフォルトは使用(ON)です。  
     (行列のキャッシュについては、後述の make-eigen-array の説明を参照ください)
 
-  - `(make-eigen-array ms me ns ne [maybe-init])`  
+  - `(make-eigen-array ns ne ms me [maybe-init])`  
     行列 (2次元のf64array) を生成します。  
-    ms me ns ne には、行列の shape を指定します。  
+    ns ne ms me には、行列の shape を指定します。  
     例えば、2x3 の行列を生成する場合には、  
     `(make-eigen-array 0 2 0 3)` のように指定します。  
     maybe-init には要素の初期値を指定します。  
@@ -113,9 +113,9 @@
     maybe-init には要素の初期値を指定します。  
     maybe-init は省略可能です。省略した場合は 0 を指定したことになります。
 
-  - `(eigen-array ms me ns ne . inits)`  
+  - `(eigen-array ns ne ms me . inits)`  
     初期化データを指定して、行列 (2次元のf64array) を生成します。  
-    ms me ns ne には、行列の shape を指定します。  
+    ns ne ms me には、行列の shape を指定します。  
     inits には、行列の要素の数だけ初期化データを並べます。  
     例えば、2x3 の行列を生成する場合には、  
     `(eigen-array 0 2 0 3 1 2 3 4 5 6)` のように指定します。
@@ -246,9 +246,9 @@
   - `(eigen-array-determinant A)`  
     行列A の行列式を計算して返します。
 
-  - `(eigen-array-identity m n)`  
+  - `(eigen-array-identity n m)`  
     `(eigen-array-identity! A)`  
-    サイズが m x n の単位行列を返します。  
+    サイズが n x m の単位行列を返します。  
     `!` がついたものは、行列A を (サイズは変えずに) 単位行列にして返します (行列A は変更されます)。
 
   - `(eigen-array-transpose A)`  
@@ -363,6 +363,7 @@
 - 2019-4-14  v1.35 eigen-array-identity,eigen-array-identity!を追加
 - 2019-4-16  v1.36 Cの処理見直し(データコピー削減)
 - 2019-4-18  v1.37 変数のmとnを交換(m=行数,n=列数に統一した(教科書の記述に合わせた))
+- 2019-4-18  v1.38 v1.37の変更を元に戻した(n=行数,m=列数という流儀もあるもよう。。。)
 
 
 (2019-4-18)
