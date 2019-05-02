@@ -5,11 +5,14 @@
 #define EIGEN_DEFAULT_TO_ROW_MAJOR 1 // データの格納順を行優先にする
 
 #include "eigenmat.h"
+#include <cmath>
 #include <iostream>
 #include <Eigen/Dense>
 
-using namespace std;
-using namespace Eigen;
+//using namespace std;
+//using namespace Eigen;
+using Eigen::MatrixXd;
+using Eigen::Map;
 
 /*
  * The following function is a dummy one; replace it for
@@ -23,7 +26,7 @@ ScmObj test_eigenmat(void)
     m(1,0) = 2.5;
     m(0,1) = -1;
     m(1,1) = m(1,0) + m(0,1);
-    //cerr << endl << m << endl;
+    //std::cerr << std::endl << m << std::endl;
     return SCM_MAKE_STR("eigenmat is working");
 }
 
@@ -209,7 +212,7 @@ int eigen_matrix_tanh(double* data1, int n1, int m1, double* data2) {
 }
 
 // 行列の要素に対して、シグモイド関数を計算
-static double sigmoid(double x) { return 1.0 / (1.0 + exp(-x)); }
+static double sigmoid(double x) { return 1.0 / (1.0 + std::exp(-x)); }
 int eigen_matrix_sigmoid(double* data1, int n1, int m1, double* data2) {
     if (n1 < 0 || m1 < 0) return FALSE;
     Map<MatrixXd> A(data1, n1, m1);
