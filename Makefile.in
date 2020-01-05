@@ -16,10 +16,13 @@ GAUCHE_CONFIG  = "@GAUCHE_CONFIG@"
 GAUCHE_PACKAGE = "@GAUCHE_PACKAGE@"
 INSTALL        = "@GAUCHE_INSTALL@" -C
 
+# for Gauche 0.9.9 header file workaround
+HEADER_COPY_DIR = ./header1000
+
 # for C++
 CXX      = @CXX@
 CFLAGS   = @CFLAGS@
-CPPFLAGS = @CPPFLAGS@ @DEF_UNICODE@
+CPPFLAGS = @CPPFLAGS@ @DEF_UNICODE@ -I$(HEADER_COPY_DIR)
 LDFLAGS  = @LDFLAGS@ -static-libstdc++
 LIBS     = @LIBS@
 
@@ -37,7 +40,7 @@ SCMFILES  = $(srcdir)/eigenmat.scm
 HEADERS   =
 
 TARGET    = $(ARCHFILES)
-GENERATED =
+GENERATED = $(HEADER_COPY_DIR)
 CONFIG_GENERATED = Makefile config.cache config.log config.status \
 		   configure.lineno autom4te*.cache $(PACKAGE).gpd
 
@@ -50,6 +53,7 @@ eigenmat_SRCS = $(srcdir)/eigenmat.c $(srcdir)/eigenmatlib.stub
 all : $(TARGET)
 
 eigenmat.$(SOEXT): $(eigenmat_SRCS)
+	./1001_Gauche_099_workaround.sh
 	$(GAUCHE_PACKAGE) compile \
 	  --cc=$(CXX)             \
 	  --cppflags="$(CPPFLAGS)" --cflags="$(CFLAGS)" \

@@ -59,6 +59,7 @@
      make check    # テストを実行します
    ```
    (注意) Windows の環境によっては、make install を実行すると  
+   「gauche-install: no write permission of ...」もしくは  
    「*** ERROR: mkstemp failed」というエラーが発生します。  
    このエラーは、インストール先のフォルダに書き込み権限がないとき等に発生します。  
    その場合には、プログラムメニューからの開発環境の起動時に右クリックして、  
@@ -304,8 +305,10 @@
 - OS
   - Windows 8.1 (64bit)
 - 環境
-  - MSYS2/MinGW-w64 (64bit/32bit) (gcc version 7.3.0 (Rev2, Built by MSYS2 project))
+  - MSYS2/MinGW-w64 (64bit/32bit) (gcc version 9.2.0 (Rev2, Built by MSYS2 project))
 - 言語
+  - Gauche v0.9.9
+  - Gauche v0.9.8
   - Gauche v0.9.7
   - Gauche v0.9.6
 - ライブラリ
@@ -366,6 +369,8 @@
 - 2019-4-18  v1.38 v1.37の変更を元に戻した(n=行数,m=列数という流儀もあるもよう。。。)
 - 2019-5-2   v1.39 using namespace を使わないようにした  
   cmath のインクルードを追加
+- 2020-1-5   v1.40 Gauche v0.9.9 対応(ヘッダーファイル内の`complex`が  
+  C++のクラスとバッティングするため、`_Complex`に置換するパッチを追加)
 
 
-(2019-5-2)
+(2020-1-5)

@@ -1,7 +1,7 @@
 ;; -*- coding: utf-8 -*-
 ;;
 ;; eigenmat.scm
-;; 2019-5-2 v1.39
+;; 2020-1-5 v1.40
 ;;
 ;; ＜内容＞
 ;;   Gauche で、Eigen ライブラリ を使って行列の高速演算を行うためのモジュールです。
@@ -64,9 +64,9 @@
 ;; == 内部処理用 ==
 
 ;; s32vector をハッシュテーブルのキーに使えるようにする
-;; (Gauche の開発最新版では、デフォルトで使用可能)
+;; (Gauche v0.9.8 からは、デフォルトで使用可能)
 (when (guard (ex (else #t)) (default-hash #s32(1)) #f)
-  ;; for Gauche v0.9.4
+  ;; for Gauche v0.9.4 - v0.9.7
   (if (version<=? (gauche-version) "0.9.4")
     (define-method object-hash ((obj <s32vector>))
       (hash (s32vector->vector obj)))
