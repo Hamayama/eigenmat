@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 1001_Gauche_099_workaround.sh
-# 2020-1-5 v1.01
+# 2020-1-7 v1.02
 #
 # for Gauche 0.9.9 header file workaround
 #
@@ -46,22 +46,22 @@ function do_patch_to_file {
     local temp_file="$1.temp5001"
 
     # replace 'complex double' to 'double _Complex'
-    if ! grep -q -e 'ScmDoubleComplex' $patch_file; then
-        if ! grep -q -e 'double _Complex' $patch_file; then
-            cp $patch_file $temp_file
-            sed -e 's@complex double@double _Complex@' $temp_file > $patch_file
+    if ! grep -q -e 'ScmDoubleComplex' "$patch_file"; then
+        if ! grep -q -e 'double _Complex' "$patch_file"; then
+            cp "$patch_file" "$temp_file"
+            sed -e 's/complex double/double _Complex/' "$temp_file" > "$patch_file"
         fi
     fi
 
     # replace 'complex float' to 'float _Complex'
-    if ! grep -q -e 'ScmFloatComplex' $patch_file; then
-        if ! grep -q -e 'float _Complex' $patch_file; then
-            cp $patch_file $temp_file
-            sed -e 's@complex float@float _Complex@' $temp_file > $patch_file
+    if ! grep -q -e 'ScmFloatComplex' "$patch_file"; then
+        if ! grep -q -e 'float _Complex' "$patch_file"; then
+            cp "$patch_file" "$temp_file"
+            sed -e 's/complex float/float _Complex/' "$temp_file" > "$patch_file"
         fi
     fi
 
-    rm -f $temp_file
+    rm -f "$temp_file"
 }
 
 ##### main #####

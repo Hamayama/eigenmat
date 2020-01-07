@@ -17,7 +17,7 @@ GAUCHE_PACKAGE = "@GAUCHE_PACKAGE@"
 INSTALL        = "@GAUCHE_INSTALL@" -C
 
 # for Gauche 0.9.9 header file workaround
-HEADER_COPY_DIR = ./header1000
+HEADER_COPY_DIR = header1000
 
 # for C++
 CXX      = @CXX@
